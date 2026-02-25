@@ -1,0 +1,28 @@
+---
+import ProjectsTable from "../components/ProjectsTable.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+import projectsData from "../content/projects.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { ProjectItem } from "../lib/types";
+
+const projects = projectsData as ProjectItem[];
+---
+
+<BaseLayout
+  title="پروژه‌ها"
+  description="فهرست پروژه‌های انجام شده و در حال انجام ایمن صنعت باتاب."
+  canonicalPath="/projects"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="فهرست پروژه‌ها"
+        subtitle="با فیلتر ساده وضعیت، پروژه‌های در حال انجام و پایان یافته را جداگانه مشاهده کنید."
+      />
+      <ProjectsTable projects={projects} />
+      <p class="mt-4 text-xs text-brand-muted">
+        TODO: در صورت دریافت داده کامل، موقعیت جغرافیایی پروژه‌ها به هر ردیف افزوده می‌شود.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

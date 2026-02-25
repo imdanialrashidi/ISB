@@ -1,0 +1,44 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as Props;
+const { Content } = await post.render();
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonicalPath={`/blog/${post.slug}`}
+>
+  <article class="section-block">
+    <div class="container-wrap">
+      <div class="mx-auto max-w-3xl">
+        <a href="/blog" class="text-sm font-semibold text-brand-accent hover:text-brand-primary">
+          بازگشت به بلاگ
+        </a>
+        <h1 class="mt-4 text-3xl font-bold text-brand-primary">{post.data.title}</h1>
+        <p class="mt-3 text-sm text-brand-muted">
+          {new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(post.data.publishDate)}
+        </p>
+        <div
+          class="prose prose-slate prose-headings:text-brand-primary prose-a:text-brand-accent mt-8 max-w-none leading-8"
+        >
+          <Content />
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

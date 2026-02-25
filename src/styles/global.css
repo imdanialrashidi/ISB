@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-arabic-400-normal.woff2") format("woff2");
+  unicode-range: U+0600-06ff, U+0750-077f, U+08a0-08ff, U+200c, U+fb50-fdff, U+fe70-feff;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-arabic-500-normal.woff2") format("woff2");
+  unicode-range: U+0600-06ff, U+0750-077f, U+08a0-08ff, U+200c, U+fb50-fdff, U+fe70-feff;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-arabic-700-normal.woff2") format("woff2");
+  unicode-range: U+0600-06ff, U+0750-077f, U+08a0-08ff, U+200c, U+fb50-fdff, U+fe70-feff;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00ff;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-latin-500-normal.woff2") format("woff2");
+  unicode-range: U+0000-00ff;
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/vazirmatn/vazirmatn-latin-700-normal.woff2") format("woff2");
+  unicode-range: U+0000-00ff;
+}
+
+:root {
+  --color-bg: #f5f7f8;
+  --color-primary: #111d31;
+  --color-accent: #0f4f46;
+  --color-text: #1f2937;
+  --color-muted: #6b7280;
+  --color-border: #d6dde5;
+  --color-surface: #ffffff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-brand-bg font-sans text-brand-text antialiased;
+}
+
+a {
+  @apply transition-colors duration-200;
+}
+
+:focus-visible {
+  outline: 2px solid #0f4f46;
+  outline-offset: 2px;
+}
+
+.container-wrap {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+}
+
+.section-block {
+  @apply py-12 sm:py-16 lg:py-20;
+}
+
+.card {
+  @apply rounded-2xl border border-brand-border bg-brand-surface shadow-soft;
+}

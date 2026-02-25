@@ -1,0 +1,80 @@
+---
+import SectionTitle from "../components/SectionTitle.astro";
+import companyData from "../content/company.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { CompanyContent } from "../lib/types";
+
+const company = companyData as CompanyContent;
+---
+
+<BaseLayout
+  title="درباره ما"
+  description="معرفی شرکت ایمن صنعت باتاب، ماموریت، چشم‌انداز، ارزش‌ها و رویکرد HSE."
+  canonicalPath="/about"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle title="درباره ایمن صنعت باتاب" subtitle={company.about} />
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">ماموریت</h2>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.mission.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">چشم‌انداز و ارزش‌ها</h2>
+        <p class="mt-4 text-sm leading-8 text-brand-text">{company.vision}</p>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.values.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle title="تاریخچه" subtitle="رویدادهای کلیدی رشد شرکت بر اساس داده‌های موجود." />
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          company.history.map((item) => (
+            <article class="card p-5">
+              <p class="text-sm font-semibold text-brand-accent">{item.year}</p>
+              <p class="mt-2 text-sm leading-7 text-brand-text">{item.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">رویکرد محیط زیست</h2>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.hseApproach.environment.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">ایمنی کارکنان</h2>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.hseApproach.employeeSafety.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap">
+      <article class="card border-dashed p-6">
+        <h2 class="text-xl font-bold text-brand-primary">ساختار سازمانی</h2>
+        <p class="mt-4 text-sm leading-7 text-brand-muted">{company.organizationalStructure}</p>
+      </article>
+    </div>
+  </section>
+</BaseLayout>

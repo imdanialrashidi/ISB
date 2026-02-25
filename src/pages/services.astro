@@ -1,0 +1,35 @@
+---
+import SectionTitle from "../components/SectionTitle.astro";
+import ServicesAccordion from "../components/ServicesAccordion.astro";
+import servicesData from "../content/services.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { ServiceItem } from "../lib/types";
+
+const services = servicesData as ServiceItem[];
+
+const grouped = Object.entries(
+  services.reduce<Record<string, ServiceItem[]>>((acc, item) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {}),
+).map(([title, items]) => ({ title, items }));
+---
+
+<BaseLayout
+  title="خدمات"
+  description="لیست کامل خدمات شرکت ایمن صنعت باتاب در حوزه ایمنی، بازرسی فنی، آموزش و مشاوره HSE."
+  canonicalPath="/services"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="خدمات تخصصی ایمن صنعت باتاب"
+        subtitle="تمام خدمات از فایل مرجع شرکت استخراج شده‌اند و به‌صورت دسته‌بندی‌شده قابل بررسی هستند."
+      />
+      <ServicesAccordion groups={grouped} />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#111D31" />
+  <rect x="70" y="70" width="1060" height="490" rx="24" fill="#F5F7F8" fill-opacity=".06" stroke="#D6DDE5" stroke-opacity=".4" />
+  <circle cx="938" cy="186" r="120" fill="#0F4F46" fill-opacity=".45" />
+  <path d="M140 420C280 330 460 290 620 340C760 384 860 446 1020 420" stroke="#F5F7F8" stroke-opacity=".4" stroke-width="3" />
+  <text x="140" y="250" fill="#F5F7F8" font-size="64" font-family="Tahoma">ایمن صنعت باتاب</text>
+  <text x="140" y="315" fill="#D6DDE5" font-size="34" font-family="Tahoma">مشاوره، آموزش و خدمات ایمنی صنعتی</text>
+</svg>

@@ -1,0 +1,111 @@
+---
+import type { ProjectItem } from "../lib/types";
+
+interface Props {
+  projects: ProjectItem[];
+}
+
+const { projects } = Astro.props as Props;
+const statusLabel = (status: ProjectItem["status"]) =>
+  status === "in_progress" ? "در حال انجام" : "پایان یافته";
+---
+
+<section data-projects-filter>
+  <div class="mb-4 flex flex-wrap gap-2">
+    <button
+      type="button"
+      class="filter-btn rounded-full border border-brand-primary bg-brand-primary px-4 py-2 text-sm font-semibold text-white"
+      data-filter="all"
+      aria-label="نمایش همه پروژه‌ها"
+    >
+      همه
+    </button>
+    <button
+      type="button"
+      class="filter-btn rounded-full border border-brand-border px-4 py-2 text-sm font-semibold text-brand-text"
+      data-filter="in_progress"
+      aria-label="نمایش پروژه‌های در حال انجام"
+    >
+      در حال انجام
+    </button>
+    <button
+      type="button"
+      class="filter-btn rounded-full border border-brand-border px-4 py-2 text-sm font-semibold text-brand-text"
+      data-filter="completed"
+      aria-label="نمایش پروژه‌های پایان یافته"
+    >
+      پایان یافته
+    </button>
+  </div>
+
+  <div class="hidden overflow-x-auto rounded-2xl border border-brand-border bg-white md:block">
+    <table class="min-w-full text-right text-sm">
+      <thead class="bg-slate-100 text-brand-primary">
+        <tr>
+          <th class="px-4 py-3">عنوان پروژه</th>
+          <th class="px-4 py-3">کارفرما</th>
+          <th class="px-4 py-3">تاریخ شروع</th>
+          <th class="px-4 py-3">تاریخ پایان / مدت</th>
+          <th class="px-4 py-3">وضعیت</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          projects.map((project) => (
+            <tr
+              data-project-row
+              data-status={project.status}
+              class="border-t border-brand-border text-brand-text"
+            >
+              <td class="px-4 py-3">{project.title}</td>
+              <td class="px-4 py-3">{project.client}</td>
+              <td class="px-4 py-3">{project.startDateFa}</td>
+              <td class="px-4 py-3">{project.endDateFa ?? "ادامه دارد"}</td>
+              <td class="px-4 py-3">{statusLabel(project.status)}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid gap-4 md:hidden">
+    {
+      projects.map((project) => (
+        <article data-project-card data-status={project.status} class="card p-4">
+          <h3 class="text-sm font-bold text-brand-primary">{project.title}</h3>
+          <p class="mt-1 text-xs text-brand-muted">{project.client}</p>
+          <p class="mt-2 text-xs text-brand-text">شروع: {project.startDateFa}</p>
+          <p class="mt-1 text-xs text-brand-text">پایان/مدت: {project.endDateFa ?? "ادامه دارد"}</p>
+          <p class="mt-2 text-xs font-semibold text-brand-accent">{statusLabel(project.status)}</p>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<script is:inline>
+  const wrappers = document.querySelectorAll("[data-projects-filter]");
+  wrappers.forEach((wrapper) => {
+    const buttons = wrapper.querySelectorAll(".filter-btn");
+    const rows = wrapper.querySelectorAll("[data-project-row], [data-project-card]");
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const selectedFilter = button.getAttribute("data-filter");
+
+        buttons.forEach((btn) => {
+          btn.classList.remove("bg-brand-primary", "text-white", "border-brand-primary");
+          btn.classList.add("border-brand-border", "text-brand-text");
+        });
+        button.classList.add("bg-brand-primary", "text-white", "border-brand-primary");
+
+        rows.forEach((item) => {
+          const status = item.getAttribute("data-status");
+          const isVisible = selectedFilter === "all" || status === selectedFilter;
+          item.classList.toggle("hidden", !isVisible);
+        });
+      });
+    });
+  });
+</script>

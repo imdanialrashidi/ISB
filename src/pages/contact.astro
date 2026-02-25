@@ -1,0 +1,106 @@
+---
+import SectionTitle from "../components/SectionTitle.astro";
+import WhatsAppForm from "../components/WhatsAppForm.astro";
+import contactsData from "../content/contacts.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { ContactsContent } from "../lib/types";
+
+const contacts = contactsData as ContactsContent;
+const mainPhone = contacts.phones[0];
+const whatsappDigits = contacts.whatsapp.number.replace(/[^\d]/g, "");
+const whatsappDisplay = whatsappDigits.startsWith("98")
+  ? `0${whatsappDigits.slice(2)}`
+  : whatsappDigits;
+const whatsappHref = whatsappDigits ? `https://wa.me/${whatsappDigits}` : "/contact#whatsapp";
+---
+
+<BaseLayout
+  title="تماس با ما"
+  description="راه‌های ارتباطی با ایمن صنعت باتاب، اطلاعات تماس دفاتر و فرم ارسال پیام در واتساپ."
+  canonicalPath="/contact"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="تماس با ایمن صنعت باتاب"
+        subtitle="برای هماهنگی پروژه‌ها، مشاوره تخصصی و دریافت پیشنهاد همکاری با ما در تماس باشید."
+      />
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <article class="card p-6">
+          <h2 class="text-xl font-bold text-brand-primary">اطلاعات تماس</h2>
+          <ul class="mt-4 space-y-3 text-sm text-brand-text">
+            {
+              contacts.phones.map((phone) => (
+                <li>
+                  <a href={`tel:${phone.tel}`} class="font-semibold hover:text-brand-accent">
+                    {phone.label}: {phone.number}
+                  </a>
+                </li>
+              ))
+            }
+            <li>فکس: {contacts.fax}</li>
+            <li>
+              <a href={`mailto:${contacts.email}`} class="hover:text-brand-accent">
+                ایمیل: {contacts.email}
+              </a>
+            </li>
+            <li>
+              <a href={contacts.website} class="hover:text-brand-accent">
+                وب‌سایت: {contacts.website}
+              </a>
+            </li>
+            <li>
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-brand-accent"
+              >
+                واتساپ: {whatsappDisplay}
+              </a>
+            </li>
+          </ul>
+          <p
+            class="mt-4 rounded-lg border border-brand-border bg-slate-50 px-3 py-2 text-xs text-brand-muted"
+          >
+            {contacts.workingHours}
+          </p>
+          <a
+            href={`tel:${mainPhone.tel}`}
+            class="mt-4 inline-flex rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+            aria-label="تماس فوری"
+          >
+            تماس فوری
+          </a>
+        </article>
+
+        <article class="card p-6">
+          <h2 class="text-xl font-bold text-brand-primary">راه‌های دسترسی</h2>
+          <ul class="mt-4 space-y-4 text-sm leading-7 text-brand-text">
+            {
+              contacts.addresses.map((address) => (
+                <li class="rounded-xl border border-brand-border p-3">
+                  <p class="font-semibold text-brand-primary">{address.city}</p>
+                  <p class="mt-1">{address.fullAddress}</p>
+                  <a
+                    href={address.mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="mt-2 inline-flex text-xs font-semibold text-brand-accent hover:text-brand-primary"
+                  >
+                    مشاهده روی نقشه
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
+      </div>
+
+      <div class="mt-8">
+        <WhatsAppForm whatsapp={contacts.whatsapp} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

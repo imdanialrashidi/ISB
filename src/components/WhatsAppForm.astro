@@ -1,0 +1,131 @@
+---
+import type { ContactWhatsApp } from "../lib/types";
+
+interface Props {
+  whatsapp: ContactWhatsApp;
+}
+
+const { whatsapp } = Astro.props as Props;
+---
+
+<section id="whatsapp" class="card p-6 sm:p-8">
+  <h2 class="text-2xl font-bold text-brand-primary">ارسال درخواست در واتساپ</h2>
+  <p class="mt-3 text-sm leading-7 text-brand-muted">
+    فرم زیر را کامل کنید. پیام آماده می‌شود و پس از کلیک روی دکمه، در واتساپ قابل ارسال خواهد بود.
+  </p>
+  {
+    whatsapp.status === "placeholder" && (
+      <p class="mt-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-700">
+        {whatsapp.fallbackMessage} - {whatsapp.todo}
+      </p>
+    )
+  }
+
+  <form
+    class="mt-6 grid gap-4 sm:grid-cols-2"
+    data-wa-form
+    data-status={whatsapp.status}
+    data-number={whatsapp.number}
+  >
+    <label class="text-sm">
+      نام و نام خانوادگی
+      <input
+        name="fullName"
+        required
+        class="mt-1 w-full rounded-xl border border-brand-border px-3 py-2"
+        aria-label="نام و نام خانوادگی"
+      />
+    </label>
+    <label class="text-sm">
+      نام شرکت
+      <input
+        name="companyName"
+        class="mt-1 w-full rounded-xl border border-brand-border px-3 py-2"
+        aria-label="نام شرکت"
+      />
+    </label>
+    <label class="text-sm">
+      شماره تماس
+      <input
+        name="phone"
+        required
+        class="mt-1 w-full rounded-xl border border-brand-border px-3 py-2"
+        aria-label="شماره تماس"
+      />
+    </label>
+    <label class="text-sm">
+      موضوع
+      <input
+        name="subject"
+        class="mt-1 w-full rounded-xl border border-brand-border px-3 py-2"
+        aria-label="موضوع پیام"
+      />
+    </label>
+    <label class="text-sm sm:col-span-2">
+      پیام
+      <textarea
+        name="message"
+        rows="5"
+        required
+        class="mt-1 w-full rounded-xl border border-brand-border px-3 py-2"
+        aria-label="متن پیام"></textarea>
+    </label>
+    <div class="sm:col-span-2">
+      <button
+        type="submit"
+        class="rounded-full bg-brand-accent px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+        disabled={whatsapp.status === "placeholder"}
+        aria-label="ارسال در واتساپ"
+      >
+        ارسال در واتساپ
+      </button>
+      <p class="mt-3 text-xs text-brand-muted" data-wa-status></p>
+    </div>
+  </form>
+</section>
+
+<script is:inline>
+  const forms = document.querySelectorAll("[data-wa-form]");
+  forms.forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const statusNode = form.querySelector("[data-wa-status]");
+      const formData = new FormData(form);
+      const payload = {
+        fullName: String(formData.get("fullName") || ""),
+        companyName: String(formData.get("companyName") || ""),
+        phone: String(formData.get("phone") || ""),
+        subject: String(formData.get("subject") || ""),
+        message: String(formData.get("message") || ""),
+      };
+
+      const text = [
+        "سلام وقت بخیر،",
+        "",
+        `نام: ${payload.fullName || "-"}`,
+        `نام شرکت: ${payload.companyName || "-"}`,
+        `شماره تماس: ${payload.phone || "-"}`,
+        `موضوع: ${payload.subject || "-"}`,
+        "متن پیام:",
+        payload.message || "-",
+      ].join("\n");
+
+      const status = form.dataset.status;
+      const number = (form.dataset.number || "").replace(/[^\d]/g, "");
+
+      if (status !== "active" || !number) {
+        if (statusNode) {
+          statusNode.textContent =
+            "شماره رسمی واتساپ هنوز تایید نشده است. لطفا فعلا تماس تلفنی بگیرید.";
+        }
+        return;
+      }
+
+      const url = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+      if (statusNode) {
+        statusNode.textContent = "در حال انتقال به واتساپ...";
+      }
+      window.open(url, "_blank", "noopener,noreferrer");
+    });
+  });
+</script>

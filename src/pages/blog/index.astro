@@ -1,0 +1,44 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionTitle from "../../components/SectionTitle.astro";
+
+const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
+);
+---
+
+<BaseLayout
+  title="بلاگ"
+  description="مطالب تخصصی ایمنی، HSE، مدیریت ریسک و تجربه پروژه‌های صنعتی."
+  canonicalPath="/blog"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="بلاگ تخصصی ایمنی صنعتی"
+        subtitle="در نسخه‌های بعدی، محتوای تخصصی سئو محور برای صنایع نفت، گاز، پتروشیمی و معادن اضافه می‌شود."
+      />
+      <div class="grid gap-4">
+        {
+          posts.map((post) => (
+            <article class="card p-6">
+              <a
+                href={`/blog/${post.slug}`}
+                class="text-lg font-bold text-brand-primary hover:text-brand-accent"
+              >
+                {post.data.title}
+              </a>
+              <p class="mt-2 text-sm leading-7 text-brand-muted">{post.data.description}</p>
+              <p class="mt-3 text-xs text-brand-muted">
+                {new Intl.DateTimeFormat("fa-IR", { dateStyle: "long" }).format(
+                  post.data.publishDate,
+                )}
+              </p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

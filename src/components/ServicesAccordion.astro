@@ -1,0 +1,40 @@
+---
+import type { ServiceItem } from "../lib/types";
+
+interface ServiceGroup {
+  title: string;
+  items: ServiceItem[];
+}
+
+interface Props {
+  groups: ServiceGroup[];
+}
+
+const { groups } = Astro.props as Props;
+---
+
+<div class="space-y-6">
+  {
+    groups.map((group) => (
+      <section class="card p-5 sm:p-6">
+        <h3 class="mb-4 text-lg font-bold text-brand-primary">{group.title}</h3>
+        <div class="space-y-3">
+          {group.items.map((service) => (
+            <details class="rounded-xl border border-brand-border p-4 transition hover:border-brand-accent">
+              <summary class="cursor-pointer list-none text-sm font-semibold text-brand-primary">
+                {service.title}
+              </summary>
+              <p class="mt-3 text-sm leading-7 text-brand-muted">{service.summary}</p>
+              <ul class="mt-3 space-y-2 text-sm text-brand-text">
+                {service.details.map((detail) => (
+                  <li>• {detail}</li>
+                ))}
+              </ul>
+              <p class="mt-3 text-xs text-brand-muted">{service.notes}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))
+  }
+</div>

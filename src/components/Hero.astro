@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  primaryCtaLabel: string;
+  primaryCtaHref: string;
+  secondaryCtaLabel: string;
+  secondaryCtaHref: string;
+}
+
+const { title, subtitle, primaryCtaLabel, primaryCtaHref, secondaryCtaLabel, secondaryCtaHref } =
+  Astro.props as Props;
+---
+
+<section class="relative overflow-hidden border-b border-brand-border bg-brand-primary text-white">
+  <div class="absolute inset-0 opacity-90">
+    <img
+      src="/images/placeholders/hero-pattern.svg"
+      width="1200"
+      height="800"
+      alt=""
+      class="h-full w-full object-cover"
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="container-wrap relative py-16 sm:py-24">
+    <div class="max-w-3xl">
+      <h1 class="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{title}</h1>
+      <p class="mt-5 text-base leading-8 text-slate-200 sm:text-lg">{subtitle}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a
+          href={primaryCtaHref}
+          class="rounded-full bg-brand-accent px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+          aria-label={primaryCtaLabel}
+        >
+          {primaryCtaLabel}
+        </a>
+        <a
+          href={secondaryCtaHref}
+          class="rounded-full border border-white/70 px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-brand-primary"
+          aria-label={secondaryCtaLabel}
+        >
+          {secondaryCtaLabel}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

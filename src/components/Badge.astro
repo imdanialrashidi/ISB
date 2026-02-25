@@ -1,0 +1,17 @@
+---
+interface Props {
+  text: string;
+  tone?: "primary" | "accent" | "neutral";
+}
+
+const { text, tone = "neutral" } = Astro.props as Props;
+const toneMap = {
+  primary: "bg-brand-primary text-white",
+  accent: "bg-brand-accent text-white",
+  neutral: "bg-slate-200 text-slate-700",
+};
+---
+
+<span class:list={["inline-flex rounded-full px-3 py-1 text-xs font-medium", toneMap[tone]]}
+  >{text}</span
+>

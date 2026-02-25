@@ -1,0 +1,156 @@
+[
+  {
+    "id": "project-01",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "پالایشگاه قشم",
+    "location": null,
+    "startDateFa": "01/07/1403",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "ارزیابی ایمنی تجهیزات لیفتینگ و پایش مستمر ریسک‌های عملیاتی.",
+    "tags": ["بازرسی فنی", "جرثقیل", "لیفتراک"]
+  },
+  {
+    "id": "project-02",
+    "title": "ارزیابی ایمنی فرایند و مدیریت ریسک با تکنیک HAZOP",
+    "client": "فومن شیمی",
+    "location": null,
+    "startDateFa": "1404/01/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "شناسایی سناریوهای ریسک فرایندی و ارائه راهکارهای کنترلی.",
+    "tags": ["HAZOP", "مدیریت ریسک"]
+  },
+  {
+    "id": "project-03",
+    "title": "مدل‌سازی و ارائه کلیه مدارک پایپینگ",
+    "client": "فومن شیمی",
+    "location": null,
+    "startDateFa": "01/01/1404",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "تدوین مدارک فنی و مدل‌سازی پایپینگ برای بهبود اجرای پروژه.",
+    "tags": ["پایپینگ", "مستندسازی"]
+  },
+  {
+    "id": "project-04",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "آب شیرین‌کن چابهار",
+    "location": null,
+    "startDateFa": "1403/09/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "بازرسی ایمنی تجهیزات حمل و بالابری در سایت آب‌شیرین‌کن.",
+    "tags": ["بازرسی فنی", "آب‌شیرین‌کن"]
+  },
+  {
+    "id": "project-05",
+    "title": "آموزش عمومی و تخصصی",
+    "client": "آب شیرین‌کن چابهار",
+    "location": null,
+    "startDateFa": "1404/03/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "برگزاری دوره‌های آموزش عمومی و تخصصی ایمنی برای تیم پروژه.",
+    "tags": ["آموزش", "HSE"]
+  },
+  {
+    "id": "project-06",
+    "title": "تهیه مدارک HSE پروژه گوگردزدایی نفت خام پالایشگاه کرمانشاه",
+    "client": "آذر انرژی تبریز",
+    "location": null,
+    "startDateFa": "1403/03/01",
+    "endDateFa": "1403/06/30",
+    "status": "completed",
+    "summary": "تدوین مستندات HSE برای پروژه گوگردزدایی پالایشگاه کرمانشاه.",
+    "tags": ["HSE", "مستندسازی"]
+  },
+  {
+    "id": "project-07",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "معادن خاف",
+    "location": null,
+    "startDateFa": "1404/01/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "ارزیابی ایمنی ماشین‌آلات لیفتینگ در محیط معدنی.",
+    "tags": ["معادن", "بازرسی فنی"]
+  },
+  {
+    "id": "project-08",
+    "title": "تهیه مدارک بازرسی و کنترل کیفیت پروژه گوگردزدایی نفت خام پالایشگاه کرمانشاه",
+    "client": "آذر انرژی تبریز",
+    "location": null,
+    "startDateFa": "1403/03/01",
+    "endDateFa": "1403/06/30",
+    "status": "completed",
+    "summary": "تکمیل مدارک بازرسی و QA/QC برای پروژه گوگردزدایی.",
+    "tags": ["کنترل کیفیت", "بازرسی"]
+  },
+  {
+    "id": "project-09",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "مسکن مهر کرمانشاه",
+    "location": null,
+    "startDateFa": "01/01/1404",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "پایش ایمنی تجهیزات بالابری در پروژه عمرانی مسکن مهر.",
+    "tags": ["عمرانی", "بازرسی فنی"]
+  },
+  {
+    "id": "project-10",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "پتروشیمی مهاباد",
+    "location": null,
+    "startDateFa": "1404/01/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "ارزیابی ایمنی تجهیزات حمل در سایت پتروشیمی.",
+    "tags": ["پتروشیمی", "لیفتینگ"]
+  },
+  {
+    "id": "project-11",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "پتروشیمی اندیمشک",
+    "location": null,
+    "startDateFa": "01/05/1404",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "بازرسی فنی دوره‌ای تجهیزات بالابری و کنترل ریسک عملیات.",
+    "tags": ["پتروشیمی", "بازرسی فنی"]
+  },
+  {
+    "id": "project-12",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "پالایشگاه طرح توسعه بندرعباس",
+    "location": null,
+    "startDateFa": "1404/01/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "پایش ایمنی تجهیزات لیفتینگ در پروژه توسعه پالایشگاهی.",
+    "tags": ["پالایشگاه", "توسعه"]
+  },
+  {
+    "id": "project-13",
+    "title": "مدیریت ریسک",
+    "client": "آب‌شیرین‌کن بندرعباس",
+    "location": null,
+    "startDateFa": "01/07/1403",
+    "endDateFa": "30/09/1403",
+    "status": "completed",
+    "summary": "تحلیل و مدیریت ریسک پروژه آب‌شیرین‌کن بندرعباس.",
+    "tags": ["مدیریت ریسک", "آب‌شیرین‌کن"]
+  },
+  {
+    "id": "project-14",
+    "title": "ارزیابی ایمنی جرثقیل و لیفتراک",
+    "client": "پتروشیمی خمین",
+    "location": null,
+    "startDateFa": "1403/07/01",
+    "endDateFa": null,
+    "status": "in_progress",
+    "summary": "ارزیابی ایمنی تجهیزات لیفتینگ و پایش مستمر نقاط بحرانی.",
+    "tags": ["پتروشیمی", "جرثقیل"]
+  }
+]
