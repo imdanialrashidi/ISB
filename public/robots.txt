@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Host: isbatab.ir
 Sitemap: https://isbatab.ir/sitemap-index.xml

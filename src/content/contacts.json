@@ -17,7 +17,7 @@
   "addresses": [
     {
       "city": "تهران",
-      "fullAddress": "تهران، میدان بهارستان، خیابان ملت، کوچه کاوه، ساختمان کاوه، طبقه دوم، شماره 218",
+      "fullAddress": "تهران، میدان بهارستان، خیابان ملت، کوچه کاوه، ساختمان کاوه، طبقه دوم، شماره ۲۱۸",
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%AA%D9%87%D8%B1%D8%A7%D9%86%D8%8C+%D9%85%DB%8C%D8%AF%D8%A7%D9%86+%D8%A8%D9%87%D8%A7%D8%B1%D8%B3%D8%AA%D8%A7%D9%86%D8%8C+%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86+%D9%85%D9%84%D8%AA%D8%8C+%DA%A9%D9%88%DA%86%D9%87+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B3%D8%A7%D8%AE%D8%AA%D9%85%D8%A7%D9%86+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B7%D8%A8%D9%82%D9%87+%D8%AF%D9%88%D9%85%D8%8C+%D8%B4%D9%85%D8%A7%D8%B1%D9%87+218"
     },
     {
@@ -26,11 +26,10 @@
       "mapUrl": "https://www.google.com/maps/search/?api=1&query=%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87%D8%8C+%D9%85%D8%B3%DA%A9%D9%86%D8%8C+%D8%A8%D9%84%D9%88%D8%A7%D8%B1+%DA%AF%D9%84%D9%87%D8%A7%D8%8C+%D8%A7%DB%8C%D8%B3%D8%AA%DA%AF%D8%A7%D9%87+%D9%85%D8%B7%D9%87%D8%B1%DB%8C%D8%8C+%D9%BE%D8%A7%D8%B3%D8%A7%DA%98+%D8%AA%DB%8C%D8%B1%D8%A7%D9%86%D8%AF%D8%A7%D8%B2"
     }
   ],
-  "workingHours": "TODO: ساعات کاری رسمی شرکت در فایل ورد موجود نیست و باید تکمیل شود.",
+  "workingHours": "شنبه تا چهارشنبه: ۸:۳۰ تا ۱۷:۰۰ | پنج‌شنبه: ۸:۳۰ تا ۱۳:۰۰",
   "whatsapp": {
     "status": "active",
     "number": "989108823933",
-    "todo": "",
     "fallbackMessage": ""
   }
 }

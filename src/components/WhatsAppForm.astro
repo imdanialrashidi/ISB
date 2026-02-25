@@ -16,7 +16,7 @@ const { whatsapp } = Astro.props as Props;
   {
     whatsapp.status === "placeholder" && (
       <p class="mt-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-700">
-        {whatsapp.fallbackMessage} - {whatsapp.todo}
+        {whatsapp.fallbackMessage}
       </p>
     )
   }

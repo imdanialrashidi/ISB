@@ -1,5 +1,6 @@
 ---
 import type { ProjectItem } from "../lib/types";
+import { formatFaDate } from "../lib/locale";
 
 interface Props {
   projects: ProjectItem[];
@@ -59,8 +60,14 @@ const statusLabel = (status: ProjectItem["status"]) =>
             >
               <td class="px-4 py-3">{project.title}</td>
               <td class="px-4 py-3">{project.client}</td>
-              <td class="px-4 py-3">{project.startDateFa}</td>
-              <td class="px-4 py-3">{project.endDateFa ?? "ادامه دارد"}</td>
+              <td class="num-text px-4 py-3">{formatFaDate(project.startDateFa)}</td>
+              <td class="px-4 py-3">
+                {project.endDateFa ? (
+                  <span class="num-text">{formatFaDate(project.endDateFa)}</span>
+                ) : (
+                  "ادامه دارد"
+                )}
+              </td>
               <td class="px-4 py-3">{statusLabel(project.status)}</td>
             </tr>
           ))
@@ -75,8 +82,17 @@ const statusLabel = (status: ProjectItem["status"]) =>
         <article data-project-card data-status={project.status} class="card p-4">
           <h3 class="text-sm font-bold text-brand-primary">{project.title}</h3>
           <p class="mt-1 text-xs text-brand-muted">{project.client}</p>
-          <p class="mt-2 text-xs text-brand-text">شروع: {project.startDateFa}</p>
-          <p class="mt-1 text-xs text-brand-text">پایان/مدت: {project.endDateFa ?? "ادامه دارد"}</p>
+          <p class="mt-2 text-xs text-brand-text">
+            شروع: <span class="num-text">{formatFaDate(project.startDateFa)}</span>
+          </p>
+          <p class="mt-1 text-xs text-brand-text">
+            پایان/مدت:{" "}
+            {project.endDateFa ? (
+              <span class="num-text">{formatFaDate(project.endDateFa)}</span>
+            ) : (
+              "ادامه دارد"
+            )}
+          </p>
           <p class="mt-2 text-xs font-semibold text-brand-accent">{statusLabel(project.status)}</p>
         </article>
       ))

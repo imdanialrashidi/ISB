@@ -10,6 +10,7 @@ import contactsData from "../content/contacts.json";
 import projectsData from "../content/projects.json";
 import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { toPersianDigits } from "../lib/locale";
 import type { CompanyContent, ContactsContent, ProjectItem, ServiceItem } from "../lib/types";
 
 const company = companyData as CompanyContent;
@@ -17,9 +18,10 @@ const contacts = contactsData as ContactsContent;
 const services = servicesData as ServiceItem[];
 const projects = projectsData as ProjectItem[];
 
-const featuredServices = services.slice(0, 3);
+const featuredServices = services.slice(0, 6);
 const featuredProjects = projects.slice(0, 6);
 const mainPhone = contacts.phones[0];
+const mainPhoneFa = toPersianDigits(mainPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
     ? `https://wa.me/${contacts.whatsapp.number.replace(/[^\d]/g, "")}`
@@ -28,13 +30,13 @@ const whatsappHref =
 
 <BaseLayout
   title="ایمن صنعت باتاب"
-  description="وب‌سایت رسمی ایمن صنعت باتاب - مشاوره، آموزش، خدمات ایمنی و بازرسی فنی برای صنایع و پروژه‌های بزرگ."
+  description="وب‌سایت رسمی ایمن صنعت باتاب؛ ارائه خدمات ایمنی، آموزش و مشاوره برای شرکت‌ها و پروژه‌های صنعتی و عمرانی."
   canonicalPath="/"
 >
   <Hero
-    title="راهکارهای حرفه‌ای ایمنی و بازرسی فنی برای صنایع پیشرو"
+    title="ایمن صنعت باتاب؛ همراه قابل اعتماد شما در خدمات ایمنی و آموزش"
     subtitle={company.introduction}
-    primaryCtaLabel={`تماس فوری: ${mainPhone.number}`}
+    primaryCtaLabel={`تماس فوری: ${mainPhoneFa}`}
     primaryCtaHref={`tel:${mainPhone.tel}`}
     secondaryCtaLabel="درخواست همکاری در واتساپ"
     secondaryCtaHref={whatsappHref}
@@ -44,9 +46,9 @@ const whatsappHref =
     <div class="container-wrap">
       <SectionTitle
         title="خدمات کلیدی"
-        subtitle="ترکیب تخصص مهندسی، تجربه صنعتی و تعهد به استانداردهای HSE برای کاهش ریسک و افزایش بهره‌وری."
+        subtitle="مجموعه‌ای از خدمات کاربردی برای ایمنی، آموزش و بهبود روندهای کاری در پروژه‌ها."
       />
-      <div class="grid gap-4 md:grid-cols-3">
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {featuredServices.map((service) => <ServiceCard service={service} />)}
       </div>
       <div class="mt-6">
@@ -54,7 +56,7 @@ const whatsappHref =
           href="/services"
           class="text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
-          مشاهده همه خدمات ←
+          مشاهده همه خدمات
         </a>
       </div>
     </div>
@@ -64,7 +66,7 @@ const whatsappHref =
     <div class="container-wrap">
       <SectionTitle
         title="پروژه‌های منتخب"
-        subtitle="نمونه‌ای از پروژه‌های انجام‌شده و در حال انجام در حوزه‌های پالایشگاهی، پتروشیمی، معدنی و عمرانی."
+        subtitle="نمونه‌ای از همکاری‌های انجام‌شده و در حال اجرا در صنایع و پروژه‌های مختلف."
       />
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {featuredProjects.map((project) => <ProjectCard project={project} />)}
@@ -74,7 +76,7 @@ const whatsappHref =
           href="/projects"
           class="text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
-          مشاهده همه پروژه‌ها ←
+          مشاهده همه پروژه‌ها
         </a>
       </div>
     </div>
@@ -106,9 +108,9 @@ const whatsappHref =
   <div class="container-wrap">
     <ContactCTA
       title="برای دریافت مشاوره تخصصی آماده‌ایم"
-      description="اگر برای پروژه صنعتی خود به مشاوره، آموزش یا بازرسی فنی نیاز دارید، از طریق تماس تلفنی یا فرم واتساپ با ما در ارتباط باشید."
+      description="برای شروع همکاری، دریافت مشاوره یا هماهنگی خدمات، از طریق تماس تلفنی یا واتساپ با ما در ارتباط باشید."
       phoneHref={`tel:${mainPhone.tel}`}
-      phoneLabel={`تماس با ${mainPhone.label}`}
+      phoneLabel={`تماس با ${mainPhone.label} (${mainPhoneFa})`}
       whatsappHref={whatsappHref}
     />
   </div>

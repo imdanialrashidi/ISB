@@ -5,6 +5,9 @@ import { defineConfig } from "astro/config";
 
 export default defineConfig({
   site: "https://isbatab.ir",
+  build: {
+    inlineStylesheets: "always",
+  },
   integrations: [
     tailwind({
       applyBaseStyles: false,

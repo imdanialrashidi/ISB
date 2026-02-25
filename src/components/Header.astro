@@ -1,9 +1,11 @@
 ---
 import contactsData from "../content/contacts.json";
+import { toPersianDigits } from "../lib/locale";
 import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
 const mainPhone = contacts.phones[0];
+const mainPhoneFa = toPersianDigits(mainPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
     ? `https://wa.me/${contacts.whatsapp.number.replace(/[^\d]/g, "")}`
@@ -30,7 +32,7 @@ const navItems = [
         class="text-base font-bold text-brand-primary sm:text-lg"
         aria-label="صفحه اصلی ایمن صنعت باتاب"
       >
-        ایمن صنعت باتاب <span class="text-brand-accent">ISB</span>
+        ایمن صنعت باتاب <span class="latin-text text-brand-accent">ISB</span>
       </a>
 
       <nav
@@ -52,7 +54,7 @@ const navItems = [
           class="rounded-full border border-brand-primary px-3 py-2 text-xs font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
           aria-label={`تماس تلفنی با ${mainPhone.label}`}
         >
-          تماس: {mainPhone.number}
+          تماس: <span class="num-text">{mainPhoneFa}</span>
         </a>
         <a
           href={whatsappHref}
@@ -79,6 +81,7 @@ const navItems = [
           class="h-5 w-5"
           viewBox="0 0 24 24"
           fill="none"
+          aria-hidden="true"
         >
           <path
             d="M4 7H20M4 12H20M4 17H20"
@@ -92,6 +95,7 @@ const navItems = [
           class="hidden h-5 w-5"
           viewBox="0 0 24 24"
           fill="none"
+          aria-hidden="true"
         >
           <path
             d="M6 6L18 18M18 6L6 18"
@@ -160,6 +164,7 @@ const navItems = [
     const setMenuState = (open) => {
       isOpen = open;
       button.setAttribute("aria-expanded", open ? "true" : "false");
+      button.setAttribute("aria-label", open ? "بستن منو" : "باز کردن منو");
       panel.classList.toggle("opacity-0", !open);
       panel.classList.toggle("pointer-events-none", !open);
       overlay.classList.toggle("opacity-0", !open);

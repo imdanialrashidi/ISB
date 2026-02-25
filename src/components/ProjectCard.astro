@@ -1,5 +1,6 @@
 ---
 import Badge from "./Badge.astro";
+import { formatFaDate } from "../lib/locale";
 import type { ProjectItem } from "../lib/types";
 
 interface Props {
@@ -20,15 +21,29 @@ const statusText = project.status === "in_progress" ? "در حال انجام" :
     class="h-40 w-full object-cover"
   />
   <div class="p-5">
-    <div class="flex items-center justify-between gap-2">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
       <h3 class="text-base font-bold text-brand-primary">{project.title}</h3>
-      <Badge text={statusText} tone={project.status === "in_progress" ? "accent" : "neutral"} />
+      <div class="shrink-0 self-start">
+        <Badge text={statusText} tone={project.status === "in_progress" ? "accent" : "neutral"} />
+      </div>
     </div>
     <p class="mt-2 text-sm text-brand-muted">{project.client}</p>
     <p class="mt-3 text-sm leading-7 text-brand-text">{project.summary}</p>
     <p class="mt-3 text-xs text-brand-muted">
-      تاریخ شروع: {project.startDateFa}
-      {project.endDateFa ? `| پایان: ${project.endDateFa}` : ""}
+      شروع: <span class="num-text">{formatFaDate(project.startDateFa)}</span>
+      {
+        project.endDateFa ? (
+          <>
+            <span class="mx-1">•</span>
+            پایان: <span class="num-text">{formatFaDate(project.endDateFa)}</span>
+          </>
+        ) : (
+          <>
+            <span class="mx-1">•</span>
+            وضعیت: ادامه دارد
+          </>
+        )
+      }
     </p>
   </div>
 </article>

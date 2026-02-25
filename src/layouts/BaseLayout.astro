@@ -3,7 +3,14 @@ import companyData from "../content/company.json";
 import contactsData from "../content/contacts.json";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
-import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl, organizationJsonLd } from "../lib/seo";
+import {
+  DEFAULT_OG_IMAGE,
+  SITE_KEYWORDS,
+  SITE_NAME,
+  absoluteUrl,
+  organizationJsonLd,
+  websiteJsonLd,
+} from "../lib/seo";
 import type { CompanyContent, ContactsContent } from "../lib/types";
 import "../styles/global.css";
 
@@ -28,6 +35,8 @@ const contacts = contactsData as ContactsContent;
 const canonical = absoluteUrl(canonicalPath);
 const ogImageUrl = absoluteUrl(ogImage);
 const orgJsonLd = organizationJsonLd(company, contacts);
+const siteJsonLd = websiteJsonLd();
+const fullTitle = title === SITE_NAME ? `${SITE_NAME} | وب‌سایت رسمی` : `${title} | ${SITE_NAME}`;
 ---
 
 <!doctype html>
@@ -36,11 +45,23 @@ const orgJsonLd = organizationJsonLd(company, contacts);
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | {SITE_NAME}</title>
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={SITE_KEYWORDS} />
+    <meta name="application-name" content={SITE_NAME} />
+    <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+    <meta name="theme-color" content="#111d31" />
+    <meta name="format-detection" content="telephone=yes" />
     <meta name="robots" content={noIndex ? "noindex,nofollow" : "index,follow"} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="alternate" href={canonical} hreflang="fa-IR" />
+    <link rel="alternate" href={canonical} hreflang="x-default" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="manifest" href="/site.webmanifest" />
     <link
       rel="preload"
       href="/fonts/vazirmatn/vazirmatn-arabic-400-normal.woff2"
@@ -48,29 +69,24 @@ const orgJsonLd = organizationJsonLd(company, contacts);
       type="font/woff2"
       crossorigin
     />
-    <link
-      rel="preload"
-      href="/fonts/vazirmatn/vazirmatn-arabic-500-normal.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="fa_IR" />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:title" content={`${title} | ${SITE_NAME}`} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content={`لوگوی ${SITE_NAME}`} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={`${title} | ${SITE_NAME}`} />
+    <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
     <script is:inline type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
   </head>
-  <body class="min-h-screen">
+  <body class="flex min-h-screen flex-col">
     <Header />
-    <main class="pb-16">
+    <main class="flex-1 pb-16">
       <slot />
     </main>
     <Footer />

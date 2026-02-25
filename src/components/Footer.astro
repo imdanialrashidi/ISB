@@ -1,8 +1,10 @@
 ---
 import contactsData from "../content/contacts.json";
+import { toPersianDigits } from "../lib/locale";
 import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
+const yearFa = toPersianDigits(new Date().getFullYear());
 ---
 
 <footer class="border-t border-brand-border bg-brand-primary py-10 text-slate-100">
@@ -10,7 +12,7 @@ const contacts = contactsData as ContactsContent;
     <div>
       <p class="text-lg font-bold">ایمن صنعت باتاب</p>
       <p class="mt-2 text-sm leading-7 text-slate-300">
-        مشاوره، آموزش، خدمات ایمنی و بازرس فنی برای صنایع نفت، گاز، پتروشیمی و پروژه‌های عمرانی.
+        مشاوره، آموزش، خدمات ایمنی و بازرسی فنی برای صنایع نفت، گاز، پتروشیمی و پروژه‌های عمرانی.
       </p>
     </div>
     <div>
@@ -20,13 +22,13 @@ const contacts = contactsData as ContactsContent;
           contacts.phones.map((phone) => (
             <li>
               <a href={`tel:${phone.tel}`} class="hover:text-white">
-                {phone.label}: {phone.number}
+                {phone.label}: <span class="num-text">{toPersianDigits(phone.number)}</span>
               </a>
             </li>
           ))
         }
         <li>
-          <a href={`mailto:${contacts.email}`} class="hover:text-white">
+          <a href={`mailto:${contacts.email}`} class="latin-text hover:text-white">
             {contacts.email}
           </a>
         </li>
@@ -47,6 +49,6 @@ const contacts = contactsData as ContactsContent;
     </div>
   </div>
   <div class="container-wrap mt-8 border-t border-slate-700 pt-5 text-xs text-slate-400">
-    © {new Date().getFullYear()} ایمن صنعت باتاب - تمامی حقوق محفوظ است.
+    © {yearFa} ایمن صنعت باتاب - تمامی حقوق محفوظ است.
   </div>
 </footer>

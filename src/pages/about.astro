@@ -2,6 +2,7 @@
 import SectionTitle from "../components/SectionTitle.astro";
 import companyData from "../content/company.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { toPersianDigits } from "../lib/locale";
 import type { CompanyContent } from "../lib/types";
 
 const company = companyData as CompanyContent;
@@ -9,7 +10,7 @@ const company = companyData as CompanyContent;
 
 <BaseLayout
   title="درباره ما"
-  description="معرفی شرکت ایمن صنعت باتاب، ماموریت، چشم‌انداز، ارزش‌ها و رویکرد HSE."
+  description="معرفی ایمن صنعت باتاب، مسیر رشد شرکت، ارزش‌ها و رویکرد کاری."
   canonicalPath="/about"
 >
   <section class="section-block">
@@ -38,12 +39,12 @@ const company = companyData as CompanyContent;
 
   <section class="section-block">
     <div class="container-wrap">
-      <SectionTitle title="تاریخچه" subtitle="رویدادهای کلیدی رشد شرکت بر اساس داده‌های موجود." />
+      <SectionTitle title="تاریخچه" subtitle="مروری کوتاه بر مسیر رشد و فعالیت ایمن صنعت باتاب." />
       <div class="grid gap-4 md:grid-cols-3">
         {
           company.history.map((item) => (
             <article class="card p-5">
-              <p class="text-sm font-semibold text-brand-accent">{item.year}</p>
+              <p class="text-sm font-semibold text-brand-accent">{toPersianDigits(item.year)}</p>
               <p class="mt-2 text-sm leading-7 text-brand-text">{item.description}</p>
             </article>
           ))

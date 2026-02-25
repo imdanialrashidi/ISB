@@ -16,7 +16,6 @@ export interface AddressItem {
 export interface ContactWhatsApp {
   status: WhatsAppStatus;
   number: string;
-  todo: string;
   fallbackMessage: string;
 }
 
