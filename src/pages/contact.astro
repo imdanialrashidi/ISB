@@ -16,18 +16,23 @@ const whatsappDigits = contacts.whatsapp.number.replace(/[^\d]/g, "");
 const whatsappDisplay = toPersianDigits(normalizePhoneForDisplay(whatsappDigits));
 const whatsappHref = whatsappDigits ? `https://wa.me/${whatsappDigits}` : "/contact#whatsapp";
 const websiteLabel = compactWebsiteLabel(contacts.website);
+const tehranOffice =
+  contacts.addresses.find((address) => address.city.includes("تهران")) ?? contacts.addresses[0];
+const tehranMapEmbed = tehranOffice
+  ? `https://www.google.com/maps?q=${encodeURIComponent(tehranOffice.fullAddress)}&output=embed`
+  : "";
 ---
 
 <BaseLayout
-  title="تماس با ما"
-  description="راه‌های ارتباطی با ایمن صنعت باتاب، اطلاعات تماس دفاتر و ارسال سریع پیام در واتساپ."
+  title="تماس با شرکت"
+  description="اطلاعات تماس دفاتر شرکت ایمن صنعت باتاب، مسیرهای دسترسی و نقشه دفتر مرکزی."
   canonicalPath="/contact"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="تماس با ایمن صنعت باتاب"
-        subtitle="برای شروع همکاری یا دریافت اطلاعات بیشتر، با ما تماس بگیرید."
+        subtitle="برای هماهنگی خدمات، دریافت مشاوره یا استعلام همکاری با واحد پشتیبانی شرکت در ارتباط باشید."
       />
 
       <div class="grid gap-6 lg:grid-cols-2">
@@ -82,7 +87,7 @@ const websiteLabel = compactWebsiteLabel(contacts.website);
         </article>
 
         <article class="card p-6">
-          <h2 class="text-xl font-bold text-brand-primary">راه‌های دسترسی</h2>
+          <h2 class="text-xl font-bold text-brand-primary">آدرس دفاتر</h2>
           <ul class="mt-4 space-y-4 text-sm leading-7 text-brand-text">
             {
               contacts.addresses.map((address) => (
@@ -103,6 +108,20 @@ const websiteLabel = compactWebsiteLabel(contacts.website);
           </ul>
         </article>
       </div>
+
+      {tehranMapEmbed && (
+        <article class="card mt-8 overflow-hidden p-2">
+          <h2 class="px-4 pt-4 text-lg font-bold text-brand-primary">نقشه دفتر مرکزی تهران</h2>
+          <p class="px-4 pt-2 text-sm text-brand-muted">{tehranOffice.fullAddress}</p>
+          <iframe
+            title="نقشه دفتر مرکزی ایمن صنعت باتاب"
+            src={tehranMapEmbed}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="mt-4 h-[360px] w-full rounded-xl border border-brand-border"
+          ></iframe>
+        </article>
+      )}
 
       <div class="mt-8">
         <WhatsAppForm whatsapp={contacts.whatsapp} />

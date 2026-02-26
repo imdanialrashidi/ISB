@@ -71,6 +71,83 @@ a {
   @apply rounded-2xl border border-brand-border bg-brand-surface shadow-soft;
 }
 
+.hover-lift {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px -20px rgba(12, 23, 40, 0.45);
+  border-color: #b8c6d6;
+}
+
+.motion-bg {
+  background:
+    radial-gradient(circle at 18% 22%, rgba(15, 79, 70, 0.12), transparent 35%),
+    radial-gradient(circle at 85% 10%, rgba(17, 29, 49, 0.1), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(245, 247, 248, 0.96));
+}
+
+.animate-fade-up {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.animate-float-soft {
+  animation: floatSoft 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-fade-up {
+    animation: fadeUp 0.65s ease-out forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift {
+    transition: none;
+  }
+
+  .hover-lift:hover {
+    transform: none;
+  }
+
+  .animate-float-soft {
+    animation: none;
+  }
+
+  .animate-fade-up {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatSoft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 .latin-text {
   direction: ltr;
   unicode-bidi: isolate;

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" fill="none">
+  <rect width="1200" height="420" fill="#F5F7F8"/>
+  <rect x="72" y="52" width="1056" height="316" rx="28" fill="#111D31"/>
+  <circle cx="166" cy="86" r="96" fill="#0F4F46" fill-opacity=".34"/>
+  <circle cx="1060" cy="342" r="110" fill="#0F4F46" fill-opacity=".28"/>
+
+  <rect x="148" y="118" width="282" height="184" rx="20" fill="#F8FAFC"/>
+  <rect x="458" y="118" width="282" height="184" rx="20" fill="#F8FAFC"/>
+  <rect x="768" y="118" width="282" height="184" rx="20" fill="#F8FAFC"/>
+
+  <text x="289" y="170" text-anchor="middle" fill="#111D31" font-family="Vazirmatn, Tahoma, sans-serif" font-size="34" font-weight="700">ISO 45001</text>
+  <text x="289" y="208" text-anchor="middle" fill="#0F4F46" font-family="Vazirmatn, Tahoma, sans-serif" font-size="24">سیستم مدیریت ایمنی</text>
+  <text x="289" y="242" text-anchor="middle" fill="#475569" font-family="Vazirmatn, Tahoma, sans-serif" font-size="20">OCU - UK</text>
+
+  <text x="599" y="170" text-anchor="middle" fill="#111D31" font-family="Vazirmatn, Tahoma, sans-serif" font-size="34" font-weight="700">ISO 14001</text>
+  <text x="599" y="208" text-anchor="middle" fill="#0F4F46" font-family="Vazirmatn, Tahoma, sans-serif" font-size="24">مدیریت محیط‌زیست</text>
+  <text x="599" y="242" text-anchor="middle" fill="#475569" font-family="Vazirmatn, Tahoma, sans-serif" font-size="20">در حال تمدید</text>
+
+  <text x="909" y="170" text-anchor="middle" fill="#111D31" font-family="Vazirmatn, Tahoma, sans-serif" font-size="34" font-weight="700">ISO 9001</text>
+  <text x="909" y="208" text-anchor="middle" fill="#0F4F46" font-family="Vazirmatn, Tahoma, sans-serif" font-size="24">مدیریت کیفیت</text>
+  <text x="909" y="242" text-anchor="middle" fill="#475569" font-family="Vazirmatn, Tahoma, sans-serif" font-size="20">در حال تمدید</text>
+</svg>

@@ -1,0 +1,51 @@
+---
+import type { CompanyContent } from "../lib/types";
+
+interface Props {
+  company: CompanyContent;
+}
+
+const { company } = Astro.props as Props;
+---
+
+<section class="card p-6">
+  <h2 class="text-xl font-bold text-brand-primary">چارت سازمانی</h2>
+  <p class="mt-3 text-sm leading-7 text-brand-muted">{company.organizationalStructure}</p>
+
+  <div class="mt-6 grid gap-4">
+    <div class="rounded-xl border border-brand-accent/30 bg-brand-accent/5 p-4 text-center">
+      <p class="text-xs text-brand-muted">مدیریت ارشد</p>
+      <p class="mt-1 font-bold text-brand-primary">{company.organizationalChart.ceo}</p>
+    </div>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="rounded-xl border border-brand-border bg-white p-4">
+        <p class="text-xs text-brand-muted">هیئت‌مدیره</p>
+        <p class="mt-1 font-semibold text-brand-primary">{company.organizationalChart.chairperson}</p>
+        <ul class="mt-2 space-y-1 text-sm text-brand-text">
+          {company.organizationalChart.boardMembers.map((item) => <li>• {item}</li>)}
+        </ul>
+      </div>
+      <div class="rounded-xl border border-brand-border bg-white p-4">
+        <p class="text-xs text-brand-muted">مدیریت فنی</p>
+        <p class="mt-1 font-semibold text-brand-primary">{company.organizationalChart.technicalManager}</p>
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-brand-border bg-white p-4">
+      <p class="text-xs text-brand-muted">واحدهای تخصصی</p>
+      <div class="mt-2 grid gap-2 sm:grid-cols-2">
+        {company.organizationalChart.units.map((unit) => (
+          <p class="rounded-lg bg-slate-50 px-3 py-2 text-sm text-brand-text">{unit}</p>
+        ))}
+      </div>
+    </div>
+
+    <div class="rounded-xl border border-brand-border bg-white p-4">
+      <p class="text-xs text-brand-muted">کارشناسان مناطق</p>
+      <ul class="mt-2 space-y-1 text-sm text-brand-text">
+        {company.organizationalChart.regionalExperts.map((person) => <li>• {person}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>

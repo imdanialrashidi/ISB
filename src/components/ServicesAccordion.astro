@@ -25,12 +25,18 @@ const { groups } = Astro.props as Props;
                 {service.title}
               </summary>
               <p class="mt-3 text-sm leading-7 text-brand-muted">{service.summary}</p>
-              <ul class="mt-3 space-y-2 text-sm text-brand-text">
-                {service.details.map((detail) => (
-                  <li>• {detail}</li>
-                ))}
-              </ul>
-              <p class="mt-3 text-xs text-brand-muted">{service.notes}</p>
+              {
+                service.details.length > 0 && (
+                  <ul class="mt-3 space-y-2 text-sm text-brand-text">
+                    {service.details.map((detail) => (
+                      <li>• {detail}</li>
+                    ))}
+                  </ul>
+                )
+              }
+              {
+                service.notes.trim() && <p class="mt-3 text-xs text-brand-muted">{service.notes}</p>
+              }
             </details>
           ))}
         </div>

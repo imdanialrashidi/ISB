@@ -26,15 +26,32 @@ const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
     ? `https://wa.me/${contacts.whatsapp.number.replace(/[^\d]/g, "")}`
     : "/contact#whatsapp";
+const visualHighlights = [
+  {
+    title: "خدمات دارای مجوز رسمی",
+    caption: "ارائه خدمات ارزیابی ایمنی و بازرسی فنی مطابق الزامات قانونی",
+    image: "/images/placeholders/service-safety.svg",
+  },
+  {
+    title: "استقرار سیستم مدیریت HSE",
+    caption: "همراهی کامل در تدوین، بازنگری و پیاده‌سازی مستندات مدیریتی",
+    image: "/images/placeholders/service-docs.svg",
+  },
+  {
+    title: "تیم تخصصی و باتجربه",
+    caption: "همکاری با متخصصان باسابقه در پروژه‌های بزرگ صنعتی و عمرانی",
+    image: "/images/placeholders/service-consulting.svg",
+  },
+];
 ---
 
 <BaseLayout
-  title="ایمن صنعت باتاب"
-  description="وب‌سایت رسمی ایمن صنعت باتاب؛ ارائه خدمات ایمنی، آموزش و مشاوره برای شرکت‌ها و پروژه‌های صنعتی و عمرانی."
+  title="شرکت ایمن صنعت باتاب ;خدمات مشاوره& آموزش& ایمنی و بازرسی فنی"
+  description="شرکت ایمن صنعت باتاب؛ ارائه‌دهنده خدمات مشاوره، آموزش، ایمنی و بازرسی فنی به صنایع، سازمان‌ها و پروژه‌های عمرانی."
   canonicalPath="/"
 >
   <Hero
-    title="ایمن صنعت باتاب؛ همراه قابل اعتماد شما در خدمات ایمنی و آموزش"
+    title="شرکت ایمن صنعت باتاب"
     subtitle={company.introduction}
     primaryCtaLabel={`تماس فوری: ${mainPhoneFa}`}
     primaryCtaHref={`tel:${mainPhone.tel}`}
@@ -42,14 +59,48 @@ const whatsappHref =
     secondaryCtaHref={whatsappHref}
   />
 
+  <section class="section-block motion-bg py-10 sm:py-14">
+    <div class="container-wrap">
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          visualHighlights.map((item, index) => (
+            <article
+              class="card hover-lift animate-fade-up group overflow-hidden"
+              style={`animation-delay: ${index * 90}ms`}
+            >
+              <img
+                src={item.image}
+                alt=""
+                width="640"
+                height="360"
+                loading="lazy"
+                class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+              />
+              <div class="p-4">
+                <h2 class="text-base font-bold text-brand-primary">{item.title}</h2>
+                <p class="mt-2 text-sm text-brand-muted">{item.caption}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
-        title="خدمات کلیدی"
-        subtitle="مجموعه‌ای از خدمات کاربردی برای ایمنی، آموزش و بهبود روندهای کاری در پروژه‌ها."
+        title="خدمات کلیدی شرکت"
+        subtitle="خدمات منتخب از سبد تخصصی شرکت در حوزه‌های ایمنی، آموزش، مشاوره HSE و بازرسی فنی."
       />
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {featuredServices.map((service) => <ServiceCard service={service} />)}
+        {
+          featuredServices.map((service, index) => (
+            <div class="animate-fade-up" style={`animation-delay: ${index * 80}ms`}>
+              <ServiceCard service={service} />
+            </div>
+          ))
+        }
       </div>
       <div class="mt-6">
         <a
@@ -65,11 +116,17 @@ const whatsappHref =
   <section class="section-block bg-white">
     <div class="container-wrap">
       <SectionTitle
-        title="پروژه‌های منتخب"
-        subtitle="نمونه‌ای از همکاری‌های انجام‌شده و در حال اجرا در صنایع و پروژه‌های مختلف."
+        title="رزومه پروژه‌های شرکت"
+        subtitle="نمونه‌ای از پروژه‌های انجام‌شده و در حال انجام شرکت در حوزه استقرار HSE و بازرسی فنی."
       />
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {featuredProjects.map((project) => <ProjectCard project={project} />)}
+        {
+          featuredProjects.map((project, index) => (
+            <div class="animate-fade-up" style={`animation-delay: ${index * 80}ms`}>
+              <ProjectCard project={project} />
+            </div>
+          ))
+        }
       </div>
       <div class="mt-6">
         <a
@@ -84,31 +141,54 @@ const whatsappHref =
 
   <section class="section-block">
     <div class="container-wrap grid gap-8 lg:grid-cols-2">
-      <div class="card p-6">
-        <SectionTitle title="چشم‌انداز و ارزش‌ها" subtitle={company.vision} />
+      <div class="card hover-lift p-6">
+        <SectionTitle title="چشم‌انداز و ارزش‌های شرکت" subtitle={company.vision} />
         <ul class="space-y-2 text-sm leading-7 text-brand-text">
           {company.values.map((value) => <li>• {value}</li>)}
         </ul>
       </div>
-      <div class="card p-6">
+      <div class="card hover-lift p-6">
+        <SectionTitle title="خط‌مشی و اهداف کلیدی" subtitle={company.policy} />
+        <ul class="space-y-2 text-sm leading-7 text-brand-text">
+          {company.objectives.slice(0, 5).map((item) => <li>• {item}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
         <SectionTitle
-          title="اعتمادسازی و استانداردها"
-          subtitle="تعهد به انطباق، کیفیت و ایمنی در تمام مراحل پروژه."
+          title="گواهی‌نامه‌ها و صلاحیت‌های مرتبط"
+          subtitle="شرکت دارای مجوز و پروانه فعالیت مرتبط و گواهی‌نامه‌های معتبر سیستم مدیریتی است."
         />
         <div class="flex flex-wrap gap-2">
           {company.standards.map((standard) => <Badge text={standard} tone="primary" />)}
         </div>
         <ul class="mt-5 space-y-2 text-sm leading-7 text-brand-text">
-          {company.hseApproach.environment.map((item) => <li>• {item}</li>)}
+          <li>• دارای گواهی‌نامه‌های صلاحیت مرتبط با موضوع فراخوان از مراجع ذی‌صلاح</li>
+          <li>• دارای مجوز و پروانه کار آموزش بین‌المللی فنی‌حرفه‌ای</li>
+          <li>• دارای مجوزهای فعال خدمات ارزیابی ایمنی و بازرسی فنی</li>
         </ul>
-      </div>
+      </article>
+      <article class="card overflow-hidden p-3">
+        <img
+          src="/images/certificates/iso-certificates-page-20.jpg"
+          alt="گواهی‌نامه‌های سیستم مدیریتی و نمونه مدرک ISO شرکت ایمن صنعت باتاب"
+          width="544"
+          height="768"
+          loading="lazy"
+          class="h-full w-full rounded-xl object-cover"
+        />
+      </article>
     </div>
   </section>
 
   <div class="container-wrap">
     <ContactCTA
       title="برای دریافت مشاوره تخصصی آماده‌ایم"
-      description="برای شروع همکاری، دریافت مشاوره یا هماهنگی خدمات، از طریق تماس تلفنی یا واتساپ با ما در ارتباط باشید."
+      description="برای هماهنگی خدمات، استعلام گواهی‌نامه‌ها، یا شروع همکاری در پروژه‌های جدید با ما تماس بگیرید."
       phoneHref={`tel:${mainPhone.tel}`}
       phoneLabel={`تماس با ${mainPhone.label} (${mainPhoneFa})`}
       whatsappHref={whatsappHref}

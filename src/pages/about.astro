@@ -1,32 +1,71 @@
 ---
+import OrganizationChart from "../components/OrganizationChart.astro";
 import SectionTitle from "../components/SectionTitle.astro";
+import certificationsData from "../content/certifications.json";
 import companyData from "../content/company.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
-import type { CompanyContent } from "../lib/types";
+import type { CertificatesContent, CompanyContent } from "../lib/types";
 
 const company = companyData as CompanyContent;
+const certificates = certificationsData as CertificatesContent;
 ---
 
 <BaseLayout
-  title="درباره ما"
-  description="معرفی ایمن صنعت باتاب، مسیر رشد شرکت، ارزش‌ها و رویکرد کاری."
+  title="درباره شرکت ایمن صنعت باتاب"
+  description="معرفی شرکت ایمن صنعت باتاب، بیانیه ماموریت، چشم‌انداز، ارزش‌ها، ساختار سازمانی، مجوزها و گواهی‌نامه‌های صلاحیت."
   canonicalPath="/about"
 >
   <section class="section-block">
     <div class="container-wrap">
-      <SectionTitle title="درباره ایمن صنعت باتاب" subtitle={company.about} />
+      <SectionTitle title="درباره شرکت ایمن صنعت باتاب" subtitle={company.about} />
+      <div class="mt-6 grid gap-4 md:grid-cols-2">
+        <article class="card p-5">
+          <p class="text-xs text-brand-muted">مدیرعامل</p>
+          <h2 class="mt-1 text-lg font-bold text-brand-primary">رشید رشیدی</h2>
+        </article>
+        <article class="card p-5">
+          <p class="text-xs text-brand-muted">مدیر فنی</p>
+          <h2 class="mt-1 text-lg font-bold text-brand-primary">شهاب نوروزی</h2>
+        </article>
+      </div>
     </div>
   </section>
 
   <section class="section-block bg-white">
     <div class="container-wrap grid gap-8 lg:grid-cols-2">
       <article class="card p-6">
-        <h2 class="text-xl font-bold text-brand-primary">ماموریت</h2>
+        <h2 class="text-xl font-bold text-brand-primary">بیانیه ماموریت</h2>
         <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
           {company.mission.map((item) => <li>• {item}</li>)}
         </ul>
       </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">خط‌مشی شرکت</h2>
+        <p class="mt-4 text-sm leading-8 text-brand-text">{company.policy}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">اهداف شرکت</h2>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.objectives.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">مسئولیت‌ها</h2>
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
+          {company.responsibilities.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
       <article class="card p-6">
         <h2 class="text-xl font-bold text-brand-primary">چشم‌انداز و ارزش‌ها</h2>
         <p class="mt-4 text-sm leading-8 text-brand-text">{company.vision}</p>
@@ -34,12 +73,125 @@ const company = companyData as CompanyContent;
           {company.values.map((item) => <li>• {item}</li>)}
         </ul>
       </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">رویکرد HSE</h2>
+        <p class="mt-4 text-sm font-semibold text-brand-accent">محیط زیست</p>
+        <ul class="mt-2 space-y-2 text-sm leading-7 text-brand-text">
+          {company.hseApproach.environment.map((item) => <li>• {item}</li>)}
+        </ul>
+        <p class="mt-5 text-sm font-semibold text-brand-accent">ایمنی کارکنان</p>
+        <ul class="mt-2 space-y-2 text-sm leading-7 text-brand-text">
+          {company.hseApproach.employeeSafety.map((item) => <li>• {item}</li>)}
+        </ul>
+      </article>
     </div>
   </section>
 
   <section class="section-block">
     <div class="container-wrap">
-      <SectionTitle title="تاریخچه" subtitle="مروری کوتاه بر مسیر رشد و فعالیت ایمن صنعت باتاب." />
+      <OrganizationChart company={company} />
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap">
+      <SectionTitle
+        title="گواهی‌نامه‌های صلاحیت مرتبط"
+        subtitle={certificates.qualificationNote}
+      />
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          certificates.qualificationCertificates.map((item) => (
+            <article class="card p-5">
+              <p class="text-xs text-brand-muted">ردیف {toPersianDigits(item.id)}</p>
+              <h3 class="mt-1 text-base font-bold text-brand-primary">{item.title}</h3>
+              <p class="mt-2 text-sm text-brand-text">{item.issuer}</p>
+              <p class="mt-1 text-xs text-brand-muted">اعتبار: {item.validity}</p>
+              <p class="mt-2 text-sm text-brand-muted">{item.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">گواهی‌نامه‌های سیستم مدیریتی شرکت</h2>
+        <ul class="mt-4 space-y-3 text-sm leading-7 text-brand-text">
+          {
+            certificates.managementCertificates.map((item) => (
+              <li class="rounded-lg border border-brand-border bg-slate-50 px-3 py-2">
+                <p class="font-semibold text-brand-primary">{item.title}</p>
+                <p>{item.issuer}</p>
+                <p class="text-xs text-brand-muted">اعتبار: {item.validity} | {item.note}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">گواهی‌نامه‌های تخصصی مدیرعامل</h2>
+        <ul class="mt-4 space-y-3 text-sm leading-7 text-brand-text">
+          {
+            certificates.ceoCertificates.map((item) => (
+              <li class="rounded-lg border border-brand-border bg-slate-50 px-3 py-2">
+                <p class="font-semibold text-brand-primary">{item.title}</p>
+                <p>{item.issuer}</p>
+                <p class="text-xs text-brand-muted">{item.note}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap grid gap-8 lg:grid-cols-2">
+      <article class="card p-6">
+        <h2 class="text-xl font-bold text-brand-primary">مجوزها و پروانه‌ها</h2>
+        <ul class="mt-4 space-y-3 text-sm leading-7 text-brand-text">
+          {
+            certificates.licenses.map((item) => (
+              <li class="rounded-lg border border-brand-border bg-slate-50 px-3 py-2">
+                <p class="font-semibold text-brand-primary">{item.title}</p>
+                <p>{item.issuer}</p>
+                <p class="text-xs text-brand-muted">وضعیت: {item.validity}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </article>
+      <div class="grid gap-4">
+        <article class="card overflow-hidden p-3">
+          <img
+            src="/images/certificates/iso-certificates-page-20.jpg"
+            alt="گواهی‌نامه‌های ISO سیستم مدیریتی شرکت ایمن صنعت باتاب"
+            width="544"
+            height="768"
+            loading="lazy"
+            class="h-full w-full rounded-xl object-cover"
+          />
+        </article>
+        <article class="card overflow-hidden p-3">
+          <img
+            src="/images/certificates/iso-certificates-page-19.jpg"
+            alt="جدول گواهی‌نامه‌های تخصصی مدیریت HSE ایمن صنعت باتاب"
+            width="544"
+            height="768"
+            loading="lazy"
+            class="h-full w-full rounded-xl object-cover"
+          />
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle title="تاریخچه شرکت" subtitle="مروری کوتاه بر روند شکل‌گیری و توسعه شرکت." />
       <div class="grid gap-4 md:grid-cols-3">
         {
           company.history.map((item) => (
@@ -50,32 +202,6 @@ const company = companyData as CompanyContent;
           ))
         }
       </div>
-    </div>
-  </section>
-
-  <section class="section-block bg-white">
-    <div class="container-wrap grid gap-8 lg:grid-cols-2">
-      <article class="card p-6">
-        <h2 class="text-xl font-bold text-brand-primary">رویکرد محیط زیست</h2>
-        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
-          {company.hseApproach.environment.map((item) => <li>• {item}</li>)}
-        </ul>
-      </article>
-      <article class="card p-6">
-        <h2 class="text-xl font-bold text-brand-primary">ایمنی کارکنان</h2>
-        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
-          {company.hseApproach.employeeSafety.map((item) => <li>• {item}</li>)}
-        </ul>
-      </article>
-    </div>
-  </section>
-
-  <section class="section-block">
-    <div class="container-wrap">
-      <article class="card border-dashed p-6">
-        <h2 class="text-xl font-bold text-brand-primary">ساختار سازمانی</h2>
-        <p class="mt-4 text-sm leading-7 text-brand-muted">{company.organizationalStructure}</p>
-      </article>
     </div>
   </section>
 </BaseLayout>

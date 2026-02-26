@@ -45,7 +45,10 @@ export interface CompanyContent {
   tagline: string;
   introduction: string;
   about: string;
+  policy: string;
   mission: string[];
+  objectives: string[];
+  responsibilities: string[];
   vision: string;
   values: string[];
   hseApproach: HseApproach;
@@ -54,6 +57,14 @@ export interface CompanyContent {
   legalType: string;
   history: CompanyHistoryItem[];
   organizationalStructure: string;
+  organizationalChart: {
+    ceo: string;
+    technicalManager: string;
+    chairperson: string;
+    boardMembers: string[];
+    units: string[];
+    regionalExperts: string[];
+  };
 }
 
 export interface ServiceItem {
@@ -76,4 +87,35 @@ export interface ProjectItem {
   status: ProjectStatus;
   summary: string;
   tags: string[];
+}
+
+export interface QualificationCertificate {
+  id: number;
+  title: string;
+  issuer: string;
+  validity: string;
+  description: string;
+}
+
+export interface ManagementCertificate {
+  id: number;
+  title: string;
+  issuer: string;
+  validity: string;
+  note: string;
+}
+
+export interface LicenseItem {
+  id: number;
+  title: string;
+  issuer: string;
+  validity: string;
+}
+
+export interface CertificatesContent {
+  qualificationNote: string;
+  qualificationCertificates: QualificationCertificate[];
+  managementCertificates: ManagementCertificate[];
+  ceoCertificates: ManagementCertificate[];
+  licenses: LicenseItem[];
 }

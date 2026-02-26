@@ -36,7 +36,8 @@ const canonical = absoluteUrl(canonicalPath);
 const ogImageUrl = absoluteUrl(ogImage);
 const orgJsonLd = organizationJsonLd(company, contacts);
 const siteJsonLd = websiteJsonLd();
-const fullTitle = title === SITE_NAME ? `${SITE_NAME} | وب‌سایت رسمی` : `${title} | ${SITE_NAME}`;
+const fullTitle =
+  canonicalPath === "/" ? title : title === SITE_NAME ? `${SITE_NAME} | وب‌سایت رسمی` : `${title} | ${SITE_NAME}`;
 ---
 
 <!doctype html>

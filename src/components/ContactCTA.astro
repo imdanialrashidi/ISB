@@ -17,8 +17,10 @@ const {
 ---
 
 <section
-  class="overflow-hidden rounded-2xl border border-brand-primary bg-brand-primary text-white shadow-soft"
+  class="relative overflow-hidden rounded-2xl border border-brand-primary bg-brand-primary text-white shadow-soft"
 >
+  <div class="pointer-events-none absolute -left-12 top-0 h-40 w-40 rounded-full bg-white/10 blur-3xl"></div>
+  <div class="pointer-events-none absolute -right-12 bottom-0 h-44 w-44 rounded-full bg-brand-accent/30 blur-3xl"></div>
   <div class="container-wrap py-10 sm:py-12">
     <h2 class="text-2xl font-bold sm:text-3xl">{title}</h2>
     <p class="mt-4 max-w-2xl text-sm leading-8 text-slate-200 sm:text-base">{description}</p>
