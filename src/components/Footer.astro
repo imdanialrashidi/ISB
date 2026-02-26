@@ -5,10 +5,14 @@ import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
 const yearFa = toPersianDigits(new Date().getFullYear());
+const tehranOffice =
+  contacts.addresses.find((address) => address.city.includes("تهران")) ?? contacts.addresses[0];
+const tehranMapEmbed =
+  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393.5300070120382!2d51.426632933969195!3d35.68956174896446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010b34ad6e33%3A0x7ef1268ba6eed0c7!2z2b7Yp9iz2KfamCDaqdin2YjZhw!5e0!3m2!1sen!2s!4v1772093528358!5m2!1sen!2s";
 ---
 
 <footer class="border-t border-brand-border bg-brand-primary py-10 text-slate-100">
-  <div class="container-wrap grid gap-8 md:grid-cols-3">
+  <div class="container-wrap grid gap-8 md:grid-cols-2 xl:grid-cols-4">
     <div>
       <img
         src="/images/brand/isbatab-logo.png"
@@ -55,6 +59,28 @@ const yearFa = toPersianDigits(new Date().getFullYear());
         }
       </ul>
     </div>
+    {
+      tehranMapEmbed && (
+        <div>
+          <p class="font-semibold text-white">نقشه دفتر تهران</p>
+          <iframe
+            title="نقشه کوچک دفتر تهران ایمن صنعت باتاب"
+            src={tehranMapEmbed}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            class="mt-3 h-36 w-full rounded-xl border border-slate-700"
+          ></iframe>
+          <a
+            href={tehranOffice.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mt-2 inline-flex text-xs font-semibold text-slate-300 hover:text-white"
+          >
+            مشاهده بزرگ روی نقشه
+          </a>
+        </div>
+      )
+    }
   </div>
   <div class="container-wrap mt-8 border-t border-slate-700 pt-5 text-xs text-slate-400">
     © {yearFa} ایمن صنعت باتاب - تمامی حقوق محفوظ است.
