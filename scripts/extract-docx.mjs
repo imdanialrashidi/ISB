@@ -1,13 +1,18 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import JSZip from "jszip";
 
-const DOCX_PATH = process.env.DOCX_PATH || "C:/Users/Danial/Downloads/1_21355573937.docx";
+// Source document lives in docs/private/ (gitignored; kept out of the public
+// repository). Override with DOCX_PATH for a different file.
+const DEFAULT_DOCX = path.join("docs", "private", "رزومه شرکت ISB..docx");
+const DOCX_PATH = process.env.DOCX_PATH || DEFAULT_DOCX;
 const CONTENT_DIR = path.resolve("src/content");
+const RAW_ARTIFACT = path.resolve(".artifacts", "extracted.raw.json");
 
 const PROJECT_HEADER = "\u0639\u0646\u0648\u0627\u0646 \u067e\u0631\u0648\u0698\u0647";
+const CLIENT_HEADER = "\u06a9\u0627\u0631\u0641\u0631\u0645\u0627";
 const SERVICES_HEADER = "\u062e\u062f\u0645\u0627\u062a \u0634\u0631\u06a9\u062a";
-const CONTINUE_TEXT = "\u0627\u062f\u0627\u0645\u0647 \u062f\u0627\u0631\u062f";
 const COMPANY_PREFIX =
   "\u0634\u0631\u06a9\u062a \u0627\u06cc\u0645\u0646 \u0635\u0646\u0639\u062a \u0628\u0627\u062a\u0627\u0628";
 
@@ -54,35 +59,49 @@ const dedupeAdjacent = (items) => {
   return out;
 };
 
-const looksLikeDate = (value) => /^\d{1,4}\/\d{1,2}\/\d{1,4}$/.test(value);
-
-const parseProjects = (lines) => {
+/**
+ * Parses the project table from the company DOCX.
+ *
+ * The source document's project section is a two-column list:
+ *   "عنوان پروژه" / "کارفرما" header, then alternating
+ *   [project title, client] rows with no dates and no status column.
+ * Each field is one paragraph. Parsing stops at the services header
+ * when present (older revisions of the document include it).
+ *
+ * @param {string[]} lines normalized, adjacent-deduped paragraphs
+ * @returns {{ rows: Array<{id: string, title: string, client: string}>, warnings: string[] }}
+ */
+export const parseProjects = (lines) => {
   const start = lines.findIndex((line) => line.includes(PROJECT_HEADER));
-  if (start === -1) return [];
+  if (start === -1) return { rows: [], warnings: [] };
 
-  const end = lines.findIndex((line, idx) => idx > start && line === SERVICES_HEADER);
-  const raw = lines.slice(start + 4, end > -1 ? end : lines.length).filter(Boolean);
-
+  const end = lines.findIndex((line, idx) => idx > start && line.includes(SERVICES_HEADER));
   const rows = [];
-  for (let i = 0; i + 3 < raw.length; i += 4) {
-    const [title, client, startDateFa, duration] = raw.slice(i, i + 4);
-    if (!looksLikeDate(startDateFa)) continue;
-    const status = duration.includes(CONTINUE_TEXT) ? "in_progress" : "completed";
+  const warnings = [];
 
-    rows.push({
-      id: `project-${String(rows.length + 1).padStart(2, "0")}`,
-      title,
-      client,
-      location: null,
-      startDateFa,
-      endDateFa: status === "completed" ? duration : null,
-      status,
-      summary: `${title} - ${client}`,
-      tags: status === "completed" ? ["پایان یافته"] : ["در حال انجام"],
-    });
+  for (let i = start + 1; i < (end > -1 ? end : lines.length); i += 1) {
+    const line = lines[i];
+    if (!line) continue;
+    if (line === CLIENT_HEADER) continue; // section header row, not a project
+
+    const title = line;
+    const client = lines[i + 1] && !lines[i + 1].includes(SERVICES_HEADER) ? lines[i + 1] : "";
+    if (client) {
+      rows.push({
+        id: `project-${String(rows.length + 1).padStart(2, "0")}`,
+        title,
+        client,
+      });
+      i += 1; // consume the client row
+    } else {
+      // A dangling title with no client means the document's table is
+      // malformed (e.g. an empty client cell collapsed by paragraph
+      // filtering). Do not guess — flag it so extraction stops being silent.
+      warnings.push(`project row "${title}" has no client line; check the source document`);
+    }
   }
 
-  return rows;
+  return { rows, warnings };
 };
 
 const parseEmail = (lines) => {
@@ -106,7 +125,18 @@ const writeJson = async (fileName, value) => {
 };
 
 const main = async () => {
-  const buffer = await fs.readFile(DOCX_PATH);
+  let buffer;
+  try {
+    buffer = await fs.readFile(DOCX_PATH);
+  } catch (error) {
+    console.error(
+      `Cannot read the source document at "${DOCX_PATH}".\n` +
+        "Provide the DOCX path via the DOCX_PATH environment variable, e.g.:\n" +
+        '  DOCX_PATH="/path/to/resume.docx" npm run extract-content',
+    );
+    process.exit(1);
+  }
+
   const zip = await JSZip.loadAsync(buffer);
   const xmlBytes = await zip.file("word/document.xml").async("uint8array");
   const xml = textDecoder.decode(xmlBytes);
@@ -118,7 +148,11 @@ const main = async () => {
   const services = await loadJson("services.json");
   const existingProjects = await loadJson("projects.json");
 
-  const parsedProjects = parseProjects(lines);
+  const parsed = parseProjects(lines);
+  const parsedProjects = parsed.rows;
+  for (const warning of parsed.warnings) {
+    console.warn(`WARNING: ${warning}`);
+  }
   const parsedEmail = parseEmail(lines);
   const parsedAbout = lines.find((line) => line.startsWith(COMPANY_PREFIX));
 
@@ -130,20 +164,43 @@ const main = async () => {
     company.about = parsedAbout;
   }
 
-  const projects = existingProjects.length > 0 ? existingProjects : parsedProjects;
+  // The DOCX is the source of truth for the project portfolio — but never
+  // overwrite a non-empty projects.json with an empty parse (that would mean
+  // the parser does not understand the document's shape anymore).
+  let projects = parsedProjects;
+  if (parsedProjects.length === 0) {
+    if (existingProjects.length > 0) {
+      console.warn(
+        `WARNING: parsed 0 projects from the source document; keeping the existing ` +
+          `${existingProjects.length} entries in projects.json unchanged. ` +
+          "If the document format changed, update scripts/extract-docx.mjs parseProjects.",
+      );
+      projects = existingProjects;
+    } else {
+      projects = [];
+    }
+  }
 
   await writeJson("company.json", company);
   await writeJson("contacts.json", contacts);
   await writeJson("services.json", services);
   await writeJson("projects.json", projects);
-  await writeJson("extracted.raw.json", { lines, generatedAt: new Date().toISOString() });
+  await fs.mkdir(path.dirname(RAW_ARTIFACT), { recursive: true });
+  await fs.writeFile(RAW_ARTIFACT, `${JSON.stringify({ lines, generatedAt: new Date().toISOString() }, null, 2)}\n`, "utf8");
 
   console.log(`Extraction complete. Updated content in: ${CONTENT_DIR}`);
+  console.log(`Raw extraction artifact: ${RAW_ARTIFACT}`);
   console.log(`Detected paragraphs: ${lines.length}`);
   console.log(`Detected projects: ${parsedProjects.length}`);
+  if (parsedProjects.length > 0) {
+    console.log(`projects.json: replaced ${existingProjects.length} entries with ${parsedProjects.length} fresh ones.`);
+  }
 };
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMain) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}

@@ -3,24 +3,20 @@ import SectionTitle from "../components/SectionTitle.astro";
 import WhatsAppForm from "../components/WhatsAppForm.astro";
 import contactsData from "../content/contacts.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import {
-  compactWebsiteLabel,
-  normalizePhoneForDisplay,
-  toPersianDigits,
-} from "../lib/locale";
+import { compactWebsiteLabel, normalizePhoneForDisplay, toPersianDigits } from "../lib/locale";
+import { waMeHref } from "../lib/whatsapp";
 import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
 const mainPhone = contacts.phones[0];
 const mobilePhone = contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[1];
 const whatsappDigits = contacts.whatsapp.number.replace(/[^\d]/g, "");
+const whatsappActive = contacts.whatsapp.status === "active";
+const whatsappHref = whatsappActive && whatsappDigits ? waMeHref(whatsappDigits) : "/contact#whatsapp";
 const whatsappDisplay = toPersianDigits(normalizePhoneForDisplay(whatsappDigits));
-const whatsappHref = whatsappDigits ? `https://wa.me/${whatsappDigits}` : "/contact#whatsapp";
 const websiteLabel = compactWebsiteLabel(contacts.website);
-const tehranOffice =
+const mapOffice =
   contacts.addresses.find((address) => address.city.includes("تهران")) ?? contacts.addresses[0];
-const tehranMapEmbed =
-  "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393.5300070120382!2d51.426632933969195!3d35.68956174896446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010b34ad6e33%3A0x7ef1268ba6eed0c7!2z2b7Yp9iz2KfamCDaqdin2YjZhw!5e0!3m2!1sen!2s!4v1772093528358!5m2!1sen!2s";
 const activeMessaging = contacts.messaging.filter((channel) => channel.status === "active");
 const pendingMessaging = contacts.messaging.filter(
   (channel) => channel.status === "missing_identifier",
@@ -68,11 +64,11 @@ const pendingMessaging = contacts.messaging.filter(
             <li>
               <a
                 href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={whatsappHref.startsWith("https://wa.me/") ? "_blank" : undefined}
+                rel={whatsappHref.startsWith("https://wa.me/") ? "noopener noreferrer" : undefined}
                 class="hover:text-brand-accent"
               >
-                واتساپ: {whatsappDisplay}
+                واتساپ: {whatsappActive ? whatsappDisplay : contacts.whatsapp.fallbackMessage || "در حال پیگیری"}
               </a>
             </li>
           </ul>
@@ -123,13 +119,13 @@ const pendingMessaging = contacts.messaging.filter(
         </article>
       </div>
 
-      {tehranMapEmbed && (
+      {mapOffice?.embedUrl && (
         <article class="card mt-8 overflow-hidden p-2">
           <h2 class="px-4 pt-4 text-lg font-bold text-brand-primary">نقشه دفتر مرکزی تهران</h2>
-          <p class="px-4 pt-2 text-sm text-brand-muted">{tehranOffice.fullAddress}</p>
+          <p class="px-4 pt-2 text-sm text-brand-muted">{mapOffice.fullAddress}</p>
           <iframe
             title="نقشه دفتر مرکزی ایمن صنعت باتاب"
-            src={tehranMapEmbed}
+            src={mapOffice.embedUrl}
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
             class="mt-4 h-[360px] w-full rounded-xl border border-brand-border"
@@ -153,8 +149,8 @@ const pendingMessaging = contacts.messaging.filter(
                 <li>
                   <a
                     href={channel.url}
-                    target={channel.url.startsWith("https://wa.me/") ? "_blank" : undefined}
-                    rel={channel.url.startsWith("https://wa.me/") ? "noopener noreferrer" : undefined}
+                    target={channel.url.startsWith("http") ? "_blank" : undefined}
+                    rel={channel.url.startsWith("http") ? "noopener noreferrer" : undefined}
                     class="inline-flex items-center gap-2 rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-primary"
                   >
                     {channel.label}

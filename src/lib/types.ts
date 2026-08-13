@@ -11,6 +11,8 @@ export interface AddressItem {
   city: string;
   fullAddress: string;
   mapUrl: string;
+  /** Optional Google Maps embed URL (src for the office map iframe). */
+  embedUrl?: string;
 }
 
 export interface ContactWhatsApp {

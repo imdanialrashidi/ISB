@@ -51,9 +51,4 @@ export const websiteJsonLd = (): Record<string, unknown> => ({
   alternateName: "ISBATAB",
   url: SITE_URL,
   inLanguage: "fa-IR",
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${SITE_URL}/?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
-  },
 });

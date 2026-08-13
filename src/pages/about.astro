@@ -1,7 +1,6 @@
 ---
 import Badge from "../components/Badge.astro";
 import OrganizationChart from "../components/OrganizationChart.astro";
-import SectionTitle from "../components/SectionTitle.astro";
 import companyData from "../content/company.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
@@ -17,8 +16,13 @@ const company = companyData as CompanyContent;
 >
   <section class="section-block">
     <div class="container-wrap">
-      <SectionTitle title="درباره شرکت ایمن صنعت باتاب" subtitle={company.about} />
-      <div class="mt-6 grid items-start gap-4 md:grid-cols-2">
+      <h1 class="text-2xl font-bold text-brand-primary sm:text-3xl">
+        درباره شرکت ایمن صنعت باتاب
+      </h1>
+      <p class="mt-4 max-w-4xl text-base leading-8 text-brand-text sm:text-lg sm:leading-9">
+        {company.about}
+      </p>
+      <div class="mt-8 grid items-start gap-4 md:grid-cols-2">
         <article class="card overflow-hidden p-3">
           <img
             src="/images/company/about-cover.jpg"

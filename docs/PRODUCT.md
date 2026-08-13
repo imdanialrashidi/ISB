@@ -16,13 +16,13 @@ Keep this document short. It is the durable source of truth for what the product
 - Riskiest product assumption: published licenses/certificates and project portfolio will be trusted by industrial buyers without a third-party review channel. UNVERIFIED.
 - Smallest experiment that tests it: launch the site, monitor contact-path clicks (needs analytics — not yet installed), and ask the first 5 inbound callers where they heard about the company.
 - Deadline / hard constraints: none recorded in the repository. UNKNOWN.
-- Supported platforms and environments: static HTML/JS/CSS, no server runtime; any modern browser; `lang="fa" dir="rtl"`; single locale (fa-IR), no LTR or multi-language support.
+- Supported platforms and environments: static HTML/JS/CSS with a minimal Cloudflare Workers runtime (adapter) serving prerendered pages; any modern browser; `lang="fa" dir="rtl"`; single locale (fa-IR), no LTR or multi-language support.
 
 ## Must-have user flows
 
 1. Home → services/projects overview → contact page → phone call or WhatsApp message (main conversion path).
 2. About → certificates/licenses and organizational chart → trust confirmation → contact.
-3. Services → categorized accordion with details/notes → contact CTA.
+3. Services → categorized service lists with details/notes → contact CTA.
 
 ## Non-goals
 
@@ -40,20 +40,20 @@ Keep this document short. It is the durable source of truth for what the product
 - [x] SEO basics: title/description/canonical/OG/JSON-LD on every page; `robots.txt`, `sitemap-index.xml` generated.
 - [x] 404 page exists and is indexed as noindex.
 - [ ] Browser-verified journey evidence (deterministic E2E) — now covered by `tests/e2e/home.spec.mjs` after bootstrap.
-- [ ] Live deployment to Cloudflare Pages (isbatab.ir) — UNVERIFIED from the repository (README documents the steps only).
+- [ ] Live deployment to Cloudflare Workers (isbatab.ir) — UNVERIFIED from the repository (`npm run deploy` is wired; no CI deploy workflow yet).
 
 ## Security, privacy, and compliance constraints
 
 - Data classification: public business data only (company facts, contacts, certificates). No personal data is collected or stored by the site.
 - Critical access rules: static site, no server-side authorization surface; the WhatsApp form composes a `wa.me` URL client-side and stores nothing.
-- External/payment providers: none. Only external links (`tel:`, `wa.me`, Google Maps iframe/links) and Cloudflare Pages hosting.
+- External/payment providers: none. Only external links (`tel:`, `wa.me`, Google Maps iframe/links) and Cloudflare Workers hosting.
 - Retention/deletion requirements: none — the site stores no user data.
 - CSP and security headers are shipped via `public/_headers` (frame-ancestors 'none', X-Frame-Options DENY, nosniff, referrer policy).
 
 ## Performance and UX budgets
 
 - Core page/API target: Core Web Vitals `good` thresholds (LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 at p75) as the default target; no product-specific budgets accepted yet; no lab or RUM evidence is committed (UNMEASURED).
-- Supported device/network baseline: unknown; site is responsive from 320 px; images lazy-loaded with width/height; Persian font limited to weights 400/700 with `font-display: swap`.
+- Supported device/network baseline: unknown; site is responsive from 320 px; images lazy-loaded with width/height; Persian font limited to weights 400/500/700 with `font-display: swap`.
 - Accessibility target: WCAG 2.2 AA (project default; no stricter target accepted).
 - Brand character (`x, not y`): industrial credibility and HSE seriousness, not a generic corporate template.
 - Visual ambition (utility / product / flagship): product-level corporate site (see `docs/DESIGN.md` for the accepted current direction).
@@ -65,7 +65,7 @@ Keep this document short. It is the durable source of truth for what the product
 - Activation / success event: contact-path interaction (tel/WhatsApp/email). NOT MEASURED — no analytics installed; decision pending.
 - Guardrail metrics: none defined. UNKNOWN.
 - Required product telemetry: none yet; must be decided before claiming measurement.
-- Support / recovery expectation: static content on Cloudflare Pages; recovery = redeploy from Git history; no state to back up.
+- Support / recovery expectation: static content on Cloudflare Workers; recovery = redeploy from Git history (or `wrangler rollback`); no state to back up.
 
 ## Open product decisions
 

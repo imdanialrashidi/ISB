@@ -8,7 +8,7 @@ Use this file for the product-level path from idea to production. Put task-level
 - Measurable success: contact-path interactions (tel/WhatsApp/email) from site visitors. NOT YET MEASURED — no analytics installed; an instrumentation decision is required before this can be tracked.
 - Explicit non-goals: payments, booking, accounts, CMS, multi-language, e-commerce, server-side lead capture.
 - Deadline / capital / compliance constraints: none recorded (UNKNOWN).
-- Current stage: **Vertical MVP (stage 3)** — real content, all core journeys implemented and statically built; blog is a sample; deployment to Cloudflare Pages is documented but not verifiable from the repository.
+- Current stage: **Vertical MVP (stage 3)** — real content, all core journeys implemented and statically built; blog is a sample; deployment to Cloudflare Workers is wired (`npm run deploy`) but not verifiable from the repository.
 
 ## Evidence ledger
 
@@ -42,7 +42,7 @@ Use this file for the product-level path from idea to production. Put task-level
 
 - Scope: one deployable end-to-end path through real boundaries with observability.
 - Exit evidence: canonical install/start/test path works; architecture and rollback assumptions are proven.
-- Verification: `npm install` → `npm run dev`/`build`/`preview` → `bash scripts/verify.sh`; proven locally at bootstrap. Deployment and rollback (Cloudflare Pages) remain unexercised — **next action**.
+- Verification: `npm install` → `npm run dev`/`build`/`preview` → `bash scripts/verify.sh`; proven locally at bootstrap. Deployment and rollback (Cloudflare Workers) remain unexercised — **next action**.
 
 ### 3. Vertical MVP
 
@@ -90,7 +90,7 @@ Use this file for the product-level path from idea to production. Put task-level
 
 | Risk / dependency                                 | Control or experiment                                             | Owner         | Decision date / trigger       |
 | ------------------------------------------------- | ----------------------------------------------------------------- | ------------- | ----------------------------- |
-| Deployment unverified                             | Confirm Cloudflare Pages deployment; exercise rollback from Git   | product owner | before claiming release-ready |
+| Deployment unverified                             | Confirm Cloudflare Workers deployment (`npm run deploy`); exercise rollback from Git   | product owner | before claiming release-ready |
 | No conversion measurement                         | Choose analytics/privacy tooling; instrument contact paths        | product owner | before stage 4                |
 | Content accuracy (certificates/projects/contacts) | Product owner review of `src/content/*.json`                      | product owner | before stage 4                |
 | WhatsApp number is a live business channel        | Confirm `contacts.json.whatsapp.status`/number with the office    | product owner | before launch                 |
@@ -99,7 +99,7 @@ Use this file for the product-level path from idea to production. Put task-level
 
 ## Next bounded slice
 
-- Goal: confirm live deployment (Cloudflare Pages) and capture a first lab performance budget; decide analytics tooling.
+- Goal: confirm live deployment (Cloudflare Workers) and capture a first lab performance budget; decide analytics tooling.
 - Acceptance proof: site reachable at the configured `site` URL with correct `_headers`; Lighthouse lab run recorded in the evidence ledger; analytics decision recorded in `docs/PRODUCT.md`.
 - Recovery / rollback: static content — redeploy any previous commit; no state to migrate.
 

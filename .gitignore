@@ -47,3 +47,6 @@ coverage/
 .dev.vars*
 !.dev.vars.example
 !.env.example
+
+# private source material (kept locally, never committed)
+docs/private/

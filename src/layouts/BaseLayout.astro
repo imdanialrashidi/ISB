@@ -82,8 +82,16 @@ const fullTitle =
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(orgJsonLd)} />
-    <script is:inline type="application/ld+json" set:html={JSON.stringify(siteJsonLd)} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(orgJsonLd).replace(/</g, "\\u003c")}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(siteJsonLd).replace(/</g, "\\u003c")}
+    />
   </head>
   <body class="flex min-h-screen flex-col">
     <Header />

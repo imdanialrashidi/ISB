@@ -4,17 +4,17 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 
 ## Current system
 
-- Runtime/platform: Astro 5 static site generation (SSG) on Node.js 22 (CI pins 22.23.2; local is 22.23.1); output is static HTML/CSS/JS in `dist/`; no server runtime, no SSR endpoints, no database, no auth.
+- Runtime/platform: Astro 5 static site generation (SSG) on Node.js 22 (CI pins 22.23.2; local is 22.23.1); output is static HTML/CSS/JS in `dist/` served via the Cloudflare Workers static-assets model (a minimal Astro runtime in `dist/_worker.js` serves the prerendered pages; no SSR endpoints, no database, no auth).
 - Main modules:
   - `src/pages/*.astro` — routes: `/` (index), `/about`, `/services`, `/projects`, `/contact`, `/blog`, `/blog/[slug]`, `404`.
-  - `src/components/*.astro` — presentational components (Header with mobile menu, Footer, Hero, SectionTitle, Badge, ContactCTA, ServiceCard, ServicesAccordion via `<details>`, ProjectsTable with status filter, ProjectCard, OrganizationChart, WhatsAppForm).
-  - `src/content/*.json` — the single source of content truth: `company.json`, `contacts.json`, `services.json` (10 services, 5 categories), `projects.json` (13 projects, status `completed|in_progress`), `certifications.json`; plus `extracted.raw.json` (raw DOCX extraction artifact) and `blog/intro-post.md` (sample post).
+  - `src/components/*.astro` — presentational components (Header with mobile menu, Footer, Hero, SectionTitle, Badge, ContactCTA, ServiceCard, ProjectCard, OrganizationChart, WhatsAppForm).
+  - `src/content/*.json` — the single source of content truth: `company.json`, `contacts.json`, `services.json` (16 services, 6 categories), `projects.json` (18 projects, `{id, title, client}`), `certifications.json`; plus `blog/intro-post.md` (sample post). A raw DOCX paragraph dump is written to `.artifacts/extracted.raw.json` (gitignored) by the extractor; `src/content/extracted.raw.json` was removed.
   - `src/lib/` — typed helpers: `types.ts` (content interfaces mirroring the JSON shape), `locale.ts` (Persian digits, fa date formatting, phone display normalization), `seo.ts` (SITE_URL, canonical/OG/JSON-LD builders), `whatsapp.ts` (message/`wa.me` URL builders).
   - `src/content.config.ts` — Astro content collection schema (zod) for the `blog` collection only.
   - `scripts/extract-docx.mjs` — one-way DOCX → `src/content/*.json` content extraction pipeline (`npm run extract-content`, source path via `DOCX_PATH` env).
-- Data stores: none at runtime. Content is committed JSON validated at build time by TypeScript (via `types.ts` casts) and by content collection schemas where defined. UNKNOWN: JSON is cast with `as` — no zod schema validates the JSON files at build time; `astro check` does not type-check JSON.
-- External services: Cloudflare Pages (hosting, per README — deployment itself UNVERIFIED); Google Maps embed/links on `/contact`; `wa.me` and `tel:` deep links; `@astrojs/sitemap` generates `sitemap-index.xml` at build.
-- Deployment topology: static `dist/` → Cloudflare Pages; `public/_headers` controls caching (immutable `/_astro/*`, `/fonts/*`, `/images/*`) and security headers (CSP, X-Frame-Options DENY, nosniff, referrer policy). No CI deploy workflow exists in `.github/workflows/` (only `quality.yml` — harness validation).
+- Data stores: none at runtime. Content is committed JSON validated at build time by TypeScript (via `types.ts` casts) and by content collection schemas where defined. Since `astro check` does not type-check JSON, `scripts/validate-content.mjs` (`npm run validate:content`, part of `verify:fast` and the `product-content` affected route) enforces the content contract with clear per-file errors.
+- External services: Cloudflare Workers (static assets + minimal Astro runtime; `wrangler.jsonc`; live deployment UNVERIFIED from the repository); Google Maps embed/links on `/contact` (embed URL lives in `contacts.json.addresses[].embedUrl`); `wa.me` and `tel:` deep links; `@astrojs/sitemap` generates `sitemap-index.xml` at build.
+- Deployment topology: static `dist/` (incl. `dist/_worker.js`) → Cloudflare Workers (`npm run deploy` → `wrangler deploy`); `public/_headers` controls caching (immutable `/_astro/*`, `/fonts/*`, favicons; short `must-revalidate` for `/images/*`) and security headers (CSP, X-Frame-Options DENY, nosniff, referrer policy). The adapter runtime is a deliberate accepted cost (~600KB) for a fully static site. No CI deploy workflow exists in `.github/workflows/` (only `quality.yml` — harness validation, unit tests, and e2e).
 
 ## Trust boundaries and critical data flows
 
@@ -27,8 +27,8 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 - Static-only: no server runtime, no SSR, no server-side user input handling. Keep it that way.
 - Content single-source rule: product content lives in `src/content/*.json` (mirrored by `src/lib/types.ts`); pages/components must not hardcode company data that already exists there (e.g., phones, addresses, services, projects).
 - Persian/RTL correctness: every page renders under `html lang="fa" dir="rtl"` (BaseLayout); Latin/numeral runs use `.latin-text`/`.num-text` or `toPersianDigits`; never mix raw ASCII digits into Persian UI text.
-- Contacts normalization: phone/WhatsApp values are normalized only through `src/lib/locale.ts` and `src/lib/whatsapp.ts` helpers (digits-only `wa.me`/`tel:` hrefs, display formatting).
-- Font licensing: only Vazirmatn (OFL-1.1, via `@fontsource/vazirmatn`; woff2 committed under `public/fonts/`) — weights 400/700 only (500 files exist but are unused).
+- Contacts normalization: phone/WhatsApp values are normalized only through `src/lib/locale.ts` and `src/lib/whatsapp.ts` helpers (digits-only `wa.me`/`tel:` hrefs, display formatting). The WhatsApp form's bundled script imports `buildWhatsAppUrl` from the same module — one copy of the message template.
+- Font licensing: only Vazirmatn (OFL-1.1, via `@fontsource/vazirmatn`; woff2 committed under `public/fonts/`) — weights 400/500/700 declared in `global.css`; `font-semibold` (600) synthesizes from 500.
 - No new runtime dependencies without a demonstrated need; keep `package.json` scripts as the interface for all verification commands.
 
 ## Chosen patterns
@@ -56,4 +56,4 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 - Migrations: none (static content).
 - Backup and tested restore: content is Git history; redeploy from any commit. No restore drill recorded (UNVERIFIED).
 - Logging/monitoring: none at runtime (static). Build/CI logs only.
-- Rollback: redeploy a previous commit to Cloudflare Pages; no state to migrate (documented in README; not exercised).
+- Rollback: redeploy a previous commit with `npm run deploy` (or `wrangler rollback`); no state to migrate (documented in README; not exercised).

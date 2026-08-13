@@ -1,14 +1,17 @@
 ---
 import contactsData from "../content/contacts.json";
 import { toPersianDigits } from "../lib/locale";
+import { waMeHref } from "../lib/whatsapp";
 import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
-const mainPhone = contacts.phones[0];
-const mainPhoneFa = toPersianDigits(mainPhone.number);
+// The primary call-to-action number: the company mobile (0912...) when present.
+const contactPhone =
+  contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[0];
+const contactPhoneFa = toPersianDigits(contactPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
-    ? `https://wa.me/${contacts.whatsapp.number.replace(/[^\d]/g, "")}`
+    ? waMeHref(contacts.whatsapp.number)
     : "/contact#whatsapp";
 
 const navItems = [
@@ -59,11 +62,11 @@ const navItems = [
 
       <div class="hidden items-center gap-2 md:flex">
         <a
-          href={`tel:${mainPhone.tel}`}
+          href={`tel:${contactPhone.tel}`}
           class="rounded-full border border-brand-primary px-3 py-2 text-xs font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
-          aria-label={`تماس تلفنی با ${mainPhone.label}`}
+          aria-label={`تماس تلفنی با ${contactPhone.label}`}
         >
-          تماس: <span class="num-text">{mainPhoneFa}</span>
+          تماس: <span class="num-text">{contactPhoneFa}</span>
         </a>
         <a
           href={whatsappHref}
@@ -142,7 +145,7 @@ const navItems = [
     </nav>
     <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
       <a
-        href={`tel:${mainPhone.tel}`}
+        href={`tel:${contactPhone.tel}`}
         class="rounded-xl border border-brand-primary px-4 py-3 text-center text-sm font-semibold text-brand-primary hover:bg-brand-primary hover:text-white"
       >
         تماس فوری

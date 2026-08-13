@@ -6,6 +6,12 @@ export interface WhatsAppFormPayload {
   message: string;
 }
 
+/** Digits-only deep link: https://wa.me/<digits> */
+export const waMeHref = (number: string): string => {
+  const digits = number.replace(/[^\d]/g, "");
+  return `https://wa.me/${digits}`;
+};
+
 export const buildWhatsAppMessage = (payload: WhatsAppFormPayload): string => {
   return [
     "سلام وقت بخیر،",
@@ -20,7 +26,6 @@ export const buildWhatsAppMessage = (payload: WhatsAppFormPayload): string => {
 };
 
 export const buildWhatsAppUrl = (number: string, payload: WhatsAppFormPayload): string => {
-  const normalized = number.replace(/[^\d]/g, "");
   const text = encodeURIComponent(buildWhatsAppMessage(payload));
-  return `https://wa.me/${normalized}?text=${text}`;
+  return `${waMeHref(number)}?text=${text}`;
 };

@@ -18,7 +18,8 @@
     {
       "city": "تهران",
       "fullAddress": "تهران، میدان بهارستان، خیابان ملت، کوچه کاوه، ساختمان کاوه، طبقه دوم، شماره ۲۱۸",
-      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%AA%D9%87%D8%B1%D8%A7%D9%86%D8%8C+%D9%85%DB%8C%D8%AF%D8%A7%D9%86+%D8%A8%D9%87%D8%A7%D8%B1%D8%B3%D8%AA%D8%A7%D9%86%D8%8C+%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86+%D9%85%D9%84%D8%AA%D8%8C+%DA%A9%D9%88%DA%86%D9%87+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B3%D8%A7%D8%AE%D8%AA%D9%85%D8%A7%D9%86+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B7%D8%A8%D9%82%D9%87+%D8%AF%D9%88%D9%85%D8%8C+%D8%B4%D9%85%D8%A7%D8%B1%D9%87+218"
+      "mapUrl": "https://www.google.com/maps/search/?api=1&query=%D8%AA%D9%87%D8%B1%D8%A7%D9%86%D8%8C+%D9%85%DB%8C%D8%AF%D8%A7%D9%86+%D8%A8%D9%87%D8%A7%D8%B1%D8%B3%D8%AA%D8%A7%D9%86%D8%8C+%D8%AE%DB%8C%D8%A7%D8%A8%D8%A7%D9%86+%D9%85%D9%84%D8%AA%D8%8C+%DA%A9%D9%88%DA%86%D9%87+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B3%D8%A7%D8%AE%D8%AA%D9%85%D8%A7%D9%86+%DA%A9%D8%A7%D9%88%D9%87%D8%8C+%D8%B7%D8%A8%D9%82%D9%87+%D8%AF%D9%88%D9%85%D8%8C+%D8%B4%D9%85%D8%A7%D8%B1%D9%87+218",
+      "embedUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393.5300070120382!2d51.426632933969195!3d35.68956174896446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010b34ad6e33%3A0x7ef1268ba6eed0c7!2z2b7Yp9iz2KfamCDaqdin2YjZhw!5e0!3m2!1sen!2s!4v1772093528358!5m2!1sen!2s"
     }
   ],
   "workingHours": "شنبه تا چهارشنبه: ۸:۳۰ تا ۱۷:۰۰ | پنج‌شنبه: ۸:۳۰ تا ۱۳:۰۰",
@@ -39,18 +40,18 @@
     {
       "id": "eitaa",
       "label": "ایتا",
-      "status": "missing_identifier",
-      "url": "",
-      "number": "",
-      "note": "شناسه رسمی کانال هنوز اعلام نشده است"
+      "status": "active",
+      "url": "https://eitaa.com",
+      "number": "09128823933",
+      "note": ""
     },
     {
       "id": "bale",
       "label": "بله",
-      "status": "missing_identifier",
-      "url": "",
-      "number": "",
-      "note": "شناسه رسمی کانال هنوز اعلام نشده است"
+      "status": "active",
+      "url": "https://ble.ir",
+      "number": "09128823933",
+      "note": ""
     }
   ]
 }
