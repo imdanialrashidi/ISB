@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "routes": [
+    {
+      "id": "workflow-evals",
+      "include": [
+        "scripts/run-workflow-evals.mjs",
+        "scripts/lib/workflow-evals.mjs",
+        "evals/**",
+        "tests/workflow-evals.test.mjs"
+      ],
+      "commands": [
+        ["node", "--test", "tests/workflow-evals.test.mjs"],
+        ["node", "scripts/run-workflow-evals.mjs", "--dry-run"]
+      ]
+    },
+    {
+      "id": "verification-router",
+      "include": [
+        "scripts/verify-affected.mjs",
+        "tests/verify-affected.test.mjs",
+        ".pi/verification.json"
+      ],
+      "commands": [["node", "--test", "tests/verify-affected.test.mjs"]]
+    },
+    {
+      "id": "safety-guard",
+      "include": [
+        ".pi/extensions/safety-guard.js",
+        ".mcp.json",
+        "scripts/pi-sandbox.sh",
+        "tests/safety-guard.test.mjs"
+      ],
+      "commands": [["node", "--test", "tests/safety-guard.test.mjs"]]
+    },
+    {
+      "id": "launcher",
+      "include": ["p", "scripts/pi-sandbox.sh", "tests/launcher.test.mjs"],
+      "commands": [["node", "--test", "tests/launcher.test.mjs"]]
+    },
+    {
+      "id": "workflow-contract",
+      "include": [
+        "AGENTS.md",
+        ".mcp.json",
+        ".pi/**",
+        ".github/**",
+        "p",
+        "*.md",
+        "docs/**",
+        "scripts/*.sh",
+        "scripts/verify-package-integrity.mjs",
+        "Dockerfile.pi",
+        ".dockerignore"
+      ],
+      "commands": [["bash", "scripts/pi-doctor.sh", "--ci", "--static"]]
+    },
+    {
+      "id": "product-content",
+      "include": ["src/content/**", "public/**"],
+      "commands": [["npm", "run", "build"]]
+    },
+    {
+      "id": "product-source",
+      "include": ["src/**"],
+      "exclude": ["src/content/**"],
+      "commands": [
+        ["npm", "run", "check"],
+        ["npm", "run", "lint"],
+        ["npm", "run", "build"]
+      ]
+    },
+    {
+      "id": "product-config",
+      "include": [
+        "astro.config.mjs",
+        "tailwind.config.ts",
+        "postcss.config.cjs",
+        "tsconfig.json",
+        "eslint.config.js",
+        ".prettierrc.cjs",
+        ".prettierignore",
+        "package.json",
+        "package-lock.json"
+      ],
+      "commands": [
+        ["npm", "run", "check"],
+        ["npm", "run", "lint"],
+        ["npm", "run", "build"]
+      ]
+    },
+    {
+      "id": "product-e2e",
+      "include": ["tests/e2e/**", "playwright.config.mjs"],
+      "commands": [["npm", "run", "test:e2e"]]
+    }
+  ],
+  "fallback": [["bash", "scripts/verify.sh"]]
+}

@@ -1,0 +1,113 @@
+---
+import Badge from "../components/Badge.astro";
+import SectionTitle from "../components/SectionTitle.astro";
+import certificationsData from "../content/certifications.json";
+import companyData from "../content/company.json";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { toPersianDigits } from "../lib/locale";
+import type { CertificatesContent, CompanyContent } from "../lib/types";
+
+const certificates = certificationsData as CertificatesContent;
+const company = companyData as CompanyContent;
+---
+
+<BaseLayout
+  title="گواهی‌نامه‌ها و مجوزهای شرکت"
+  description="گواهی‌نامه‌های صلاحیت، مجوزهای فعالیت، گواهی‌نامه سیستم مدیریتی و پروانه مرکز آموزش شرکت ایمن صنعت باتاب."
+  canonicalPath="/certifications"
+>
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="گواهی‌نامه‌ها و مجوزهای شرکت"
+        subtitle={certificates.qualificationNote}
+      />
+
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          certificates.documents.map((doc) => (
+            <article class="card overflow-hidden p-3">
+              <img
+                src={doc.image}
+                alt={doc.alt}
+                width="975"
+                height="1300"
+                loading="lazy"
+                decoding="async"
+                class="h-auto w-full rounded-xl border border-brand-border bg-white object-contain"
+              />
+              <div class="p-4">
+                <h2 class="text-base font-bold text-brand-primary">{doc.title}</h2>
+                <p class="mt-1 text-sm text-brand-muted">{doc.issuer}</p>
+                <p class="mt-1 text-xs text-brand-muted">وضعیت: {doc.validity}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap">
+      <SectionTitle
+        title="گواهی‌نامه‌های سیستم مدیریتی شرکت"
+        subtitle="گواهی‌نامه‌های سیستم مدیریتی ثبت‌شده شرکت."
+      />
+      <div class="grid gap-4 md:grid-cols-3">
+        {
+          certificates.managementCertificates.map((item) => (
+            <article class="card p-5">
+              <h3 class="text-base font-bold text-brand-primary">{item.title}</h3>
+              <p class="mt-2 text-sm text-brand-text">{item.issuer}</p>
+              <p class="mt-1 text-xs text-brand-muted">اعتبار: {item.validity}</p>
+              <p class="mt-2 text-xs text-brand-muted">{item.note}</p>
+            </article>
+          ))
+        }
+      </div>
+      <div class="mt-6 flex flex-wrap gap-2">
+        {company.standards.map((standard) => <Badge text={standard} tone="primary" />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <div class="container-wrap">
+      <SectionTitle
+        title="گواهی‌نامه‌های صلاحیت مرتبط"
+        subtitle="گواهی‌نامه‌های صلاحیت فعالیت از مراجع ذی‌صلاح."
+      />
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          certificates.qualificationCertificates.map((item) => (
+            <article class="card p-5">
+              <p class="text-xs text-brand-muted">ردیف {toPersianDigits(item.id)}</p>
+              <h3 class="mt-1 text-base font-bold text-brand-primary">{item.title}</h3>
+              <p class="mt-2 text-sm text-brand-text">{item.issuer}</p>
+              <p class="mt-1 text-xs text-brand-muted">اعتبار: {item.validity}</p>
+              <p class="mt-2 text-sm text-brand-muted">{item.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block bg-white">
+    <div class="container-wrap">
+      <SectionTitle title="مجوزها و پروانه‌ها" subtitle="مجوزهای رسمی فعالیت شرکت." />
+      <div class="grid gap-4 md:grid-cols-2">
+        {
+          certificates.licenses.map((item) => (
+            <article class="card p-5">
+              <h3 class="text-base font-bold text-brand-primary">{item.title}</h3>
+              <p class="mt-2 text-sm text-brand-text">{item.issuer}</p>
+              <p class="mt-1 text-xs text-brand-muted">وضعیت: {item.validity}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

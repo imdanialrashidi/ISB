@@ -1,5 +1,5 @@
 ---
-import ProjectsTable from "../components/ProjectsTable.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 import projectsData from "../content/projects.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
@@ -10,16 +10,20 @@ const projects = projectsData as ProjectItem[];
 
 <BaseLayout
   title="رزومه پروژه‌ها"
-  description="رزومه پروژه‌های انجام‌شده و در حال انجام شرکت ایمن صنعت باتاب بر اساس مستندات رسمی شرکت."
+  description="رزومه پروژه‌های شرکت ایمن صنعت باتاب بر اساس مستندات رسمی شرکت."
   canonicalPath="/projects"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="رزومه پروژه‌های شرکت"
-        subtitle="نمونه پروژه‌های ثبت‌شده شرکت در حوزه استقرار HSE، بازرسی فنی، ارزیابی ایمنی و خدمات تخصصی صنعتی."
+        subtitle="فهرست پروژه‌های ثبت‌شده شرکت در حوزه بازرسی فنی، ارزیابی ایمنی، سیستم‌های حریق و خدمات تخصصی صنعتی."
       />
-      <ProjectsTable projects={projects} />
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {
+          projects.map((project, index) => <ProjectCard project={project} index={index} />)
+        }
+      </div>
       <p class="mt-4 text-xs text-brand-muted">
         برای جزئیات بیشتر هر پروژه، با تیم پشتیبانی تماس بگیرید.
       </p>

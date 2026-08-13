@@ -1,5 +1,5 @@
-export type ProjectStatus = "in_progress" | "completed";
 export type WhatsAppStatus = "active" | "placeholder";
+export type MessagingStatus = "active" | "missing_identifier";
 
 export interface PhoneItem {
   label: string;
@@ -19,6 +19,15 @@ export interface ContactWhatsApp {
   fallbackMessage: string;
 }
 
+export interface MessagingChannel {
+  id: string;
+  label: string;
+  status: MessagingStatus;
+  url: string;
+  number: string;
+  note: string;
+}
+
 export interface ContactsContent {
   phones: PhoneItem[];
   fax: string;
@@ -27,6 +36,7 @@ export interface ContactsContent {
   addresses: AddressItem[];
   workingHours: string;
   whatsapp: ContactWhatsApp;
+  messaging: MessagingChannel[];
 }
 
 export interface CompanyHistoryItem {
@@ -35,7 +45,9 @@ export interface CompanyHistoryItem {
 }
 
 export interface HseApproach {
+  environmentIntro: string;
   environment: string[];
+  employeeSafetyIntro: string;
   employeeSafety: string[];
 }
 
@@ -46,9 +58,9 @@ export interface CompanyContent {
   introduction: string;
   about: string;
   policy: string;
+  policyItems: string[];
+  policySummary: string;
   mission: string[];
-  objectives: string[];
-  responsibilities: string[];
   vision: string;
   values: string[];
   hseApproach: HseApproach;
@@ -59,11 +71,7 @@ export interface CompanyContent {
   organizationalStructure: string;
   organizationalChart: {
     ceo: string;
-    technicalManager: string;
-    chairperson: string;
-    boardMembers: string[];
     units: string[];
-    regionalExperts: string[];
   };
 }
 
@@ -75,18 +83,13 @@ export interface ServiceItem {
   category: string;
   highlights: string[];
   notes: string;
+  image: string;
 }
 
 export interface ProjectItem {
   id: string;
   title: string;
   client: string;
-  location: string | null;
-  startDateFa: string;
-  endDateFa: string | null;
-  status: ProjectStatus;
-  summary: string;
-  tags: string[];
 }
 
 export interface QualificationCertificate {
@@ -112,10 +115,19 @@ export interface LicenseItem {
   validity: string;
 }
 
+export interface CertificateDocument {
+  id: number;
+  title: string;
+  issuer: string;
+  validity: string;
+  image: string;
+  alt: string;
+}
+
 export interface CertificatesContent {
   qualificationNote: string;
   qualificationCertificates: QualificationCertificate[];
   managementCertificates: ManagementCertificate[];
-  ceoCertificates: ManagementCertificate[];
   licenses: LicenseItem[];
+  documents: CertificateDocument[];
 }

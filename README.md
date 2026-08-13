@@ -41,13 +41,33 @@ npm run preview
 
 ## Scripts
 
-- `npm run dev` - start Astro dev server
+- `npm run dev` - start Astro dev server (http://localhost:4321)
 - `npm run build` - build static site to `dist`
 - `npm run preview` - preview build output
-- `npm run check` - Astro/Type diagnostics
+- `npm run check` - Astro/Type diagnostics (`astro check`)
 - `npm run lint` - ESLint
-- `npm run format` - Prettier check
+- `npm run format` - Prettier check (⚠ not enforced — see below)
+- `npm run verify:fast` - fast static lane: lint + check
+- `npm run verify:feature` - feature lane: fast + build + E2E smoke
+- `npm run test:e2e` - Playwright smoke (`tests/e2e/`; chromium only, 1 worker, no video/trace/screenshots; builds+previews on port 4325 or reuses an ISBATAB server already running there)
+- `node scripts/verify-affected.mjs` - affected-file verification routing (config: `.pi/verification.json`; unmatched files fall back to the full gate)
+- `bash scripts/verify.sh` - canonical full gate: harness doctor (`--ci`) + lint + build
 - `npm run extract-content` - extract content from the source DOCX file
+
+## Verification lanes (for agents and humans)
+
+| Lane                | Command                                          | Covers                                                                                 |
+| ------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| Targeted / affected | `node scripts/verify-affected.mjs --file <path>` | Routes in `.pi/verification.json`; conservative full-gate fallback for unmatched files |
+| Fast (static)       | `npm run verify:fast`                            | ESLint + `astro check`                                                                 |
+| Feature             | `npm run verify:feature`                         | Fast + production build + committed browser smoke                                      |
+| Full (canonical)    | `bash scripts/verify.sh`                         | Harness doctor + lint + build — required before merge/release                          |
+
+Browser E2E prerequisites: `npx playwright install chromium` once locally. Interactive browser exploration uses the Playwright MCP server (`.mcp.json`); committed deterministic specs live in `tests/e2e/`.
+
+> Note: Prettier is configured but **not enforced** — `npm run format` fails on pre-existing files and is deliberately absent from all verification lanes. Format only files you touch.
+
+## Content Editing Guide
 
 ## Deploy to Cloudflare Pages
 
