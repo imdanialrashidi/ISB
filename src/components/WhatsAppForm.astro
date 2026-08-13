@@ -84,8 +84,10 @@ const { whatsapp } = Astro.props as Props;
   </form>
 </section>
 
-<script is:inline>
-  const forms = document.querySelectorAll("[data-wa-form]");
+<script>
+  import { buildWhatsAppUrl } from "../lib/whatsapp";
+
+  const forms = document.querySelectorAll<HTMLFormElement>("[data-wa-form]");
   forms.forEach((form) => {
     form.addEventListener("submit", (event) => {
       event.preventDefault();
@@ -99,17 +101,6 @@ const { whatsapp } = Astro.props as Props;
         message: String(formData.get("message") || ""),
       };
 
-      const text = [
-        "سلام وقت بخیر،",
-        "",
-        `نام: ${payload.fullName || "-"}`,
-        `نام شرکت: ${payload.companyName || "-"}`,
-        `شماره تماس: ${payload.phone || "-"}`,
-        `موضوع: ${payload.subject || "-"}`,
-        "متن پیام:",
-        payload.message || "-",
-      ].join("\n");
-
       const status = form.dataset.status;
       const number = (form.dataset.number || "").replace(/[^\d]/g, "");
 
@@ -121,7 +112,7 @@ const { whatsapp } = Astro.props as Props;
         return;
       }
 
-      const url = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+      const url = buildWhatsAppUrl(number, payload);
       if (statusNode) {
         statusNode.textContent = "در حال انتقال به واتساپ...";
       }

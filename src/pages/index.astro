@@ -11,6 +11,7 @@ import projectsData from "../content/projects.json";
 import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
+import { waMeHref } from "../lib/whatsapp";
 import type { CompanyContent, ContactsContent, ProjectItem, ServiceItem } from "../lib/types";
 
 const company = companyData as CompanyContent;
@@ -20,29 +21,33 @@ const projects = projectsData as ProjectItem[];
 
 const featuredServices = services.slice(0, 6);
 const featuredProjects = projects.slice(0, 6);
+// The hero call-to-action number: the company mobile (0912...) when present.
+const contactPhone =
+  contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[0];
+const contactPhoneFa = toPersianDigits(contactPhone.number);
 const mainPhone = contacts.phones[0];
 const mainPhoneFa = toPersianDigits(mainPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
-    ? `https://wa.me/${contacts.whatsapp.number.replace(/[^\d]/g, "")}`
+    ? waMeHref(contacts.whatsapp.number)
     : "/contact#whatsapp";
 const visualHighlights = [
   {
     title: "خدمات دارای مجوز رسمی",
     caption: "ارائه خدمات ارزیابی ایمنی و بازرسی فنی مطابق الزامات قانونی",
-    image: "/images/services/crane-lifting.jpg",
+    image: "/images/services/service-safety.png",
     alt: "بازرسی فنی و ارزیابی ایمنی جرثقیل‌ها و ماشین‌آلات صنعتی",
   },
   {
     title: "استقرار سیستم مدیریت HSE",
     caption: "همراهی کامل در تدوین، بازنگری و پیاده‌سازی مستندات مدیریتی",
-    image: "/images/services/hse-management.jpg",
+    image: "/images/services/service-docs.png",
     alt: "مشاوره و استقرار سیستم‌های مدیریت HSE در محیط صنعتی",
   },
   {
     title: "تیم تخصصی و باتجربه",
     caption: "همکاری با متخصصان باسابقه در پروژه‌های بزرگ صنعتی و عمرانی",
-    image: "/images/company/about-cover.jpg",
+    image: "/images/services/service-consulting.png",
     alt: "تصویر معرفی شرکت ایمن صنعت باتاب",
   },
 ];
@@ -56,8 +61,8 @@ const visualHighlights = [
   <Hero
     title="شرکت ایمن صنعت باتاب"
     subtitle={company.introduction}
-    primaryCtaLabel={`تماس فوری: ${mainPhoneFa}`}
-    primaryCtaHref={`tel:${mainPhone.tel}`}
+    primaryCtaLabel={`تماس فوری: ${contactPhoneFa}`}
+    primaryCtaHref={`tel:${contactPhone.tel}`}
     secondaryCtaLabel="درخواست همکاری در واتساپ"
     secondaryCtaHref={whatsappHref}
   />
