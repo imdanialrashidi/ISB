@@ -58,7 +58,10 @@
     {
       "id": "product-content",
       "include": ["src/content/**", "public/**"],
-      "commands": [["npm", "run", "build"]]
+      "commands": [
+        ["npm", "run", "validate:content"],
+        ["npm", "run", "build"]
+      ]
     },
     {
       "id": "product-source",

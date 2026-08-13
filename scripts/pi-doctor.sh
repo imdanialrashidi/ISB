@@ -122,7 +122,7 @@ fi
 
 if [[ "$static_mode" -eq 1 ]]; then
   pass "workflow behavior tests omitted in explicit static-only mode"
-elif node --test tests/*.test.mjs; then
+elif node --test tests/*.test.mjs tests/unit/*.test.mjs; then
   pass "workflow behavior tests pass"
 else
   fail "workflow behavior tests failed"
