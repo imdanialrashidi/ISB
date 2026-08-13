@@ -32,7 +32,7 @@ References calibrate principles; they are not permission to clone another produc
 
 - Visual thesis (as implemented): restrained "industrial trust" — deep navy primary, teal accent, cool light-gray canvas, generous white cards, soft shadows, RTL Persian typography on Vazirmatn.
 - Signature element: the deep-navy header with the teal action accent (`#111d31` / `#0f4f46`) and rounded-full pill CTAs; subtle radial-gradient "motion-bg" on the home hero band.
-- One justified aesthetic risk: restrained two-color system with no imagery beyond placeholders — the site currently depends on vector placeholder art (`public/images/placeholders/*.svg`) for media; real photography is not yet sourced (LICENSE/ownership: UNKNOWN — placeholders are project-made SVGs).
+- One justified aesthetic risk: restrained two-color system with limited imagery — real photography is committed for services, certificates, and the company (see Media below); three vector placeholders remain (`hero-pattern.svg`, `og-cover.svg`, `service-safety.svg` fallback) (LICENSE/ownership of photography: UNKNOWN — sourced by the company; placeholders are project-made SVGs).
 - What must feel familiar: RTL Persian layout, `tel:`/WhatsApp CTAs, certificate/project lists as proof.
 - What must never look generic: the teal/navy palette and Vazirmatn type are the differentiation; do not drift toward purple/blue SaaS gradients or generic stock-style cards.
 
@@ -59,10 +59,10 @@ No color-contrast measurements are committed; a11y checks must verify before rel
 
 | Role           | Family / fallback                                                                                         | Scale / weight / leading                                                                                             | Purpose                                       |
 | -------------- | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| all text       | Vazirmatn → Vazir → Tahoma → sans-serif (`fontFamily.sans`)                                               | weights loaded: **400, 700** only (500 files exist but are unused); body `text-sm`/`text-base`, headings `font-bold` | Single-family system; Persian + Latin subsets |
+| all text       | Vazirmatn → Vazir → Tahoma → sans-serif (`fontFamily.sans`)                                               | weights loaded: **400, 500, 700** (600 synthesizes from 500); body `text-sm`/`text-base`, headings `font-bold` | Single-family system; Persian + Latin subsets |
 | utility / data | same family; `.num-text` / `.latin-text` classes set `direction: ltr; unicode-bidi: isolate` for LTR runs | `letter-spacing: 0.01em`                                                                                             | phone numbers, dates, IDs, Latin terms        |
 
-Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; woff2 committed under `public/fonts/` (arabic + latin subsets, weights 400/500/700 files present; only 400/700 declared in `global.css`). Fallback preserves hierarchy adequately; metric mismatch with Tahoma is acceptable.
+Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; woff2 committed under `public/fonts/` (arabic + latin subsets, weights 400/500/700 all declared in `global.css`). Fallback preserves hierarchy adequately; metric mismatch with Tahoma is acceptable.
 
 ### Geometry and depth
 
@@ -70,21 +70,21 @@ Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; wo
 - Grid/content measure: max content width 72rem (6xl); card grids `md:grid-cols-2/3`, `lg:grid-cols-2`.
 - Radius logic: cards `rounded-2xl`; pills/CTAs `rounded-full`; inputs `rounded-xl`.
 - Border/shadow logic: `border-brand-border` on cards; shadow token `shadow-soft` (`0 10px 30px -18px rgba(12,23,40,0.42)`); hover lift `translateY(-6px)` + deeper shadow.
-- Icon/media treatment: inline SVG (stroke `currentColor`) for menu icons; placeholder SVG images for media; brand logo `public/images/brand/isbatab-logo.png` (owned by the company — license UNKNOWN, treat as company asset).
+- Icon/media treatment: inline SVG (stroke `currentColor`) for menu icons; real photography for service/certificate/company media (`public/images/services/*`, `certificates/*`, `company/*`); brand logo `public/images/brand/isbatab-logo.png` (owned by the company — license UNKNOWN, treat as company asset).
 
 ### Media and art direction
 
-- Photography / illustration / data-visualization language: placeholder SVG illustrations only (hero-pattern, certificates, project-card, service-\*); no photography committed.
+- Photography / illustration / data-visualization language: real photography (service cards, certificates, company/about images) over the navy/teal canvas; three project-made SVG placeholders remain for decorative/fallback use (`hero-pattern.svg`, `og-cover.svg`, `service-safety.svg`).
 - Icon family and stroke/fill rules: hand-written inline SVGs, `stroke="currentColor"`, 1.8 stroke, 24×24 viewBox.
-- Asset source, ownership/license, and attribution: project-made SVGs; logo and certificate JPGs (`public/images/certificates/iso-certificates-page-19/20.jpg`) are company documents — no license records (UNKNOWN).
+- Asset source, ownership/license, and attribution: project-made SVGs; logo and certificate JPGs (`public/images/certificates/iso-45001-certificate.jpg`, `training-license.jpg`) are company documents — no license records (UNKNOWN).
 - Responsive art direction and meaningful alt-text rules: images get `width`/`height`, `loading="lazy"` (hero-adjacent eager), `alt=""` for decorative, descriptive Persian alt for meaningful images.
 - Fallback when the preferred asset cannot load: `alt` text + width/height boxes; no JS image fallbacks.
 
 ## Composition and responsiveness
 
 - Desktop composition: sticky navy header (logo + horizontal nav + phone pill + WhatsApp pill), hero band, section blocks with 2–3 column card grids, footer with contact columns.
-- Mobile recomposition: header collapses to logo + hamburger (md breakpoint `768px`); slide-down panel with nav links and tel/WhatsApp buttons; project table becomes stacked cards; services accordion stacks; contact grid single-column. This is real recomposition, not shrinkage.
-- Dense/long-content behavior: services grouped by category with `<details>` accordions; projects table `overflow-x-auto` on md+.
+- Mobile recomposition: header collapses to logo + hamburger (md breakpoint `768px`); slide-down panel with nav links and tel/WhatsApp buttons; card grids stack to one column; contact grid single-column. This is real recomposition, not shrinkage.
+- Dense/long-content behavior: services grouped by category headers over card grids; projects as a responsive card grid.
 - Supported viewport/device baseline: 320 px minimum tested target; breakpoints `sm 640 / md 768 / lg 1024` (Tailwind defaults). No device matrix evidence committed (UNVERIFIED beyond code inspection).
 - RTL/localization behavior: fa-IR RTL only; no LTR locale; LTR runs isolated via `.num-text`/`.latin-text`.
 
@@ -97,8 +97,8 @@ Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; wo
 | Hero                | home variant with dual CTAs                                             | default                                                                                | keep            |
 | SectionTitle        | title + optional subtitle                                               | default                                                                                | keep            |
 | Card                | service / project / highlight / contact                                 | default / hover-lift                                                                   | keep            |
-| ServicesAccordion   | `<details>` per service                                                 | open/closed (native) / hover border→accent                                             | keep            |
-| ProjectsTable       | table (md+) / cards (mobile) / filter buttons                           | all / in_progress / completed filter states (client JS)                                | keep            |
+| ServiceCard        | grid grouped by category (`/services`) / featured grid (home)       | default / hover-lift / empty details list                                      | keep            |
+| ProjectCard        | card grid (`/projects`, home)                                       | default / hover-lift                                                             | keep            |
 | WhatsAppForm        | `status: active` / `status: placeholder` (disabled button + amber note) | default / required-field validation (native) / submit→wa.me open / placeholder message | keep            |
 | 404 page            | centered card + home/contact links                                      | noindex page                                                                           | keep            |
 | Footer              | contact columns + quick links                                           | default                                                                                | keep            |
@@ -130,10 +130,10 @@ Required journey states:
 
 - Accessibility target: WCAG 2.2 AA unless the product accepts another target (no stricter target accepted).
 - Text/non-text contrast target: 4.5:1 / 3:1; unmeasured — verify before release claims.
-- Keyboard/focus/touch target: `:focus-visible` outline (2px accent); touch targets ≥ 40 px on nav buttons (h-10 w-10 hamburger); full keyboard path exists (native `<details>`, links, form).
+- Keyboard/focus/touch target: `:focus-visible` outline (2px accent); touch targets ≥ 40 px on nav buttons (h-10 w-10 hamburger); full keyboard path exists (links, form, native controls).
 - Performance target: LCP ≤ 2.5 s, INP ≤ 200 ms, CLS ≤ 0.1 at p75 unless stricter product budgets are accepted (default; unmeasured).
 - Pre-release lab budget and production RUM/rollout proof: none accepted/committed (UNKNOWN).
-- Image/font/JS budget: fonts 400/700 only, `font-display: swap`, preload of arabic 400; inline stylesheets; images lazy + width/height. No numeric budget accepted.
+- Image/font/JS budget: fonts 400/500/700 (600 synthesizes from 500), `font-display: swap`, preload of arabic 400; inline stylesheets; images lazy + width/height. No numeric budget accepted.
 - Supported browsers and input modes: modern evergreen browsers; mouse/touch/keyboard; no browser matrix committed.
 
 ## Screen acceptance
@@ -141,8 +141,8 @@ Required journey states:
 | Flow / screen | Critical states                        | Viewports/locales         | Visual proof                |
 | ------------- | -------------------------------------- | ------------------------- | --------------------------- |
 | Home          | default, mobile menu open, hover       | 320 / 768 / 1280+, fa-RTL | none committed (UNVERIFIED) |
-| Services      | accordion open/closed                  | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
-| Projects      | filter states, table vs cards          | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
+| Services      | grouped card grids (category headers)           | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
+| Projects      | card grid                                    | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
 | Contact       | WhatsApp active/placeholder, map embed | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
 | 404           | default                                | all, fa-RTL               | none committed (UNVERIFIED) |
 

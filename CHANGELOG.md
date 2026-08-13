@@ -6,6 +6,29 @@ All notable workflow changes are documented here. This project follows the spiri
 
 ### Added
 
+- `npm test` (harness + product unit suites), `npm run typecheck`, and `npm run validate:content` scripts; the canonical gate (`scripts/verify.sh`) and CI now run typecheck, unit tests, `npm audit` (high/critical), and the browser e2e smoke.
+- Content contract validation (`scripts/validate-content.mjs`) wired into `verify:fast` and the `product-content` affected route.
+- Unit tests for the DOCX project parser, WhatsApp URL builders, and the content validator (`tests/unit/`).
+- Dependabot coverage for npm dependencies.
+
+### Changed
+
+- Documented the Cloudflare Workers static-assets deployment (README, `docs/ARCHITECTURE.md`, `docs/PRODUCT.md`, `docs/PLAN.md`) — the code already built to `dist/_worker.js`; README no longer instructs Cloudflare Pages.
+- Hero and header call CTAs now dial the company mobile number (0912…) when present in `contacts.json`; the ایتا and بله messenger channels are active with the 0912 number displayed.
+- `/about` opens with a wide, properly set lead paragraph and a real `h1` heading.
+- `src/lib/whatsapp.ts` is now the single WhatsApp message/URL implementation, used by the form's bundled script and the header/index/contact links.
+- Maps embed URL moved from hardcoded component constants into `contacts.json.addresses[].embedUrl`.
+- Vazirmatn 500 and Latin 700 faces are declared (files already shipped); JSON-LD no longer advertises a non-existent site search and escapes `<`; `/images/*` cache is short + `must-revalidate` instead of immutable.
+- Extracted raw DOCX dump now goes to `.artifacts/extracted.raw.json` (gitignored); `docs/private/` is gitignored and its DOCX is untracked; unreferenced placeholder SVGs were removed.
+
+### Fixed
+
+- `npm run extract-content` parsed the source document's real two-column project table (title/client pairs) instead of assuming a 4-line/date format that never matched; it refuses to overwrite `projects.json` with an empty parse and no longer defaults to a hardcoded personal Windows path.
+- Blog dates are formatted in the `Asia/Tehran` timezone.
+- The WhatsApp status (`placeholder`) is honored consistently on the contact page.
+
+### Added
+
 - Product bootstrap: filled `docs/PRODUCT.md`, `docs/ARCHITECTURE.md`, `docs/QUALITY.md`, `docs/PLAN.md`, and `docs/DESIGN.md` with confirmed repository facts.
 - Stack-specific verification lanes: `verify:fast`, `verify:feature`, `test:e2e` npm scripts, a low-resource Playwright lane (`playwright.config.mjs`, `tests/e2e/home.spec.mjs` — chromium only, 1 worker, 0 retries, no video/trace/screenshots, server reuse), and product routes in `.pi/verification.json` (content, source, config, e2e) with the full-gate fallback preserved.
 
