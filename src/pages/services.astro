@@ -1,6 +1,6 @@
 ---
 import SectionTitle from "../components/SectionTitle.astro";
-import ServicesAccordion from "../components/ServicesAccordion.astro";
+import ServiceCard from "../components/ServiceCard.astro";
 import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import type { ServiceItem } from "../lib/types";
@@ -20,16 +20,25 @@ const grouped = Object.entries(
 
 <BaseLayout
   title="خدمات شرکت"
-  description="خدمات شرکت ایمن صنعت باتاب شامل ارزیابی ایمنی، بازرسی فنی، آموزش، مشاوره HSE و خدمات تخصصی پروژه."
+  description="خدمات شرکت ایمن صنعت باتاب شامل ارزیابی ایمنی و بازرسی فنی، آموزش، مشاوره HSE، سیستم‌های حریق و خدمات تخصصی پروژه."
   canonicalPath="/services"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="خدمات شرکت ایمن صنعت باتاب"
-        subtitle="فهرست خدمات بر اساس مستندات رسمی شرکت ارائه شده و شامل خدمات دارای مجوز، صدور تاییدیه و پشتیبانی اجرایی است."
+        subtitle="فهرست خدمات بر اساس مستندات رسمی شرکت ارائه شده و شامل خدمات دارای مجوز، صدور گواهینامه و تاییدیه و پشتیبانی اجرایی است."
       />
-      <ServicesAccordion groups={grouped} />
+      {
+        grouped.map((group) => (
+          <section class="mt-8">
+            <h2 class="text-lg font-bold text-brand-primary">{group.title}</h2>
+            <div class="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {group.items.map((service) => <ServiceCard service={service} />)}
+            </div>
+          </section>
+        ))
+      }
     </div>
   </section>
 </BaseLayout>

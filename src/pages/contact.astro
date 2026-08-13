@@ -12,6 +12,7 @@ import type { ContactsContent } from "../lib/types";
 
 const contacts = contactsData as ContactsContent;
 const mainPhone = contacts.phones[0];
+const mobilePhone = contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[1];
 const whatsappDigits = contacts.whatsapp.number.replace(/[^\d]/g, "");
 const whatsappDisplay = toPersianDigits(normalizePhoneForDisplay(whatsappDigits));
 const whatsappHref = whatsappDigits ? `https://wa.me/${whatsappDigits}` : "/contact#whatsapp";
@@ -20,11 +21,15 @@ const tehranOffice =
   contacts.addresses.find((address) => address.city.includes("تهران")) ?? contacts.addresses[0];
 const tehranMapEmbed =
   "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d393.5300070120382!2d51.426632933969195!3d35.68956174896446!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010b34ad6e33%3A0x7ef1268ba6eed0c7!2z2b7Yp9iz2KfamCDaqdin2YjZhw!5e0!3m2!1sen!2s!4v1772093528358!5m2!1sen!2s";
+const activeMessaging = contacts.messaging.filter((channel) => channel.status === "active");
+const pendingMessaging = contacts.messaging.filter(
+  (channel) => channel.status === "missing_identifier",
+);
 ---
 
 <BaseLayout
   title="تماس با شرکت"
-  description="اطلاعات تماس دفاتر شرکت ایمن صنعت باتاب، مسیرهای دسترسی و نقشه دفتر مرکزی."
+  description="اطلاعات تماس دفتر مرکزی شرکت ایمن صنعت باتاب، شماره‌های تماس، مسیرهای ارتباطی و نقشه دسترسی."
   canonicalPath="/contact"
 >
   <section class="section-block">
@@ -76,17 +81,27 @@ const tehranMapEmbed =
           >
             {contacts.workingHours}
           </p>
-          <a
-            href={`tel:${mainPhone.tel}`}
-            class="mt-4 inline-flex rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
-            aria-label="تماس فوری"
-          >
-            تماس فوری
-          </a>
+          <div class="mt-5 rounded-xl border border-brand-border bg-slate-50 p-4">
+            <p class="text-sm font-semibold text-brand-primary">تماس فوری</p>
+            <div class="mt-3 grid gap-2 sm:grid-cols-2">
+              <a
+                href={`tel:${mainPhone.tel}`}
+                class="inline-flex items-center justify-center gap-2 rounded-full bg-brand-accent px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+              >
+                دفتر: <span class="num-text">{toPersianDigits(mainPhone.number)}</span>
+              </a>
+              <a
+                href={`tel:${mobilePhone.tel}`}
+                class="inline-flex items-center justify-center gap-2 rounded-full border border-brand-accent bg-white px-4 py-2.5 text-sm font-semibold text-brand-accent hover:bg-brand-accent hover:text-white"
+              >
+                همراه: <span class="num-text">{toPersianDigits(mobilePhone.number)}</span>
+              </a>
+            </div>
+          </div>
         </article>
 
         <article class="card p-6">
-          <h2 class="text-xl font-bold text-brand-primary">آدرس دفاتر</h2>
+          <h2 class="text-xl font-bold text-brand-primary">آدرس دفتر</h2>
           <ul class="mt-4 space-y-4 text-sm leading-7 text-brand-text">
             {
               contacts.addresses.map((address) => (
@@ -124,6 +139,42 @@ const tehranMapEmbed =
 
       <div class="mt-8">
         <WhatsAppForm whatsapp={contacts.whatsapp} />
+      </div>
+
+      <div class="mt-6">
+        <article class="card p-6">
+          <h2 class="text-xl font-bold text-brand-primary">مسیرهای پیام‌رسان</h2>
+          <p class="mt-3 text-sm leading-7 text-brand-muted">
+            از طریق پیام‌رسان‌های زیر نیز می‌توانید با شرکت در ارتباط باشید.
+          </p>
+          <ul class="mt-4 flex flex-wrap gap-3">
+            {
+              activeMessaging.map((channel) => (
+                <li>
+                  <a
+                    href={channel.url}
+                    target={channel.url.startsWith("https://wa.me/") ? "_blank" : undefined}
+                    rel={channel.url.startsWith("https://wa.me/") ? "noopener noreferrer" : undefined}
+                    class="inline-flex items-center gap-2 rounded-full bg-brand-accent px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-primary"
+                  >
+                    {channel.label}
+                    {channel.number && (
+                      <span class="num-text text-xs text-white/85">{toPersianDigits(channel.number)}</span>
+                    )}
+                  </a>
+                </li>
+              ))
+            }
+            {
+              pendingMessaging.map((channel) => (
+                <li class="inline-flex items-center gap-2 rounded-full border border-brand-border bg-slate-50 px-5 py-2.5 text-sm font-semibold text-brand-muted">
+                  {channel.label}
+                  <span class="text-xs font-normal">{channel.note}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
       </div>
     </div>
   </section>

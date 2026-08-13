@@ -46,7 +46,7 @@ const visualHighlights = [
 ---
 
 <BaseLayout
-  title="شرکت ایمن صنعت باتاب ;خدمات مشاوره& آموزش& ایمنی و بازرسی فنی"
+  title="شرکت ایمن صنعت باتاب | خدمات مشاوره، آموزش، ایمنی و بازرسی فنی"
   description="شرکت ایمن صنعت باتاب؛ ارائه‌دهنده خدمات مشاوره، آموزش، ایمنی و بازرسی فنی به صنایع، سازمان‌ها و پروژه‌های عمرانی."
   canonicalPath="/"
 >
@@ -117,13 +117,13 @@ const visualHighlights = [
     <div class="container-wrap">
       <SectionTitle
         title="رزومه پروژه‌های شرکت"
-        subtitle="نمونه‌ای از پروژه‌های انجام‌شده و در حال انجام شرکت در حوزه استقرار HSE و بازرسی فنی."
+        subtitle="نمونه‌ای از پروژه‌های شرکت در حوزه بازرسی فنی، ارزیابی ایمنی و خدمات تخصصی صنعتی."
       />
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {
           featuredProjects.map((project, index) => (
             <div class="animate-fade-up" style={`animation-delay: ${index * 80}ms`}>
-              <ProjectCard project={project} />
+              <ProjectCard project={project} index={index} />
             </div>
           ))
         }
@@ -141,18 +141,21 @@ const visualHighlights = [
 
   <section class="section-block">
     <div class="container-wrap grid gap-8 lg:grid-cols-2">
-      <div class="card hover-lift p-6">
+      <article class="card hover-lift p-6">
         <SectionTitle title="چشم‌انداز و ارزش‌های شرکت" subtitle={company.vision} />
-        <ul class="space-y-2 text-sm leading-7 text-brand-text">
+        <ul class="mt-4 space-y-2 text-sm leading-7 text-brand-text">
           {company.values.map((value) => <li>• {value}</li>)}
         </ul>
-      </div>
-      <div class="card hover-lift p-6">
-        <SectionTitle title="خط‌مشی و اهداف کلیدی" subtitle={company.policy} />
-        <ul class="space-y-2 text-sm leading-7 text-brand-text">
-          {company.objectives.slice(0, 5).map((item) => <li>• {item}</li>)}
-        </ul>
-      </div>
+      </article>
+      <article class="card hover-lift p-6">
+        <SectionTitle title="خط مشی شرکت" subtitle={company.policySummary} />
+        <a
+          href="/about#policy"
+          class="mt-4 inline-flex text-sm font-semibold text-brand-accent hover:text-brand-primary"
+        >
+          مشاهده خط مشی کامل شرکت
+        </a>
+      </article>
     </div>
   </section>
 
@@ -171,13 +174,19 @@ const visualHighlights = [
           <li>• دارای مجوز و پروانه کار آموزش بین‌المللی فنی‌حرفه‌ای</li>
           <li>• دارای مجوزهای فعال خدمات ارزیابی ایمنی و بازرسی فنی</li>
         </ul>
+        <a
+          href="/certifications"
+          class="mt-4 inline-flex text-sm font-semibold text-brand-accent hover:text-brand-primary"
+        >
+          مشاهده گواهی‌نامه‌ها و مجوزها
+        </a>
       </article>
       <article class="card overflow-hidden p-3">
         <img
-          src="/images/certificates/iso-certificates-page-20.jpg"
-          alt="گواهی‌نامه‌های سیستم مدیریتی و نمونه مدرک ISO شرکت ایمن صنعت باتاب"
-          width="544"
-          height="768"
+          src="/images/certificates/iso-45001-certificate.jpg"
+          alt="گواهینامه سیستم مدیریت ایمنی و بهداشت شغلی ISO 45001:2018 شرکت ایمن صنعت باتاب"
+          width="975"
+          height="1300"
           loading="lazy"
           class="h-full w-full rounded-xl object-cover"
         />
