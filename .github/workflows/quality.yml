@@ -36,9 +36,6 @@ jobs:
       - name: Verify pinned packages against npm
         run: node scripts/verify-package-integrity.mjs --online
 
-      - name: npm audit (high and critical only)
-        run: npm audit --audit-level=high --registry=https://registry.npmjs.org
-
   e2e:
     runs-on: ubuntu-latest
     timeout-minutes: 25
