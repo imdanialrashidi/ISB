@@ -51,13 +51,25 @@ const requireStringArray = (file, object, key) => {
   }
 };
 
-const imageExists = (file, value, root) => {
+const imageExists = (file, value, roots) => {
   if (typeof value !== "string" || !value.startsWith("/images/")) {
     fail(file, `image path must start with "/images/", got: ${value}`);
     return;
   }
-  const imagePath = path.join(root, ...value.replace(/^\//, "").split("/"));
-  if (!fs.existsSync(imagePath)) fail(file, `image not found under public/: ${value}`);
+  const relative = value.replace(/^\//, "").split("/");
+  const exists = roots.some((root) => {
+    try {
+      return fs.statSync(path.join(root, ...relative)).isFile();
+    } catch {
+      return false;
+    }
+  });
+  if (!exists) {
+    fail(
+      file,
+      `image not found under public/ or src/assets: ${value} (raster sources live in src/assets/images, SVG placeholders in public/images)`,
+    );
+  }
 };
 
 const validateContacts = (contacts) => {
@@ -175,7 +187,7 @@ const validateCompany = (company) => {
   requireStringArray(file, company.organizationalChart || {}, "units");
 };
 
-const validateServices = (services, publicRoot) => {
+const validateServices = (services, imageRoots) => {
   if (!services) return;
   const file = "services.json";
   if (!isNonEmptyArray(services)) {
@@ -192,7 +204,7 @@ const validateServices = (services, publicRoot) => {
         fail(file, `services[${index}].${key} must be an array of strings`);
       }
     }
-    imageExists(file, service?.image, publicRoot);
+    imageExists(file, service?.image, imageRoots);
   });
 };
 
@@ -213,7 +225,7 @@ const validateProjects = (projects) => {
   });
 };
 
-const validateCertifications = (certifications, publicRoot) => {
+const validateCertifications = (certifications, imageRoots) => {
   if (!certifications) return;
   const file = "certifications.json";
   requireString(file, certifications, "qualificationNote");
@@ -247,14 +259,16 @@ const validateCertifications = (certifications, publicRoot) => {
         requireString(file, document, field);
       }
       if (!Number.isInteger(document?.id)) fail(file, `documents[${index}].id must be an integer`);
-      imageExists(file, document?.image, publicRoot);
+      imageExists(file, document?.image, imageRoots);
     });
   }
 };
 
-export const validateContent = (contentRootArg, publicRootArg) => {
+export const validateContent = (contentRootArg, publicRootArg, assetsRootArg) => {
   const root = path.resolve(contentRootArg || contentDir);
   const publicRoot = path.resolve(publicRootArg || publicDir);
+  const assetsRoot = path.resolve(assetsRootArg || path.join(root, "../assets"));
+  const imageRoots = [publicRoot, assetsRoot];
   errors.length = 0;
   checks.files = 0;
   const files = {
@@ -268,8 +282,8 @@ export const validateContent = (contentRootArg, publicRootArg) => {
     const data = readJsonAt(root, file);
     checks.files += 1;
     if (data === null) continue;
-    if (file === "services.json") validateServices(data, publicRoot);
-    else if (file === "certifications.json") validateCertifications(data, publicRoot);
+    if (file === "services.json") validateServices(data, imageRoots);
+    else if (file === "certifications.json") validateCertifications(data, imageRoots);
     else validate(data);
   }
   return { ok: errors.length === 0, errors: [...errors], files: checks.files };

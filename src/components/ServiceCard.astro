@@ -1,4 +1,6 @@
 ---
+import { Image } from "astro:assets";
+import { cardImageOptions, resolveRaster } from "../lib/media";
 import type { ServiceItem } from "../lib/types";
 
 interface Props {
@@ -7,19 +9,35 @@ interface Props {
 
 const { service } = Astro.props as Props;
 const imageSrc = service.image || "/images/placeholders/service-safety.svg";
+const raster = resolveRaster(service.image);
+const imageClass =
+  "h-36 w-full object-cover transition duration-500 group-hover:scale-105";
 ---
 
 <article class="card hover-lift group h-full overflow-hidden">
   <div class="relative overflow-hidden">
-    <img
-      src={imageSrc}
-      alt=""
-      width="640"
-      height="360"
-      loading="lazy"
-      decoding="async"
-      class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
-    />
+    {
+      raster ? (
+        <Image
+          src={raster}
+          {...cardImageOptions}
+          loading="lazy"
+          decoding="async"
+          alt=""
+          class={imageClass}
+        />
+      ) : (
+        <img
+          src={imageSrc}
+          width="640"
+          height="360"
+          loading="lazy"
+          decoding="async"
+          alt=""
+          class={imageClass}
+        />
+      )
+    }
     <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-brand-primary/25 to-transparent"></div>
   </div>
   <div class="p-5">

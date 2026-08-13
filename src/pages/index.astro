@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Badge from "../components/Badge.astro";
 import ContactCTA from "../components/ContactCTA.astro";
 import Hero from "../components/Hero.astro";
@@ -11,6 +12,7 @@ import projectsData from "../content/projects.json";
 import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
+import { cardImageOptions, resolveRaster } from "../lib/media";
 import { waMeHref } from "../lib/whatsapp";
 import type { CompanyContent, ContactsContent, ProjectItem, ServiceItem } from "../lib/types";
 
@@ -51,6 +53,8 @@ const visualHighlights = [
     alt: "تصویر معرفی شرکت ایمن صنعت باتاب",
   },
 ];
+const highlightImages = visualHighlights.map((item) => resolveRaster(item.image));
+const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate.jpg");
 ---
 
 <BaseLayout
@@ -71,25 +75,39 @@ const visualHighlights = [
     <div class="container-wrap">
       <div class="grid gap-4 md:grid-cols-3">
         {
-          visualHighlights.map((item, index) => (
-            <article
-              class="card hover-lift animate-fade-up group overflow-hidden"
-              style={`animation-delay: ${index * 90}ms`}
-            >
-              <img
-                src={item.image}
-                alt={item.alt}
-                width="640"
-                height="360"
-                loading="lazy"
-                class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
-              />
-              <div class="p-4">
-                <h2 class="text-base font-bold text-brand-primary">{item.title}</h2>
-                <p class="mt-2 text-sm text-brand-muted">{item.caption}</p>
-              </div>
-            </article>
-          ))
+          visualHighlights.map((item, index) => {
+            const raster = highlightImages[index];
+            return (
+              <article
+                class="card hover-lift animate-fade-up group overflow-hidden"
+                style={`animation-delay: ${index * 90}ms`}
+              >
+                {raster ? (
+                  <Image
+                    src={raster}
+                    {...cardImageOptions}
+                    loading="lazy"
+                    decoding="async"
+                    alt={item.alt}
+                    class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <img
+                    src={item.image}
+                    alt={item.alt}
+                    width="640"
+                    height="360"
+                    loading="lazy"
+                    class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                )}
+                <div class="p-4">
+                  <h2 class="text-base font-bold text-brand-primary">{item.title}</h2>
+                  <p class="mt-2 text-sm text-brand-muted">{item.caption}</p>
+                </div>
+              </article>
+            );
+          })
         }
       </div>
     </div>
@@ -190,14 +208,32 @@ const visualHighlights = [
         </a>
       </article>
       <article class="card overflow-hidden p-3">
-        <img
-          src="/images/certificates/iso-45001-certificate.jpg"
-          alt="گواهینامه سیستم مدیریت ایمنی و بهداشت شغلی ISO 45001:2018 شرکت ایمن صنعت باتاب"
-          width="975"
-          height="1300"
-          loading="lazy"
-          class="h-full w-full rounded-xl object-cover"
-        />
+        {
+          isoCertificate ? (
+            <Image
+              src={isoCertificate}
+              widths={[480, 640, 975]}
+              sizes="(min-width: 768px) 502px, 100vw"
+              width={975}
+              height={1300}
+              format="webp"
+              quality={90}
+              loading="lazy"
+              decoding="async"
+              alt="گواهینامه سیستم مدیریت ایمنی و بهداشت شغلی ISO 45001:2018 شرکت ایمن صنعت باتاب"
+              class="h-full w-full rounded-xl object-cover"
+            />
+          ) : (
+            <img
+              src="/images/certificates/iso-45001-certificate.jpg"
+              alt="گواهینامه سیستم مدیریت ایمنی و بهداشت شغلی ISO 45001:2018 شرکت ایمن صنعت باتاب"
+              width="975"
+              height="1300"
+              loading="lazy"
+              class="h-full w-full rounded-xl object-cover"
+            />
+          )
+        }
       </article>
     </div>
   </section>

@@ -1,8 +1,12 @@
 ---
+import { Image } from "astro:assets";
 import contactsData from "../content/contacts.json";
+import { logoImageOptions, resolveRaster } from "../lib/media";
 import { toPersianDigits } from "../lib/locale";
 import { waMeHref } from "../lib/whatsapp";
 import type { ContactsContent } from "../lib/types";
+
+const logo = resolveRaster("/images/brand/isbatab-logo.png");
 
 const contacts = contactsData as ContactsContent;
 // The primary call-to-action number: the company mobile (0912...) when present.
@@ -36,15 +40,28 @@ const navItems = [
         class="inline-flex items-center"
         aria-label="صفحه اصلی ایمن صنعت باتاب"
       >
-        <img
-          src="/images/brand/isbatab-logo.png"
-          alt="لوگوی ایمن صنعت باتاب"
-          width="924"
-          height="282"
-          loading="eager"
-          decoding="async"
-          class="h-10 w-auto sm:h-11"
-        />
+        {
+          logo ? (
+            <Image
+              src={logo}
+              {...logoImageOptions}
+              loading="eager"
+              decoding="async"
+              alt="لوگوی ایمن صنعت باتاب"
+              class="h-10 w-auto sm:h-11"
+            />
+          ) : (
+            <img
+              src="/images/brand/isbatab-logo.png"
+              alt="لوگوی ایمن صنعت باتاب"
+              width="924"
+              height="282"
+              loading="eager"
+              decoding="async"
+              class="h-10 w-auto sm:h-11"
+            />
+          )
+        }
       </a>
 
       <nav

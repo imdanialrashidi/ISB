@@ -1,14 +1,28 @@
 ---
+import { Image } from "astro:assets";
 import Badge from "../components/Badge.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 import certificationsData from "../content/certifications.json";
 import companyData from "../content/company.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
+import { resolveRaster } from "../lib/media";
 import type { CertificatesContent, CompanyContent } from "../lib/types";
 
 const certificates = certificationsData as CertificatesContent;
 const company = companyData as CompanyContent;
+const certificateImages = new Map(
+  certificates.documents.map((doc) => [doc.id, resolveRaster(doc.image)]),
+);
+// Fallback intrinsic dimensions per certificate document (used only when the
+// raster source cannot be resolved, e.g. a future document whose image lives
+// directly under public/ instead of src/assets).
+const certificateImageDims: Record<string, [number, number]> = {
+  "training-license.jpg": [1375, 900],
+  "iso-45001-certificate.jpg": [975, 1300],
+};
+const fallbackDims = (imagePath: string): [number, number] =>
+  certificateImageDims[imagePath.split("/").pop() ?? ""] ?? [975, 1300];
 ---
 
 <BaseLayout
@@ -25,24 +39,44 @@ const company = companyData as CompanyContent;
 
       <div class="grid gap-4 md:grid-cols-2">
         {
-          certificates.documents.map((doc) => (
-            <article class="card overflow-hidden p-3">
-              <img
-                src={doc.image}
-                alt={doc.alt}
-                width="975"
-                height="1300"
-                loading="lazy"
-                decoding="async"
-                class="h-auto w-full rounded-xl border border-brand-border bg-white object-contain"
-              />
-              <div class="p-4">
-                <h2 class="text-base font-bold text-brand-primary">{doc.title}</h2>
-                <p class="mt-1 text-sm text-brand-muted">{doc.issuer}</p>
-                <p class="mt-1 text-xs text-brand-muted">وضعیت: {doc.validity}</p>
-              </div>
-            </article>
-          ))
+          certificates.documents.map((doc) => {
+            const raster = certificateImages.get(doc.id);
+            const isLandscape = Boolean(raster && raster.width > raster.height);
+            return (
+              <article class="card overflow-hidden p-3">
+                {raster ? (
+                  <Image
+                    src={raster}
+                    widths={isLandscape ? [480, 640, 960] : [480, 640, 975]}
+                    sizes="(min-width: 768px) 510px, 100vw"
+                    width={raster.width}
+                    height={raster.height}
+                    format="webp"
+                    quality={90}
+                    loading="lazy"
+                    decoding="async"
+                    alt={doc.alt}
+                    class="h-auto w-full rounded-xl border border-brand-border bg-white object-contain"
+                  />
+                ) : (
+                  <img
+                    src={doc.image}
+                    alt={doc.alt}
+                    width={fallbackDims(doc.image)[0]}
+                    height={fallbackDims(doc.image)[1]}
+                    loading="lazy"
+                    decoding="async"
+                    class="h-auto w-full rounded-xl border border-brand-border bg-white object-contain"
+                  />
+                )}
+                <div class="p-4">
+                  <h2 class="text-base font-bold text-brand-primary">{doc.title}</h2>
+                  <p class="mt-1 text-sm text-brand-muted">{doc.issuer}</p>
+                  <p class="mt-1 text-xs text-brand-muted">وضعیت: {doc.validity}</p>
+                </div>
+              </article>
+            );
+          })
         }
       </div>
     </div>

@@ -19,6 +19,9 @@ const makeSandbox = () => {
   fs.cpSync(path.join(repositoryRoot, "src", "content"), path.join(sandbox, "content"), {
     recursive: true,
   });
+  fs.cpSync(path.join(repositoryRoot, "src", "assets"), path.join(sandbox, "assets"), {
+    recursive: true,
+  });
   fs.cpSync(path.join(repositoryRoot, "public"), path.join(sandbox, "public"), {
     recursive: true,
   });
@@ -65,7 +68,7 @@ test("validator rejects an active messenger channel without a url", () => {
   }
 });
 
-test("validator rejects a service image that does not exist under public/", () => {
+test("validator rejects a service image that exists in neither public/ nor src/assets", () => {
   const sandbox = makeSandbox();
   try {
     const servicesPath = path.join(sandbox, "content", "services.json");
@@ -75,7 +78,10 @@ test("validator rejects a service image that does not exist under public/", () =
 
     const result = runValidator(path.join(sandbox, "content"), path.join(sandbox, "public"));
     assert.equal(result.status, 1);
-    assert.match(result.stderr, /image not found under public\/: \/images\/services\/does-not-exist\.jpg/);
+    assert.match(
+      result.stderr,
+      /image not found under public\/ or src\/assets: \/images\/services\/does-not-exist\.jpg/,
+    );
   } finally {
     fs.rmSync(sandbox, { recursive: true, force: true });
   }

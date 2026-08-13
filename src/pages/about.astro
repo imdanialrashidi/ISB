@@ -1,12 +1,15 @@
 ---
+import { Image } from "astro:assets";
 import Badge from "../components/Badge.astro";
 import OrganizationChart from "../components/OrganizationChart.astro";
 import companyData from "../content/company.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { toPersianDigits } from "../lib/locale";
+import { resolveRaster } from "../lib/media";
 import type { CompanyContent } from "../lib/types";
 
 const company = companyData as CompanyContent;
+const aboutCover = resolveRaster("/images/company/about-cover.jpg");
 ---
 
 <BaseLayout
@@ -24,15 +27,33 @@ const company = companyData as CompanyContent;
       </p>
       <div class="mt-8 grid items-start gap-4 md:grid-cols-2">
         <article class="card overflow-hidden p-3">
-          <img
-            src="/images/company/about-cover.jpg"
-            alt="تصویر معرفی شرکت ایمن صنعت باتاب"
-            width="1064"
-            height="890"
-            loading="lazy"
-            decoding="async"
-            class="h-full w-full rounded-xl object-cover"
-          />
+          {
+            aboutCover ? (
+              <Image
+                src={aboutCover}
+                widths={[480, 640, 960, 1064]}
+                sizes="(min-width: 768px) 510px, 100vw"
+                width={1064}
+                height={890}
+                format="webp"
+                quality={82}
+                loading="lazy"
+                decoding="async"
+                alt="تصویر معرفی شرکت ایمن صنعت باتاب"
+                class="aspect-[1064/890] h-full w-full rounded-xl object-cover"
+              />
+            ) : (
+              <img
+                src="/images/company/about-cover.jpg"
+                alt="تصویر معرفی شرکت ایمن صنعت باتاب"
+                width="1064"
+                height="890"
+                loading="lazy"
+                decoding="async"
+                class="aspect-[1064/890] h-full w-full rounded-xl object-cover"
+              />
+            )
+          }
         </article>
         <div class="grid gap-4">
           <article class="card p-5">

@@ -70,14 +70,14 @@ Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; wo
 - Grid/content measure: max content width 72rem (6xl); card grids `md:grid-cols-2/3`, `lg:grid-cols-2`.
 - Radius logic: cards `rounded-2xl`; pills/CTAs `rounded-full`; inputs `rounded-xl`.
 - Border/shadow logic: `border-brand-border` on cards; shadow token `shadow-soft` (`0 10px 30px -18px rgba(12,23,40,0.42)`); hover lift `translateY(-6px)` + deeper shadow.
-- Icon/media treatment: inline SVG (stroke `currentColor`) for menu icons; real photography for service/certificate/company media (`public/images/services/*`, `certificates/*`, `company/*`); brand logo `public/images/brand/isbatab-logo.png` (owned by the company — license UNKNOWN, treat as company asset).
+- Icon/media treatment: inline SVG (stroke `currentColor`) for menu icons; real photography for service/certificate/company media (raster sources in `src/assets/images/services/*`, `certificates/*`, `company/*`, served as responsive build-time WebP via `astro:assets`); brand logo `src/assets/images/brand/isbatab-logo.png` (owned by the company — license UNKNOWN, treat as company asset).
 
 ### Media and art direction
 
 - Photography / illustration / data-visualization language: real photography (service cards, certificates, company/about images) over the navy/teal canvas; three project-made SVG placeholders remain for decorative/fallback use (`hero-pattern.svg`, `og-cover.svg`, `service-safety.svg`).
 - Icon family and stroke/fill rules: hand-written inline SVGs, `stroke="currentColor"`, 1.8 stroke, 24×24 viewBox.
-- Asset source, ownership/license, and attribution: project-made SVGs; logo and certificate JPGs (`public/images/certificates/iso-45001-certificate.jpg`, `training-license.jpg`) are company documents — no license records (UNKNOWN).
-- Responsive art direction and meaningful alt-text rules: images get `width`/`height`, `loading="lazy"` (hero-adjacent eager), `alt=""` for decorative, descriptive Persian alt for meaningful images.
+- Asset source, ownership/license, and attribution: project-made SVGs (kept in `public/images/placeholders/`); logo and certificate JPGs (raster sources in `src/assets/images/certificates/iso-45001-certificate.jpg`, `training-license.jpg`) are company documents — no license records (UNKNOWN).
+- Responsive art direction and meaningful alt-text rules: raster images are delivered as responsive WebP variants (`srcset`/`sizes`; per-asset widths chosen for the rendered slot, mobile picks smaller files than desktop); images get `width`/`height` (+ `aspect-ratio` where the layout derives height from the image), `loading="lazy"` (hero-adjacent eager), `alt=""` for decorative, descriptive Persian alt for meaningful images.
 - Fallback when the preferred asset cannot load: `alt` text + width/height boxes; no JS image fallbacks.
 
 ## Composition and responsiveness

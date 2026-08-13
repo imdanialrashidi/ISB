@@ -130,6 +130,7 @@ Applied optimizations include:
 - Inline stylesheet strategy in Astro build to reduce render-blocking CSS request chains.
 - Cloudflare cache headers for hashed assets and fonts.
 - Width/height and lazy-loading applied to non-critical images for low CLS.
+- All raster content images are optimized at build time to responsive WebP variants (`srcset`/`sizes`) sized for their rendered slot, so mobile browsers download smaller files than desktop; certificates/org-chart use conservative quality for text clarity. SVG placeholders and favicons remain in their original formats.
 
 ### Running Lighthouse
 
