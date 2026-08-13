@@ -22,3 +22,22 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Pi local runtime
+.pi/npm/
+.pi/git/
+.pi/sessions/
+.pi/cache/
+.pi/auth.json
+.pi/models.json
+.pi/trust.json
+.pi/mcp.json
+.pi/mcp-oauth/
+.pi/mcp-traces/
+
+# Workflow/browser artifacts
+.artifacts/
+playwright-report/
+test-results/
+coverage/
+*.log

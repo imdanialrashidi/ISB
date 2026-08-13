@@ -10,6 +10,9 @@
     "check": "astro check",
     "lint": "eslint .",
     "format": "prettier --check .",
+    "verify:fast": "npm run lint && npm run check",
+    "verify:feature": "npm run verify:fast && npm run build && npm run test:e2e",
+    "test:e2e": "playwright test",
     "extract-content": "node ./scripts/extract-docx.mjs"
   },
   "dependencies": {
@@ -22,6 +25,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.6",
+    "@playwright/test": "^1.62.1",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
     "astro-eslint-parser": "^1.3.0",
