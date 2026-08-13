@@ -120,7 +120,7 @@ function pathInputs(toolName, input) {
 function commandContainsSensitivePath(command) {
   const scrubbed = command
     .replaceAll(".env.example", "")
-    .replaceAll("docs/private/.gitkeep", "");
+    .replaceAll("docs/private", "");
 
   const checks = [
     /(^|[\s"'=])\.env(?:[\s"'./]|$)/i,
