@@ -6,6 +6,12 @@ cd "$ROOT_DIR"
 
 bash scripts/pi-doctor.sh --ci
 
+# CI checks out a clean tree without node_modules. Ensure project dependencies
+# exist before running package scripts; local runs with an existing install stay fast.
+if [[ -f package.json && ! -d node_modules ]]; then
+  bash scripts/ci-install.sh
+fi
+
 if [[ -x scripts/project-verify.sh ]]; then
   exec scripts/project-verify.sh
 fi
