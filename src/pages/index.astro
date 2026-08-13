@@ -30,17 +30,20 @@ const visualHighlights = [
   {
     title: "خدمات دارای مجوز رسمی",
     caption: "ارائه خدمات ارزیابی ایمنی و بازرسی فنی مطابق الزامات قانونی",
-    image: "/images/placeholders/service-safety.svg",
+    image: "/images/services/crane-lifting.jpg",
+    alt: "بازرسی فنی و ارزیابی ایمنی جرثقیل‌ها و ماشین‌آلات صنعتی",
   },
   {
     title: "استقرار سیستم مدیریت HSE",
     caption: "همراهی کامل در تدوین، بازنگری و پیاده‌سازی مستندات مدیریتی",
-    image: "/images/placeholders/service-docs.svg",
+    image: "/images/services/hse-management.jpg",
+    alt: "مشاوره و استقرار سیستم‌های مدیریت HSE در محیط صنعتی",
   },
   {
     title: "تیم تخصصی و باتجربه",
     caption: "همکاری با متخصصان باسابقه در پروژه‌های بزرگ صنعتی و عمرانی",
-    image: "/images/placeholders/service-consulting.svg",
+    image: "/images/company/about-cover.jpg",
+    alt: "تصویر معرفی شرکت ایمن صنعت باتاب",
   },
 ];
 ---
@@ -70,7 +73,7 @@ const visualHighlights = [
             >
               <img
                 src={item.image}
-                alt=""
+                alt={item.alt}
                 width="640"
                 height="360"
                 loading="lazy"
