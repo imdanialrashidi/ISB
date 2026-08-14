@@ -4,7 +4,7 @@
 // - video, trace, and automatic screenshots disabled;
 // - dedicated port 4325 so a foreign app on Astro's default 4321 can never be
 //   picked up; reuses an ISBATAB server already running on 4325, otherwise builds
-//   and starts `astro preview` (production-accurate static output);
+//   and starts `wrangler dev` (production-accurate static asset serving);
 // - the spec's beforeAll probe verifies the server actually serves the ISBATAB
 //   site, because Playwright's readiness check only tests HTTP 2xx;
 // - deterministic committed specs live in tests/e2e; interactive exploration uses

@@ -12,7 +12,7 @@ const mainPhone = contacts.phones[0];
 const mobilePhone = contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[1];
 const whatsappDigits = contacts.whatsapp.number.replace(/[^\d]/g, "");
 const whatsappActive = contacts.whatsapp.status === "active";
-const whatsappHref = whatsappActive && whatsappDigits ? waMeHref(whatsappDigits) : "/contact#whatsapp";
+const whatsappHref = whatsappActive && whatsappDigits ? waMeHref(whatsappDigits) : "/contact/#whatsapp";
 const whatsappDisplay = toPersianDigits(normalizePhoneForDisplay(whatsappDigits));
 const websiteLabel = compactWebsiteLabel(contacts.website);
 const mapOffice =
@@ -24,15 +24,16 @@ const pendingMessaging = contacts.messaging.filter(
 ---
 
 <BaseLayout
-  title="تماس با شرکت"
-  description="اطلاعات تماس دفتر مرکزی شرکت ایمن صنعت باتاب، شماره‌های تماس، مسیرهای ارتباطی و نقشه دسترسی."
-  canonicalPath="/contact"
+  title="تماس با ایمن صنعت باتاب | مشاوره HSE و همکاری در پروژه‌ها"
+  description="اطلاعات تماس ایمن صنعت باتاب: تلفن دفتر تهران، همراه، واتساپ، ایمیل و آدرس دفتر مرکزی با نقشه دسترسی."
+  canonicalPath="/contact/"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="تماس با ایمن صنعت باتاب"
         subtitle="برای هماهنگی خدمات، دریافت مشاوره یا استعلام همکاری با واحد پشتیبانی شرکت در ارتباط باشید."
+        level="h1"
       />
 
       <div class="grid gap-6 lg:grid-cols-2">

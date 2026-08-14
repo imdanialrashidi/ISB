@@ -9,22 +9,24 @@ const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort(
 ---
 
 <BaseLayout
-  title="بلاگ"
-  description="مطالب تخصصی ایمنی، HSE، مدیریت ریسک و تجربه پروژه‌های صنعتی."
-  canonicalPath="/blog"
+  title="بلاگ ایمن صنعت باتاب | مقالات ایمنی و HSE"
+  description="مقالات تخصصی ایمنی صنعتی، HSE و مدیریت ریسک توسط ایمن صنعت باتاب."
+  canonicalPath="/blog/"
+  noIndex
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="بلاگ تخصصی ایمنی صنعتی"
-        subtitle="در نسخه‌های بعدی، محتوای تخصصی سئو محور برای صنایع نفت، گاز، پتروشیمی و معادن اضافه می‌شود."
+        subtitle="در نسخه‌های بعدی، محتوای تخصصی برای صنایع نفت، گاز، پتروشیمی و معادن در این بخش منتشر می‌شود."
+        level="h1"
       />
       <div class="grid gap-4">
         {
           posts.map((post) => (
             <article class="card p-6">
               <a
-                href={`/blog/${post.slug}`}
+                href={`/blog/${post.slug}/`}
                 class="text-lg font-bold text-brand-primary hover:text-brand-accent"
               >
                 {post.data.title}

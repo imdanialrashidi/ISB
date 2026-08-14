@@ -86,6 +86,17 @@ export interface ServiceItem {
   highlights: string[];
   notes: string;
   image: string;
+  /** When true, the service has a dedicated detail page at /services/<id>/. */
+  detailPage?: boolean;
+  /** Opening copy for the detail page: scope, methods and audience. */
+  detailIntro?: string;
+  /** Real project ids (projects.json) that support this service. */
+  relatedProjectIds?: string[];
+  /** Referenced certificates from certifications.json (ids). */
+  qualificationCertificateIds?: number[];
+  managementCertificateIds?: number[];
+  documentIds?: number[];
+  licenseIds?: number[];
 }
 
 export interface ProjectItem {

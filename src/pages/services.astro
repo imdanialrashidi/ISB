@@ -1,11 +1,20 @@
 ---
+import ContactCTA from "../components/ContactCTA.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 import ServiceCard from "../components/ServiceCard.astro";
+import contactsData from "../content/contacts.json";
 import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import type { ServiceItem } from "../lib/types";
+import { toPersianDigits } from "../lib/locale";
+import { waMeHref } from "../lib/whatsapp";
+import type { ContactsContent, ServiceItem } from "../lib/types";
 
 const services = servicesData as ServiceItem[];
+const contacts = contactsData as ContactsContent;
+const whatsappHref =
+  contacts.whatsapp.status === "active" && contacts.whatsapp.number
+    ? waMeHref(contacts.whatsapp.number)
+    : "/contact/#whatsapp";
 
 const grouped = Object.entries(
   services.reduce<Record<string, ServiceItem[]>>((acc, item) => {
@@ -19,16 +28,23 @@ const grouped = Object.entries(
 ---
 
 <BaseLayout
-  title="خدمات شرکت"
-  description="خدمات شرکت ایمن صنعت باتاب شامل ارزیابی ایمنی و بازرسی فنی، آموزش، مشاوره HSE، سیستم‌های حریق و خدمات تخصصی پروژه."
-  canonicalPath="/services"
+  title="خدمات ایمن صنعت باتاب | مشاوره HSE، آموزش و بازرسی فنی"
+  description="فهرست خدمات ایمن صنعت باتاب: بازرسی فنی جرثقیل و لیفتراک، HAZOP/HAZID، ضخامت‌سنجی مخازن، سیستم‌های اعلام و اطفا حریق، ارت و صاعقه‌گیر، آموزش و مشاوره HSE."
+  canonicalPath="/services/"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="خدمات شرکت ایمن صنعت باتاب"
         subtitle="فهرست خدمات بر اساس مستندات رسمی شرکت ارائه شده و شامل خدمات دارای مجوز، صدور گواهینامه و تاییدیه و پشتیبانی اجرایی است."
+        level="h1"
       />
+      <p class="mb-8 max-w-4xl text-sm leading-8 text-brand-text sm:text-base">
+        ایمن صنعت باتاب خدمات تخصصی HSE و بازرسی فنی را با مجوز فعالیت از وزارت تعاون، کار و
+        رفاه اجتماعی ارائه می‌دهد؛ از ارزیابی ایمنی جرثقیل، لیفتراک و ماشین‌آلات و ضخامت‌سنجی
+        مخازن تحت فشار تا HAZOP و HAZID، سیستم‌های اعلام و اطفا حریق، ارت و صاعقه‌گیر، آموزش و
+        مشاوره استقرار سیستم‌های مدیریت ایمنی، بهداشت و محیط زیست.
+      </p>
       {
         grouped.map((group) => (
           <section class="mt-8">
@@ -41,4 +57,18 @@ const grouped = Object.entries(
       }
     </div>
   </section>
+
+  <div class="container-wrap">
+    <p class="mb-4 text-sm leading-7 text-brand-text">
+      برای دریافت جزئیات هر خدمت، شیوه اجرا یا استعلام مجوزها با تیم پشتیبانی در ارتباط باشید؛
+      خدمات با صدور گواهینامه و تاییدیه فنی ارائه می‌شوند.
+    </p>
+    <ContactCTA
+      title="برای استعلام خدمات و مشاوره تخصصی تماس بگیرید"
+      description="جزئیات اجرا، تعرفه و هماهنگی بازدید برای هر یک از خدمات از طریق تماس یا واتساپ پاسخ داده می‌شود."
+      phoneHref={`tel:${contacts.phones[0].tel}`}
+      phoneLabel={`تماس با دفتر (${toPersianDigits(contacts.phones[0].number)})`}
+      whatsappHref={whatsappHref}
+    />
+  </div>
 </BaseLayout>

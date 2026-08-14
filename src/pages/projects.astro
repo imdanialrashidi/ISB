@@ -2,26 +2,40 @@
 import ProjectCard from "../components/ProjectCard.astro";
 import SectionTitle from "../components/SectionTitle.astro";
 import projectsData from "../content/projects.json";
+import servicesData from "../content/services.json";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import type { ProjectItem } from "../lib/types";
+import type { ProjectItem, ServiceItem } from "../lib/types";
 
 const projects = projectsData as ProjectItem[];
+const services = servicesData as ServiceItem[];
+// Contextual project → service links (see index.astro for the same map).
+const projectsByService = new Map<string, ServiceItem>();
+for (const service of services) {
+  for (const projectId of service.relatedProjectIds ?? []) {
+    if (!projectsByService.has(projectId)) projectsByService.set(projectId, service);
+  }
+}
+const serviceHrefFor = (project: ProjectItem): string | undefined => {
+  const service = projectsByService.get(project.id);
+  return service ? `/services/${service.id}/` : undefined;
+};
 ---
 
 <BaseLayout
-  title="رزومه پروژه‌ها"
-  description="رزومه پروژه‌های شرکت ایمن صنعت باتاب بر اساس مستندات رسمی شرکت."
-  canonicalPath="/projects"
+  title="پروژه‌های ایمن صنعت باتاب | بازرسی فنی و ارزیابی ایمنی صنایع"
+  description="رزومه پروژه‌های ایمن صنعت باتاب در معادن، پتروشیمی‌ها، پالایشگاه‌ها و پروژه‌های عمرانی؛ بازرسی فنی، ارزیابی ایمنی، سیستم‌های حریق و آموزش."
+  canonicalPath="/projects/"
 >
   <section class="section-block">
     <div class="container-wrap">
       <SectionTitle
         title="رزومه پروژه‌های شرکت"
         subtitle="فهرست پروژه‌های ثبت‌شده شرکت در حوزه بازرسی فنی، ارزیابی ایمنی، سیستم‌های حریق و خدمات تخصصی صنعتی."
+        level="h1"
       />
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {
-          projects.map((project, index) => <ProjectCard project={project} index={index} />)
+          projects.map((project, index) => <ProjectCard project={project} index={index} serviceHref={serviceHrefFor(project)} />)
         }
       </div>
       <p class="mt-4 text-xs text-brand-muted">

@@ -16,16 +16,16 @@ const contactPhoneFa = toPersianDigits(contactPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
     ? waMeHref(contacts.whatsapp.number)
-    : "/contact#whatsapp";
+    : "/contact/#whatsapp";
 
 const navItems = [
   { href: "/", label: "خانه" },
-  { href: "/about", label: "درباره ما" },
-  { href: "/services", label: "خدمات" },
-  { href: "/certifications", label: "گواهینامه‌ها" },
-  { href: "/projects", label: "پروژه‌ها" },
-  { href: "/contact", label: "تماس با ما" },
-  { href: "/blog", label: "بلاگ" },
+  { href: "/about/", label: "درباره ما" },
+  { href: "/services/", label: "خدمات" },
+  { href: "/certifications/", label: "گواهینامه‌ها" },
+  { href: "/projects/", label: "پروژه‌ها" },
+  { href: "/contact/", label: "تماس با ما" },
+  { href: "/blog/", label: "بلاگ" },
 ];
 ---
 

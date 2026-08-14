@@ -187,13 +187,24 @@ const validateCompany = (company) => {
   requireStringArray(file, company.organizationalChart || {}, "units");
 };
 
-const validateServices = (services, imageRoots) => {
+const validateServices = (services, imageRoots, projects, certifications) => {
   if (!services) return;
   const file = "services.json";
   if (!isNonEmptyArray(services)) {
     fail(file, "services must be a non-empty array");
     return;
   }
+  const projectIds = new Set((projects ?? []).map((project) => project?.id));
+  const certIdSets = {
+    qualificationCertificateIds: new Set(
+      (certifications?.qualificationCertificates ?? []).map((item) => item?.id),
+    ),
+    managementCertificateIds: new Set(
+      (certifications?.managementCertificates ?? []).map((item) => item?.id),
+    ),
+    documentIds: new Set((certifications?.documents ?? []).map((item) => item?.id)),
+    licenseIds: new Set((certifications?.licenses ?? []).map((item) => item?.id)),
+  };
   services.forEach((service, index) => {
     for (const key of ["id", "title", "summary", "category", "image"]) {
       requireString(file, service, key);
@@ -205,6 +216,50 @@ const validateServices = (services, imageRoots) => {
       }
     }
     imageExists(file, service?.image, imageRoots);
+
+    // Detail-page contract: a dedicated page may only exist when the source
+    // content is substantial enough (intro copy + at least one referenced
+    // certificate/licence document as trust evidence) and all references are
+    // resolvable. This is the anti-thin-page guard for /services/<id>/.
+    if (service?.detailPage !== undefined && typeof service.detailPage !== "boolean") {
+      fail(file, `services[${index}].detailPage must be a boolean`);
+    }
+    if (service?.detailPage) {
+      if (!isNonEmptyString(service.detailIntro)) {
+        fail(file, `services[${index}].detailPage is true but "detailIntro" is missing`);
+      }
+      const referenced = [
+        ...(service.qualificationCertificateIds ?? []),
+        ...(service.managementCertificateIds ?? []),
+        ...(service.documentIds ?? []),
+        ...(service.licenseIds ?? []),
+      ];
+      if (referenced.length === 0) {
+        fail(file, `services[${index}] (${service.id}) declares a detail page but references no certificate/licence evidence`);
+      }
+      for (const [key, allowed] of Object.entries(certIdSets)) {
+        const ids = service[key] ?? [];
+        if (!Array.isArray(ids) || !ids.every((id) => Number.isInteger(id))) {
+          fail(file, `services[${index}].${key} must be an array of certificate ids`);
+          continue;
+        }
+        for (const id of ids) {
+          if (!allowed.has(id)) {
+            fail(file, `services[${index}].${key} references unknown id ${id}`);
+          }
+        }
+      }
+      const related = service.relatedProjectIds ?? [];
+      if (!Array.isArray(related) || !related.every((id) => typeof id === "string")) {
+        fail(file, `services[${index}].relatedProjectIds must be an array of project ids`);
+      } else {
+        for (const id of related) {
+          if (!projectIds.has(id)) {
+            fail(file, `services[${index}].relatedProjectIds references unknown project "${id}"`);
+          }
+        }
+      }
+    }
   });
 };
 
@@ -271,20 +326,24 @@ export const validateContent = (contentRootArg, publicRootArg, assetsRootArg) =>
   const imageRoots = [publicRoot, assetsRoot];
   errors.length = 0;
   checks.files = 0;
-  const files = {
-    "contacts.json": validateContacts,
-    "company.json": validateCompany,
-    "services.json": validateServices,
-    "projects.json": validateProjects,
-    "certifications.json": validateCertifications,
-  };
-  for (const [file, validate] of Object.entries(files)) {
+  const projects = readJsonAt(root, "projects.json");
+  const certifications = readJsonAt(root, "certifications.json");
+  const files = [
+    "contacts.json",
+    "company.json",
+    "services.json",
+    "projects.json",
+    "certifications.json",
+  ];
+  for (const file of files) {
     const data = readJsonAt(root, file);
     checks.files += 1;
     if (data === null) continue;
-    if (file === "services.json") validateServices(data, imageRoots);
+    if (file === "services.json") validateServices(data, imageRoots, projects, certifications);
     else if (file === "certifications.json") validateCertifications(data, imageRoots);
-    else validate(data);
+    else if (file === "contacts.json") validateContacts(data);
+    else if (file === "company.json") validateCompany(data);
+    else if (file === "projects.json") validateProjects(data);
   }
   return { ok: errors.length === 0, errors: [...errors], files: checks.files };
 };

@@ -144,6 +144,32 @@ Recommended checks:
 - Performance (focus on FCP/LCP/Speed Index)
 - Accessibility (contrast and accessible names)
 
+## Search (SEO) notes
+
+- **Canonical convention:** every indexable page identifies its preferred URL
+  with a trailing slash (`https://isbatab.ir/about/`). Canonical tags, internal
+  links, the XML sitemap, and Cloudflare's auto-trailing-slash asset behavior
+  all agree on this single form — keep new links on it.
+- **Index policy:** pages opt out of indexing with the `noIndex` prop on
+  `BaseLayout` (currently `/blog/` only — its post is demo content and the
+  post is committed as `draft: true`). The sitemap filter in
+  `astro.config.mjs` excludes the same paths; remove the filter entry and the
+  `noIndex` prop when real articles are published.
+- **Structured data:** Organization + WebSite JSON-LD is emitted on the
+  homepage only (`orgSchema` prop); BreadcrumbList on service detail and blog
+  pages; Article/BlogPosting on blog posts (author = the company). All data is
+  derived from `src/content/*.json` — no invented properties.
+- **Social image:** `og:image` is the rasterized cover
+  `public/images/placeholders/og-cover.png` (SVG source sits next to it with
+  the logo embedded as a data URI). Regenerate with:
+  `rsvg-convert -w 1200 -h 630 public/images/placeholders/og-cover.svg -o public/images/placeholders/og-cover.png`.
+- **Brand assets:** `public/images/brand/isbatab-logo.png` is a stable public
+  copy of the logo (used by Organization `logo` JSON-LD); keep it in sync with
+  `src/assets/images/brand/isbatab-logo.png`.
+- **Preview environments:** canonical tags are absolute and always point to
+  `https://isbatab.ir/...`, so Cloudflare preview URLs cannot become competing
+  indexed copies of production.
+
 ## License
 
 All rights reserved.

@@ -6,6 +6,23 @@ All notable workflow changes are documented here. This project follows the spiri
 
 ### Added
 
+- SEO fundamentals pass: 11 service detail pages at `/services/<id>/` (only for services with real supporting content — intro copy, certificate/licence evidence, and related project experience; guarded by the content validator), visible breadcrumbs + `BreadcrumbList` JSON-LD, dormant `BlogPosting` schema on the blog template, `Organization`/`WebSite` JSON-LD on the homepage only (logo, founding date, address, phones — no fabricated properties), and committed SEO-contract e2e coverage (`tests/e2e/seo.spec.mjs`).
+- `tests/unit/seo.test.mjs` (canonical/title/summary helpers, Jalaali→Gregorian conversion, JSON-LD builders) and anti-thin-page validator tests.
+
+### Changed
+
+- Canonical convention standardized to trailing-slash URLs (`https://isbatab.ir/about/`) across canonical tags, internal links, the sitemap, and Cloudflare asset serving; removed `<meta name="keywords">`, self-referencing `hreflang` alternates, redundant `index,follow` robots meta, and the per-page Organization/WebSite schema duplication.
+- Unique descriptive Persian titles/descriptions and a single `h1` on every page (services, certifications, projects, contact, blog); contextual internal links from projects and services to their detail pages; footer quick links.
+- Blog demo post is `draft: true` and `/blog/` is noindexed and sitemap-excluded until real articles exist; `og:image` is now a rasterized PNG cover (`og-cover.png`); `public/images/brand/isbatab-logo.png` is a stable public logo copy for schema; `ISO 45000/14000` aligned to the certified `ISO 45001/14001` standards in the HSE consulting service.
+
+### Fixed
+
+- Description summarization cuts at word boundaries; Jalaali date conversion validates month lengths; `og:url` no longer emitted on the 404 page.
+
+---
+
+### Added
+
 - `npm test` (harness + product unit suites), `npm run typecheck`, and `npm run validate:content` scripts; the canonical gate (`scripts/verify.sh`) and CI now run typecheck, unit tests, `npm audit` (high/critical), and the browser e2e smoke.
 - Content contract validation (`scripts/validate-content.mjs`) wired into `verify:fast` and the `product-content` affected route.
 - Unit tests for the DOCX project parser, WhatsApp URL builders, and the content validator (`tests/unit/`).

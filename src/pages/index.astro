@@ -23,6 +23,18 @@ const projects = projectsData as ProjectItem[];
 
 const featuredServices = services.slice(0, 6);
 const featuredProjects = projects.slice(0, 6);
+// Contextual project → service links: a project links to the detail page of
+// the first service that lists it as related project experience.
+const projectsByService = new Map<string, ServiceItem>();
+for (const service of services) {
+  for (const projectId of service.relatedProjectIds ?? []) {
+    if (!projectsByService.has(projectId)) projectsByService.set(projectId, service);
+  }
+}
+const serviceHrefFor = (project: ProjectItem): string | undefined => {
+  const service = projectsByService.get(project.id);
+  return service ? `/services/${service.id}/` : undefined;
+};
 // The hero call-to-action number: the company mobile (0912...) when present.
 const contactPhone =
   contacts.phones.find((phone) => phone.tel.includes("98912")) ?? contacts.phones[0];
@@ -32,7 +44,7 @@ const mainPhoneFa = toPersianDigits(mainPhone.number);
 const whatsappHref =
   contacts.whatsapp.status === "active" && contacts.whatsapp.number
     ? waMeHref(contacts.whatsapp.number)
-    : "/contact#whatsapp";
+    : "/contact/#whatsapp";
 const visualHighlights = [
   {
     title: "خدمات دارای مجوز رسمی",
@@ -58,9 +70,10 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
 ---
 
 <BaseLayout
-  title="شرکت ایمن صنعت باتاب | خدمات مشاوره، آموزش، ایمنی و بازرسی فنی"
-  description="شرکت ایمن صنعت باتاب؛ ارائه‌دهنده خدمات مشاوره، آموزش، ایمنی و بازرسی فنی به صنایع، سازمان‌ها و پروژه‌های عمرانی."
+  title="ایمن صنعت باتاب | مشاوره HSE، آموزش ایمنی و بازرسی فنی"
+  description="ایمن صنعت باتاب خدمات مشاوره HSE، آموزش ایمنی، ارزیابی ریسک و بازرسی فنی جرثقیل، مخازن تحت فشار و سیستم‌های حریق را به صنایع و پروژه‌های عمرانی ارائه می‌دهد."
   canonicalPath="/"
+  orgSchema
 >
   <Hero
     title="شرکت ایمن صنعت باتاب"
@@ -130,7 +143,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
       </div>
       <div class="mt-6">
         <a
-          href="/services"
+          href="/services/"
           class="text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
           مشاهده همه خدمات
@@ -149,14 +162,14 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
         {
           featuredProjects.map((project, index) => (
             <div class="animate-fade-up" style={`animation-delay: ${index * 80}ms`}>
-              <ProjectCard project={project} index={index} />
+              <ProjectCard project={project} index={index} serviceHref={serviceHrefFor(project)} />
             </div>
           ))
         }
       </div>
       <div class="mt-6">
         <a
-          href="/projects"
+          href="/projects/"
           class="text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
           مشاهده همه پروژه‌ها
@@ -176,7 +189,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
       <article class="card hover-lift p-6">
         <SectionTitle title="خط مشی شرکت" subtitle={company.policySummary} />
         <a
-          href="/about#policy"
+          href="/about/#policy"
           class="mt-4 inline-flex text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
           مشاهده خط مشی کامل شرکت
@@ -201,7 +214,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
           <li>• دارای مجوزهای فعال خدمات ارزیابی ایمنی و بازرسی فنی</li>
         </ul>
         <a
-          href="/certifications"
+          href="/certifications/"
           class="mt-4 inline-flex text-sm font-semibold text-brand-accent hover:text-brand-primary"
         >
           مشاهده گواهی‌نامه‌ها و مجوزها

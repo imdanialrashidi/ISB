@@ -86,3 +86,51 @@ test("validator rejects a service image that exists in neither public/ nor src/a
     fs.rmSync(sandbox, { recursive: true, force: true });
   }
 });
+
+test("validator rejects a detail-page service without detailIntro (anti-thin-page guard)", () => {
+  const sandbox = makeSandbox();
+  try {
+    const servicesPath = path.join(sandbox, "content", "services.json");
+    const services = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+    delete services[0].detailIntro;
+    fs.writeFileSync(servicesPath, JSON.stringify(services, null, 2), "utf8");
+
+    const result = runValidator(path.join(sandbox, "content"), path.join(sandbox, "public"));
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /detailPage is true but "detailIntro" is missing/);
+  } finally {
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
+test("validator rejects a detail-page service referencing an unknown certificate id", () => {
+  const sandbox = makeSandbox();
+  try {
+    const servicesPath = path.join(sandbox, "content", "services.json");
+    const services = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+    services[0].qualificationCertificateIds = [999];
+    fs.writeFileSync(servicesPath, JSON.stringify(services, null, 2), "utf8");
+
+    const result = runValidator(path.join(sandbox, "content"), path.join(sandbox, "public"));
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /qualificationCertificateIds references unknown id 999/);
+  } finally {
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});
+
+test("validator rejects a detail-page service referencing an unknown project id", () => {
+  const sandbox = makeSandbox();
+  try {
+    const servicesPath = path.join(sandbox, "content", "services.json");
+    const services = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+    services[0].relatedProjectIds = ["project-99"];
+    fs.writeFileSync(servicesPath, JSON.stringify(services, null, 2), "utf8");
+
+    const result = runValidator(path.join(sandbox, "content"), path.join(sandbox, "public"));
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /relatedProjectIds references unknown project "project-99"/);
+  } finally {
+    fs.rmSync(sandbox, { recursive: true, force: true });
+  }
+});

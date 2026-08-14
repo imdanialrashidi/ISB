@@ -16,7 +16,16 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        // /blog/ is intentionally kept out of the index until real articles
+        // exist: the current post is demo content and the blog index is
+        // noindexed (BaseLayout noIndex prop). Remove this entry when the
+        // first real article is published.
+        if (page.startsWith("https://isbatab.ir/blog/")) return false;
+        return true;
+      },
+    }),
   ],
 
   adapter: cloudflare(),

@@ -1,9 +1,10 @@
 ---
 import { Image } from "astro:assets";
 import contactsData from "../content/contacts.json";
+import servicesData from "../content/services.json";
 import { logoImageOptions, resolveRaster } from "../lib/media";
 import { toPersianDigits } from "../lib/locale";
-import type { ContactsContent } from "../lib/types";
+import type { ContactsContent, ServiceItem } from "../lib/types";
 
 const logo = resolveRaster("/images/brand/isbatab-logo.png");
 
@@ -11,10 +12,12 @@ const contacts = contactsData as ContactsContent;
 const yearFa = toPersianDigits(new Date().getFullYear());
 const mapOffice =
   contacts.addresses.find((address) => address.city.includes("تهران")) ?? contacts.addresses[0];
+// A short contextual list of major services with dedicated pages.
+const services = (servicesData as ServiceItem[]).filter((service) => service.detailPage).slice(0, 5);
 ---
 
 <footer class="border-t border-brand-border bg-brand-primary py-10 text-slate-100">
-  <div class="container-wrap grid gap-8 md:grid-cols-2 xl:grid-cols-4">
+  <div class="container-wrap grid gap-8 md:grid-cols-2 xl:grid-cols-5">
     <div>
       {
         logo ? (
@@ -96,6 +99,28 @@ const mapOffice =
         </div>
       )
     }
+    <div>
+      <p class="font-semibold text-white">دسترسی سریع</p>
+      <ul class="mt-3 space-y-2 text-sm text-slate-300">
+        <li><a href="/about/" class="hover:text-white">درباره شرکت</a></li>
+        <li><a href="/services/" class="hover:text-white">خدمات</a></li>
+        <li><a href="/certifications/" class="hover:text-white">گواهی‌نامه‌ها و مجوزها</a></li>
+        <li><a href="/projects/" class="hover:text-white">پروژه‌ها</a></li>
+        <li><a href="/contact/" class="hover:text-white">تماس با ما</a></li>
+      </ul>
+      <p class="mt-5 font-semibold text-white">خدمات تخصصی</p>
+      <ul class="mt-3 space-y-2 text-sm text-slate-300">
+        {
+          services.map((service) => (
+            <li>
+              <a href={`/services/${service.id}/`} class="hover:text-white">
+                {service.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
   <div class="container-wrap mt-8 border-t border-slate-700 pt-5 text-xs text-slate-400">
     © {yearFa} ایمن صنعت باتاب - تمامی حقوق محفوظ است.
