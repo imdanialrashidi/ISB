@@ -26,10 +26,11 @@ const orgChart = resolveRaster("/images/company/org-chart.png");
           height={588}
           format="webp"
           quality={94}
-          loading="lazy"
+          loading="eager"
           decoding="async"
           alt="چارت سازمانی شرکت ایمن صنعت باتاب شامل مدیرعامل، معاونت‌های اداری و فنی و واحدهای تخصصی بازرسی فنی، ایمنی و آتش‌نشانی، آموزش، قراردادها و مالی-اداری"
-          class="aspect-[1600/588] h-auto w-full"
+          class="aspect-[1600/588] h-auto w-full bg-white"
+          style="object-position: center top"
         />
       ) : (
         <img
@@ -37,9 +38,10 @@ const orgChart = resolveRaster("/images/company/org-chart.png");
           alt="چارت سازمانی شرکت ایمن صنعت باتاب شامل مدیرعامل، معاونت‌های اداری و فنی و واحدهای تخصصی بازرسی فنی، ایمنی و آتش‌نشانی، آموزش، قراردادها و مالی-اداری"
           width="1600"
           height="588"
-          loading="lazy"
+          loading="eager"
           decoding="async"
-          class="aspect-[1600/588] h-auto w-full"
+          class="aspect-[1600/588] h-auto w-full bg-white"
+          style="object-position: center top"
         />
       )
     }
@@ -50,12 +52,18 @@ const orgChart = resolveRaster("/images/company/org-chart.png");
 
   <div class="mt-6 rounded-xl border border-brand-border bg-white p-4">
     <p class="text-xs text-brand-muted">مدیریت ارشد</p>
-    <p class="mt-1 font-bold text-brand-primary">{company.organizationalChart.ceo}</p>
-    <p class="mt-4 text-xs text-brand-muted">واحدهای تخصصی</p>
-    <div class="mt-2 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-      {company.organizationalChart.units.map((unit) => (
-        <p class="rounded-lg bg-slate-50 px-3 py-2 text-sm text-brand-text">{unit}</p>
-      ))}
-    </div>
+    <p class="mt-1 font-bold text-brand-primary">
+      {company.organizationalChart.ceo}{' '}
+      <a
+        href="/about/ceo-resume/"
+        class="mr-2 inline-flex items-center rounded-full border border-brand-accent/20 bg-brand-accent/5 px-3 py-1 text-xs font-semibold text-brand-accent transition hover:bg-brand-accent hover:text-white"
+        aria-label="رزومه مدیرعامل"
+      >
+        رزومه
+      </a>
+    </p>
+    <p class="mt-2 text-xs leading-6 text-brand-muted">
+      رزومه تفصیلی مدیرعامل به‌زودی در این بخش منتشر خواهد شد.
+    </p>
   </div>
 </section>

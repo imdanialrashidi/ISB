@@ -103,6 +103,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
                     decoding="async"
                     alt={item.alt}
                     class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+                    style="object-position: center 35%"
                   />
                 ) : (
                   <img
@@ -112,6 +113,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
                     height="360"
                     loading="lazy"
                     class="h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+                    style="object-position: center 35%"
                   />
                 )}
                 <div class="p-4">
@@ -209,7 +211,7 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
           {company.standards.map((standard) => <Badge text={standard} tone="primary" />)}
         </div>
         <ul class="mt-5 space-y-2 text-sm leading-7 text-brand-text">
-          <li>• دارای گواهی‌نامه‌های صلاحیت مرتبط با موضوع فراخوان از مراجع ذی‌صلاح</li>
+          <li>• دارای گواهی‌نامه‌های صلاحیت مرتبط با موضوع فراخوان از مراجع ذیصلاح</li>
           <li>• دارای مجوز و پروانه کار آموزش بین‌المللی فنی‌حرفه‌ای</li>
           <li>• دارای مجوزهای فعال خدمات ارزیابی ایمنی و بازرسی فنی</li>
         </ul>
@@ -234,7 +236,8 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
               loading="lazy"
               decoding="async"
               alt="گواهینامه سیستم مدیریت ایمنی و بهداشت شغلی ISO 45001:2018 شرکت ایمن صنعت باتاب"
-              class="h-full w-full rounded-xl object-cover"
+              class="h-full w-full rounded-xl object-contain bg-white"
+              style="object-position: center top"
             />
           ) : (
             <img
@@ -243,7 +246,8 @@ const isoCertificate = resolveRaster("/images/certificates/iso-45001-certificate
               width="975"
               height="1300"
               loading="lazy"
-              class="h-full w-full rounded-xl object-cover"
+              class="h-full w-full rounded-xl object-contain bg-white"
+              style="object-position: center top"
             />
           )
         }

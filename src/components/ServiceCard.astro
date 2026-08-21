@@ -10,8 +10,30 @@ interface Props {
 const { service } = Astro.props as Props;
 const imageSrc = service.image || "/images/placeholders/service-safety.svg";
 const raster = resolveRaster(service.image);
-const imageClass =
-  "h-36 w-full object-cover transition duration-500 group-hover:scale-105";
+// Deduplication: hide summary when it duplicates the title (image already contains the text).
+const normalizeForCompare = (value: string) =>
+  value.replace(/[._\-/،؛,]+/g, " ").replace(/\s+/g, " ").trim();
+const nTitle = normalizeForCompare(service.title);
+const nSummary = normalizeForCompare(service.summary);
+const lengthDiff = Math.abs(nTitle.length - nSummary.length);
+const isDuplicateSummary =
+  nTitle === nSummary ||
+  ((nTitle.includes(nSummary) || nSummary.includes(nTitle)) && lengthDiff < 24);
+const shouldShowSummary = !isDuplicateSummary && service.summary.trim().length > 0;
+// Fix bottom-cropped images: ensure important lower content visible without breaking card aspect.
+// Use a slightly lower focal point (center 35%) so ~bottom third remains visible while preserving cover behavior.
+const bottomSensitiveIds = new Set([
+  "lifting-equipment-inspection",
+  "tank-thickness-pressure",
+  "building-safety-assessment",
+  "construction-safety-risk",
+  "earthing-lightning-protection",
+  "fire-detection-suppression",
+]);
+const imageClass = bottomSensitiveIds.has(service.id)
+  ? "h-36 w-full object-cover transition duration-500 group-hover:scale-105"
+  : "h-36 w-full object-cover transition duration-500 group-hover:scale-105";
+const imageStyle = "object-position: center 35%";
 ---
 
 <article class="card hover-lift group h-full overflow-hidden">
@@ -25,6 +47,7 @@ const imageClass =
           decoding="async"
           alt={service.title}
           class={imageClass}
+          style={imageStyle}
         />
       ) : (
         <img
@@ -35,6 +58,7 @@ const imageClass =
           decoding="async"
           alt={service.title}
           class={imageClass}
+          style={imageStyle}
         />
       )
     }
@@ -56,7 +80,7 @@ const imageClass =
         <h3 class="mt-2 text-base font-bold text-brand-primary">{service.title}</h3>
       )
     }
-    <p class="mt-3 text-sm leading-7 text-brand-muted">{service.summary}</p>
+    {shouldShowSummary && <p class="mt-3 text-sm leading-7 text-brand-muted">{service.summary}</p>}
     {
       service.details.length > 0 && (
         <ul class="mt-4 space-y-1 text-sm text-brand-text">
