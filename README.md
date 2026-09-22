@@ -69,6 +69,8 @@ npm run preview
 
 Browser E2E prerequisites: `npx playwright install chromium` once locally. Interactive browser exploration uses the Playwright MCP server (`.mcp.json`); committed deterministic specs live in `tests/e2e/`.
 
+Tiny low-risk edits: `/skill:quick-fix <change>` (targeted check only; escalates to `/build` when scope or risk grows).
+
 > Note: Prettier is configured but **not enforced** — `npm run format` fails on pre-existing files and is deliberately absent from all verification lanes. Format only files you touch.
 
 ## Deploy to Cloudflare Workers

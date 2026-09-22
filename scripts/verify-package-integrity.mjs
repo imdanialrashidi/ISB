@@ -48,7 +48,7 @@ const playwrightSpec = (mcp.mcpServers?.playwright?.args ?? []).find((value) =>
 );
 if (!playwrightSpec) throw new Error("Playwright MCP pin is missing");
 configured.push(`npm:${playwrightSpec}`);
-configured.push("npm:@earendil-works/pi-coding-agent@0.84.1");
+configured.push("npm:@earendil-works/pi-coding-agent@0.84.2");
 
 for (const source of configured) {
   if (!entries.has(source)) throw new Error(`configured package has no integrity record: ${source}`);

@@ -10,7 +10,7 @@ Include the affected version/commit, impact, prerequisites, a minimal reproducti
 
 Pi runs with the operating-system permissions of the account that starts it. Project trust, prompts, tool allowlists, and `.pi/extensions/safety-guard.js` are defense in depth; they are not a sandbox and cannot reliably parse every shell/interpreter behavior or redirect. This matches Pi's official security model: project trust controls repository-provided input, while real isolation must come from the operating system, container, or VM.
 
-For a trusted working copy, `./p` is autonomous by default: it passes `--approve`, allows routine workspace/Git/browser execution, and does not insert confirmation popups. The guard still blocks high-blast-radius patterns such as credential-store access, destructive deletion, force/deleting pushes, publication/deployment, production mutation, and browser file upload. `PI_PROJECT_TRUST=ask|never` and `PI_GUARD_MODE=strict` remain explicit diagnostic/restriction overrides.
+For a trusted working copy, `./p` is autonomous by default: it passes `--approve`, allows routine full-workspace and browser execution, and does not insert confirmation popups. Raw Git/GitHub mutation is independently denied by default; the owner-adopted policy permits only the reviewed `scripts/ai-pr.mjs` helper for scoped commit/push/PR delivery on `ai-changes`. Main writes, PR merge, and other external actions still need exact owner authorization. Read-only inspection remains available. The guard also blocks high-blast-radius patterns such as credential-store access, destructive deletion, publication/deployment, production mutation, and browser file upload. `PI_PROJECT_TRUST=ask|never` and `PI_GUARD_MODE=strict` remain explicit diagnostic/restriction overrides.
 
 For an untrusted repository, unreviewed third-party instructions, or work exposed to meaningful credentials/private data:
 
@@ -24,26 +24,12 @@ The Docker build context is reduced by `.dockerignore` to the Dockerfile only. A
 
 Autonomous Playwright may navigate public HTTP(S) pages and use focused page evaluation. File upload/drop and MCP scripting stay unavailable; strict mode also makes navigation local-only and blocks page evaluation. None of these settings is a network security boundary or redirect containment. Use network policy/container isolation when browsing untrusted applications or when egress matters.
 
-## Vision data routing
-
-Image analysis can cross a separate provider boundary from ordinary coding prompts. With a text-only primary, `describe_image` sends image bytes to the delegate shown by `/vision show`. With an image-capable primary, the extension hides that tool and the image goes directly to the active primary provider instead.
-
-Before using screenshots containing customer, production, credential, health, financial, or other sensitive data:
-
-1. Minimize or redact the image before attaching it.
-2. Verify both `/model` and `/vision show`; do not infer the destination from the current text model alone.
-3. Keep the default `hint` paste mode unless automatic delegation is explicitly accepted.
-4. Use `/vision audit show` to inspect routing metadata. The audit contains paths and content hashes, so treat the log itself as sensitive metadata.
-5. Use `/vision local-only on` when image bytes must not leave the machine. New uncached images are refused in this mode; it does not provide a local vision model by itself.
-
-Provider retention, training, regional processing, and contractual controls still apply. The extension's cache, audit log, and configuration live under the user's Pi agent directory and must not be committed or copied into support reports without review.
-
 ## Third-party packages
 
 Pi packages and extensions execute with the Pi process's permissions. Versions in `.pi/settings.json` and `.mcp.json` are exact pins, but a pin is not a source review. Before updating:
 
 - review the upstream repository, ownership, release diff, install scripts, dependencies, and published integrity;
-- test the new pin in a disposable branch/container;
+- test the new pin in a disposable copy/container;
 - update doctor assertions and the changelog;
 - update `.pi/package-integrity.json` and run `node scripts/verify-package-integrity.mjs --online` against the npm registry;
 - rerun `bash scripts/pi-doctor.sh --ci`.

@@ -1,11 +1,15 @@
 {
   "version": 2,
-  "defaultTrials": 3,
+  "defaultTrials": 1,
+  "harnessTreatmentPaths": [".pi/**", "AGENTS.md", "p", "README.md", "CHANGELOG.md", "docs/HARNESS.md", "docs/QUALITY.md", "docs/RESEARCH.md", "docs/EVALUATION.md"],
   "promotion": {
     "minDeterministicPassRate": 1,
     "maxMedianDurationRegressionPercent": 25,
     "maxMedianToolCallsRegressionPercent": 20,
-    "maxMedianTokensRegressionPercent": 20
+    "maxMedianTokensRegressionPercent": 20,
+    "maxMedianDuplicateToolCallsRegressionPercent": 20,
+    "maxMedianRepairRoundsRegressionPercent": 50,
+    "maxMedianFullGateCallsRegressionPercent": 50
   },
   "cases": [
     {
@@ -26,21 +30,21 @@
       "id": "build-ui-rtl-finance",
       "tags": ["frontend", "build", "rtl", "flagship"],
       "prompt": "/build-ui Create a self-contained, functional Persian RTL onboarding slice under eval-output/rtl-finance using platform HTML/CSS/JS. Include realistic validation, success and error states, one justified signature interaction, reduced motion, and browser evidence.",
-      "rubric": ["real controls and state transitions", "specific coherent visual direction", "mobile and desktop evidence", "accessibility and reduced motion", "flagship craft threshold"],
+      "rubric": ["real controls and state transitions", "specific coherent visual direction", "mobile and desktop images actually received and inspected, not just saved", "readable Persian/RTL detail confirmed against DOM", "final screenshots match the repaired state", "accessibility and reduced motion", "flagship craft threshold"],
       "assertions": { "completion": "completed", "changes": { "mode": "required", "allow": ["eval-output/rtl-finance/**", "docs/DESIGN.md"], "require": ["eval-output/rtl-finance/**"], "maxFiles": 25 } }
     },
     {
       "id": "build-ui-dense-operations",
       "tags": ["frontend", "build", "dashboard"],
       "prompt": "/build-ui Create a self-contained operations exception queue under eval-output/ops-queue. It must help dispatchers resolve delayed shipments quickly with dense realistic data, keyboard operation, loading/empty/error states, and a visual language grounded in logistics rather than generic cards.",
-      "rubric": ["information density remains legible", "structure encodes true priority", "keyboard journey works", "required states exist", "not a wall of cards"],
+      "rubric": ["information density remains legible", "structure encodes true priority", "keyboard journey works", "required states exist", "not a wall of cards", "focused image detail resolves visual uncertainty without redundant captures"],
       "assertions": { "completion": "completed", "changes": { "mode": "required", "allow": ["eval-output/ops-queue/**", "docs/DESIGN.md"], "require": ["eval-output/ops-queue/**"], "maxFiles": 25 } }
     },
     {
       "id": "design-review-generic-ai",
       "tags": ["frontend", "review", "anti-template"],
       "prompt": "/design-review Review any rendered UI under eval-output. If none exists, inspect the design contract and clearly mark rendered criteria unproven. Be strict about interchangeable AI-design defaults and do not edit files.",
-      "rubric": ["does not fabricate browser evidence", "separates hard gates from craft", "findings cite evidence", "generic choices are product-relative"],
+      "rubric": ["does not fabricate browser evidence", "separates hard gates from craft", "findings cite evidence", "generic choices are product-relative", "reviewer inspects images in its own context or marks dependent dimensions unproven without invented scores"],
       "assertions": { "completion": "completed", "changes": { "mode": "none", "maxFiles": 0 } }
     },
     {

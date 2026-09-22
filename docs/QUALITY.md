@@ -12,21 +12,38 @@ A required criterion that is unproven is **not passed**.
 
 For accepted scope:
 
-- controls that imply behavior must actually perform that behavior (e.g., the mobile menu opens/closes, project filters actually filter, the WhatsApp form actually composes a `wa.me` URL);
-- persistence must survive the lifecycle promised by the product (static content — the "persistence" contract is that content renders identically from committed JSON across builds);
-- displayed state must come from the authoritative source (`src/content/*.json` + `src/lib/types.ts`), never from copy pasted into components;
-- required error, empty, loading, disabled, success, permission, retry, and recovery states must behave coherently — for this site: 404 page, WhatsApp `placeholder` disabled state (`contacts.json.whatsapp.status`), empty services details list, no-index pages, mobile-menu closed state;
+- controls that imply behavior must actually perform that behavior;
+- persistence must survive the lifecycle promised by the product;
+- displayed state must come from the authoritative source rather than a convenient fake;
+- required error, empty, loading, disabled, success, permission, retry, and recovery states must behave coherently;
 - no accepted feature may be satisfied by a placeholder, TODO handler, mock response, display-only control, or hard-coded success path unless the contract explicitly says it is a prototype.
 
 ## Correctness
 
 - Preserve domain invariants across success and failure paths.
-- Validate external/untrusted data at boundaries. Currently all content is committed/trusted; if user-supplied content is ever introduced, it must be validated before rendering (zod at the content boundary is the established pattern via `src/content.config.ts`).
-- Handle retries, duplicate requests, time, rounding, ordering, partial failure, and concurrency where they are material (static site: mostly not material; the only runtime code is inline enhancement JS).
+- Validate external/untrusted data at boundaries.
+- Handle retries, duplicate requests, time, rounding, ordering, partial failure, and concurrency where they are material to the changed behavior.
 - A production bug should gain regression evidence when practical.
 - Tests should assert behavior and contracts rather than implementation trivia.
 - A new regression test should demonstrably fail on pre-fix behavior (or a safe focused mutation/equivalent independent characterization) when practical, then pass after the fix.
 - Generated tests must build, pass reliably, add a distinct behavioral signal, and isolate relevant state; line coverage alone is not acceptance evidence.
+
+### Test Value Gate
+
+A new or materially changed test is retained only when it identifies:
+
+1. an observable contract or invariant;
+2. a plausible failure it can detect;
+3. a gap not already covered by an existing test, type, schema, or deterministic check;
+4. the cheapest faithful layer;
+5. an oracle independent from the implementation under test; and
+6. red-before-green, a controlled focused mutation, or equivalent defect-sensitivity evidence when practical.
+
+If no distinct failure model or evidence gap exists, extend an existing case or add no test. `No new test` is an acceptable professional outcome for behavior-neutral changes or behavior already proved by the suite. Coverage, assertion count, and test count are diagnostic signals—not acceptance goals.
+
+Select one representative per equivalence class and exact material boundaries. Use decision tables, pairwise cases, or properties for meaningful interactions instead of Cartesian enumeration. Prefer the lowest-cost layer that preserves the real contract; use full end-to-end tests only for failures lower layers cannot represent.
+
+Do not compute expected values with the implementation's own logic, mock the subject/authority, verify private calls unless contractual, test framework or third-party behavior, use broad incidental snapshots, blind-update snapshots, sleep/retry away nondeterminism, or duplicate cases that add no distinct behavioral signal. Mocks are reserved for owned boundaries that are expensive, nondeterministic, or unsafe. Browser tests use user-visible behavior and accessible roles/labels, keep independent state, and exercise only the journey that requires a browser.
 
 ## Security and data integrity
 
@@ -34,18 +51,18 @@ For trust-boundary changes, require the `risk-review` workflow.
 
 At minimum:
 
-- authorization and ownership are enforced server-side — not applicable today (no server surface); do not introduce a server surface that bypasses this rule;
-- client-provided roles, prices, payment/subscription states, ownership, and permissions are never authoritative — nothing client-authoritative exists; keep it that way;
-- secrets and sensitive data do not enter source, logs, screenshots, fixtures, prompts, or public artifacts — the repo currently holds no secrets (`.pi/models.env` holds model routing only, no keys);
-- money/callback/state-transition operations — none exist;
-- schema/data changes have compatibility, rollback/recovery, and failure-path reasoning — content JSON changes must keep `src/lib/types.ts` in sync (build fails otherwise at render sites only if the shape is accessed; `astro check` does not validate JSON files, so a content edit can silently satisfy a wrong type — verify with `npm run build` and the affected lane).
+- authorization and ownership are enforced server-side;
+- client-provided roles, prices, payment/subscription states, ownership, and permissions are never authoritative;
+- secrets and sensitive data do not enter source, logs, screenshots, fixtures, prompts, or public artifacts;
+- money/callback/state-transition operations are verified, idempotent, replay-aware, and auditable where applicable;
+- schema/data changes have compatibility, rollback/recovery, and failure-path reasoning.
 
 ## User-facing quality
 
 For rendered interfaces:
 
-- exercise the critical journey in the real browser when browser behavior matters (`tests/e2e/home.spec.mjs` is the committed lane; Playwright MCP for interactive exploration);
-- preserve keyboard access, visible focus, semantic controls, labels, contrast, touch targets, and reduced-motion behavior — current implementation: `:focus-visible` outline, `prefers-reduced-motion` fallbacks, `aria-expanded`/`aria-controls` on the mobile menu, `aria-label`s on icon controls, Escape closes the mobile menu;
+- exercise the critical journey in the real browser when browser behavior matters;
+- preserve keyboard access, visible focus, semantic controls, labels, contrast, touch targets, and reduced-motion behavior;
 - check realistic data, long text, localization/RTL when relevant, and at least one narrow viewport for mobile-facing surfaces;
 - follow the accepted `docs/DESIGN.md`; use existing design tokens/components when they remain sound and change them deliberately when the accepted direction requires it;
 - do not add explanatory copy that merely restates obvious UI;
@@ -61,7 +78,17 @@ Default accessibility baseline when the product has not chosen a stricter target
 
 ### Visual excellence
 
-For a new interface, redesign, launch surface, or explicitly high-aesthetic task, load `frontend-design` and evaluate the rendered result using its visual-quality rubric. The current site direction is documented in `docs/DESIGN.md`; do not invent a new direction during ordinary work.
+For a new interface, redesign, launch surface, or explicitly high-aesthetic task, load `frontend-design` and evaluate the rendered result using its visual-quality rubric.
+
+Require:
+
+- a product-specific visual thesis and one restrained signature element;
+- typography, palette, composition, geometry, media, and motion derived from the product/audience rather than interchangeable defaults;
+- semantic tokens and coherent components without turning every section into the same card;
+- mobile recomposition rather than simple shrinkage;
+- real content and deliberately designed loading, empty, error, success, focus, selected, disabled, and permission states as relevant;
+- one product/interaction browser pass and one independent studio/aesthetic pass;
+- named desktop, mobile, and demanding-state evidence when the application can run.
 
 Hard-gate failures cannot be offset by aesthetic scoring. The ordinary production craft threshold is 2.75/4 with no dimension below 2; an explicitly flagship surface requires 3.25/4 with every dimension at least 3. Any criterion that depends on rendered evidence is `UNPROVEN` when only code was inspected.
 
@@ -69,10 +96,10 @@ Hard-gate failures cannot be offset by aesthetic scoring. The ordinary productio
 
 Apply only where relevant to the changed path:
 
-- avoid unbounded reads/work, N+1 access, duplicate calls, uncontrolled concurrency, and blocking hot paths — static build: keep the build fast; content additions are cheap;
+- avoid unbounded reads/work, N+1 access, duplicate calls, uncontrolled concurrency, and blocking hot paths;
 - use explicit timeouts/cancellation/retries where the boundary requires them;
 - preserve meaningful non-sensitive logs or diagnostics for critical transitions;
-- performance claims require a reproducible baseline and after-measurement — the README lists applied optimizations (font weights 400/500/700, `font-display: swap`, inline stylesheets, cache headers, width/height + lazy images); there is **no committed Lighthouse/RUM evidence** — do not present these as measured;
+- performance claims require a reproducible baseline and after-measurement;
 - a flaky test or intermittent runtime path is a reliability defect, not automatic permission to weaken the gate.
 
 For production web surfaces without accepted product-specific field budgets, use current Core Web Vitals `good` thresholds as targets at the 75th percentile, segmented by mobile and desktop: LCP ≤ 2.5 s, INP ≤ 200 ms, and CLS ≤ 0.1. Before field data exists, require an accepted repeatable lab budget, RUM instrumentation, and a staged-rollout check. Lab results are pre-production signals; do not present them as field/RUM proof.
@@ -81,7 +108,7 @@ For production web surfaces without accepted product-specific field budgets, use
 
 - Prefer existing project patterns and stable framework/platform primitives.
 - Keep public interfaces small and backward-compatible unless a breaking change is accepted.
-- Keep business rules separable from presentation/transport when the existing architecture supports it (`src/lib/*` holds pure helpers; components stay presentational).
+- Keep business rules separable from presentation/transport when the existing architecture supports it.
 - New abstractions should solve more than one real current use case or remove a demonstrated risk/duplication.
 - New dependencies require a concrete benefit over existing/platform capabilities.
 - Architecture invariants that matter repeatedly should be enforced mechanically with types, lint rules, structural tests, schemas, or CI rather than prose alone.
