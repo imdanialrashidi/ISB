@@ -1,29 +1,19 @@
-# build output
-dist/
-# generated types
-.astro/
-
-# dependencies
-node_modules/
-
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-
-# environment variables
+# Secrets and local configuration
 .env
-.env.production
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
 
-# macOS-specific files
-.DS_Store
+# Confidential project/client material (kept locally, never committed)
+docs/private/**
+!docs/private/.gitkeep
 
-# jetbrains setting folder
-.idea/
-
-# Pi local runtime
+# Pi local runtime and installed project packages
 .pi/npm/
 .pi/git/
 .pi/sessions/
@@ -35,18 +25,36 @@ pnpm-debug.log*
 .pi/mcp-oauth/
 .pi/mcp-traces/
 
-# Workflow/browser artifacts
+# Dependencies and environments
+node_modules/
+.venv/
+venv/
+vendor/
+
+# Build, test, browser, and framework output
+dist/
+.astro/
+build/
+coverage/
+target/
+.next/
+.turbo/
+.vite/
 .artifacts/
 playwright-report/
 test-results/
-coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 *.log
 
-# wrangler files
+# Wrangler / Cloudflare Workers
 .wrangler
 .dev.vars*
 !.dev.vars.example
-!.env.example
 
-# private source material (kept locally, never committed)
-docs/private/
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
