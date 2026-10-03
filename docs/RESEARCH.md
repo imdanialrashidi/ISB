@@ -1,6 +1,22 @@
 # Research Basis and Optimization Record
 
-Reviewed: **2026-08-23**. Test-quality amendment reviewed: **2026-08-24**. This record connects current primary evidence to concrete workflow controls. It does not claim that a prompt- or tool-level change improves every model or repository; deterministic tests protect invariants, and repeated matched-model evals remain the promotion standard.
+Reviewed: **2026-08-23**. Test-quality amendment reviewed: **2026-08-24**. Pi 1.0 compatibility review: **2026-10-01**. This record connects current primary evidence to concrete workflow controls. It does not claim that a prompt- or tool-level change improves every model or repository; deterministic tests protect invariants, and repeated matched-model evals remain the promotion standard.
+
+## 2026-10-01 — Pi 1.0 compatibility review
+
+This amendment supersedes the earlier runtime/MCP package and tool-loading decisions below; those remain an audit history. Reviewed Pi tag `v1.0.0` resolves to `a13d35a742c6ef8462812a28fbe1d8c8b7431c32`. Registry metadata and tarball integrities were checked on this date.
+
+| Primary source | Change and reason |
+|---|---|
+| Pi [v1.0.0 changelog](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/CHANGELOG.md), [MCP](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/mcp.md), [tool exposure](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/extensions.md#tool-exposure) | Replace `pi-mcp-adapter` with native project MCP. Declare selected browser tools as deferred, hide the rest, and use native `tool_search`. Direct and codemode-nested calls emit the guard hooks; validate actual names/arguments rather than trusting the old proxy contract. |
+| Pi [default tools](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/settings.md#tools), [SDK](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/sdk.md) | Use `defaultTools` instead of launcher `--tools`, whose allowlist hides omitted MCP tools from the registry. Keep nine initial schemas, remove three package helpers that actual loading revealed were unintentionally active, and let Pi retain discovered MCP tools on its own branches. Five non-MCP capability groups stay conditional. |
+| Pi [CLI](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/cli.md), [theme/events](https://github.com/earendil-works/pi/blob/v1.0.0/packages/coding-agent/docs/extensions.md) | Preserve leading CLI subcommands, provider/model overrides and native fullscreen default. Do not force experimental setup. Validate slate and elapsed/weighted-output/tool-time/cost metrics against the new loader and event contract. Codemode remains optional: no token-saving claim is made for the default workflow. |
+| [Playwright MCP 0.0.83](https://github.com/microsoft/playwright-mcp/releases/tag/v0.0.83), published CLI/schema | Upgrade selected browser tools and retain native image responses. Correct setup guidance: default Chrome is not installed by the generic Chromium install command. Keep server/browser versions compatible. |
+| Published [rpiv-todo](https://github.com/juicesharp/rpiv-mono/tree/main/packages/rpiv-todo) `2.12.0`, [pi-web-search](https://github.com/ByteTrue/pi-package-mono/tree/main/packages/pi-web-search) `0.5.1` tarballs | Review actual published code and load both in Pi 1.0. Todo retains its native tool/history contract and defers overlay loading. Web search adds guarded redirect/DNS/body handling and preserves legacy config while moving personal settings to the agent directory. Keep sub-agent, LSP and docs at their latest published pins; do not add a new package or skill. |
+
+Validation in this repository: the migrated harness suite (44/44 in the directly affected suites, 119/120 overall), `bash scripts/pi-doctor.sh --ci --static`, `node scripts/run-workflow-evals.mjs --dry-run`, and `node scripts/verify-package-integrity.mjs --online` all pass against the new pins. The seven registry integrity records were re-checked against npm for this migration.
+
+Limits: model-backed quality and latency improvement remain unmeasured. Actual page rendering/screenshot capture under the upgraded Playwright MCP was not exercised in this migration; browser QA stays an operator smoke check. The installed local Pi runtime must satisfy the new `1.0.0` minimum before `./p` will pass doctor; the one local `npm test` failure (`tests/unit/extract-docx.test.mjs`, missing `jszip`) is a pre-existing missing-`node_modules` condition, not a workflow regression.
 
 ## Result in one page
 

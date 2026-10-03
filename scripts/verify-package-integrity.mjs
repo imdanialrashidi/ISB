@@ -13,7 +13,7 @@ if (unexpected.length) throw new Error(`Unknown argument(s): ${unexpected.join("
 const manifestPath = path.join(repositoryRoot, ".pi/package-integrity.json");
 const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const settings = JSON.parse(fs.readFileSync(path.join(repositoryRoot, ".pi/settings.json"), "utf8"));
-const mcp = JSON.parse(fs.readFileSync(path.join(repositoryRoot, ".mcp.json"), "utf8"));
+const mcp = JSON.parse(fs.readFileSync(path.join(repositoryRoot, ".pi/mcp.json"), "utf8"));
 
 if (manifest.version !== 1 || !Array.isArray(manifest.packages)) {
   throw new Error("package integrity manifest must be version 1 with a packages array");
@@ -48,7 +48,10 @@ const playwrightSpec = (mcp.mcpServers?.playwright?.args ?? []).find((value) =>
 );
 if (!playwrightSpec) throw new Error("Playwright MCP pin is missing");
 configured.push(`npm:${playwrightSpec}`);
-configured.push("npm:@earendil-works/pi-coding-agent@0.84.2");
+const docker = fs.readFileSync(path.join(repositoryRoot, "Dockerfile.pi"), "utf8");
+const piVersion = docker.match(/^ARG PI_VERSION=(\d+\.\d+\.\d+)$/m)?.[1];
+if (!piVersion) throw new Error("Dockerfile Pi pin is missing");
+configured.push(`npm:@earendil-works/pi-coding-agent@${piVersion}`);
 
 for (const source of configured) {
   if (!entries.has(source)) throw new Error(`configured package has no integrity record: ${source}`);
@@ -66,12 +69,15 @@ if (online) {
       stdio: ["ignore", "pipe", "inherit"],
     });
     const published = JSON.parse(output);
-    if (published["dist.integrity"] !== entry.integrity) {
+    // npm >=11 returns an array for `npm view <pkg>@<exact>`; older npm returns the object.
+    const record = Array.isArray(published) ? published[0] : published;
+    if (!record) throw new Error(`registry returned no metadata for ${source}`);
+    if (record["dist.integrity"] !== entry.integrity) {
       throw new Error(
-        `registry integrity mismatch for ${source}: reviewed=${entry.integrity} published=${published["dist.integrity"]}`,
+        `registry integrity mismatch for ${source}: reviewed=${entry.integrity} published=${record["dist.integrity"]}`,
       );
     }
-    if (published.license !== entry.license) throw new Error(`registry license mismatch for ${source}`);
+    if (record.license !== entry.license) throw new Error(`registry license mismatch for ${source}`);
     process.stdout.write(`PASS ${source}\n`);
   }
 } else {

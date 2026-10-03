@@ -8,7 +8,7 @@
 // - the spec's beforeAll probe verifies the server actually serves the ISBATAB
 //   site, because Playwright's readiness check only tests HTTP 2xx;
 // - deterministic committed specs live in tests/e2e; interactive exploration uses
-//   the Playwright MCP server configured in .mcp.json (kept separate by design).
+//   the Playwright MCP server configured in .pi/mcp.json (kept separate by design).
 import { defineConfig } from "@playwright/test";
 
 const PORT = 4325;

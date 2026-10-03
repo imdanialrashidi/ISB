@@ -4,6 +4,16 @@ All notable workflow changes are documented here. This project follows the spiri
 
 ## Unreleased
 
+### Changed — Pi workflow upgrade to 1.0
+
+- Adopted the upstream `pi-production-workflow-template` Pi 1.0 set: runtime pin `0.84.2` → `1.0.0` in `./p`, `Dockerfile.pi`, and doctor requirements; registry integrities re-verified against npm.
+- Replaced the third-party MCP adapter and root `.mcp.json` with native Pi `.pi/mcp.json` (`@playwright/mcp` `0.0.79` → `0.0.83`), selective `deferred` browser tool exposure, and `tool_search` discovery. Guard enforcement now covers direct and codemode-nested `mcp__*` calls, plus Pi 1.0 credential paths.
+- Moved the core tool allowlist from launcher `--tools` to project `defaultTools` in `.pi/settings.json` (nine schemas incl. `tool_search`), because a CLI allowlist hides native MCP tools from the registry. `./p` now passes leading native CLI subcommands through and no longer forces `PI_EXPERIMENTAL`.
+- Dropped the `browser` capability group from `harness_tools` (native MCP owns it) and moved three package helpers into runtime-managed unloading. Bumped `@juicesharp/rpiv-todo` `2.6.2` → `2.12.0` and `@bytetrue/pi-web-search` `0.2.1` → `0.5.1`.
+- Updated workflow docs (`HARNESS`, `TOOLING_SETUP`, `EVALUATION`, `RESEARCH`, `SECURITY`, `browser-qa`) and the affected-route/doctor/protected-path references to `.pi/mcp.json`. Project contracts (`docs/PRODUCT.md`, `PLAN`, `ARCHITECTURE`, `DESIGN`, `QUALITY` project invariants), the `product-*` verification routes, the canonical gate, CI e2e job, and Dependabot npm coverage are unchanged.
+
+**Owner action required:** install the reviewed runtime before using `./p` — `npm install -g --ignore-scripts @earendil-works/pi-coding-agent@1.0.0`. `bash scripts/pi-doctor.sh` fails on any older Pi.
+
 ### Added
 
 - SEO fundamentals pass: 11 service detail pages at `/services/<id>/` (only for services with real supporting content — intro copy, certificate/licence evidence, and related project experience; guarded by the content validator), visible breadcrumbs + `BreadcrumbList` JSON-LD, dormant `BlogPosting` schema on the blog template, `Organization`/`WebSite` JSON-LD on the homepage only (logo, founding date, address, phones — no fabricated properties), and committed SEO-contract e2e coverage (`tests/e2e/seo.spec.mjs`).

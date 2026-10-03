@@ -67,7 +67,7 @@ npm run preview
 | Feature             | `npm run verify:feature`                         | Fast + production build + committed browser smoke                                      |
 | Full (canonical)    | `bash scripts/verify.sh`                         | Harness doctor + typecheck + lint + unit tests + build — required before merge/release |
 
-Browser E2E prerequisites: `npx playwright install chromium` once locally. Interactive browser exploration uses the Playwright MCP server (`.mcp.json`); committed deterministic specs live in `tests/e2e/`.
+Browser E2E prerequisites: `npx playwright install chromium` once locally. Interactive browser exploration uses the Playwright MCP server (`.pi/mcp.json`); committed deterministic specs live in `tests/e2e/`.
 
 Tiny low-risk edits: `/skill:quick-fix <change>` (targeted check only; escalates to `/build` when scope or risk grows).
 
