@@ -67,4 +67,23 @@ test.describe("corporate site shell", () => {
     await expect(form.locator("textarea[name='message']")).toBeVisible();
     await expect(form.getByRole("button", { name: "ارسال در واتساپ" })).toBeEnabled();
   });
+
+  // Owner-directed footer contract (docs/DESIGN.md → Owner direction): the
+  // "خدمات تخصصی" block states only the three service domains. It previously
+  // rendered a per-service link list built from services.json; this asserts the
+  // directive cannot silently regress.
+  test("footer states only the three service domains under خدمات تخصصی", async ({ page }) => {
+    await page.goto("/");
+    const footer = page.locator("footer");
+    const heading = footer.getByText("خدمات تخصصی", { exact: true });
+    await expect(heading).toBeVisible();
+
+    // Exactly one statement follows the heading, with the owner's wording.
+    const statement = heading.locator("xpath=following-sibling::*[1]");
+    await expect(statement).toHaveText("خدمات فنی و مهندسی ایمنی، آتش نشانی و بازرسی فنی");
+
+    // No per-service explanation list or deep service link survived. The plain "خدمات"
+    // quick link to /services/ belongs to the quick-links list above and is kept.
+    await expect(footer.locator('a[href*="/services/"]:not([href="/services/"])')).toHaveCount(0);
+  });
 });

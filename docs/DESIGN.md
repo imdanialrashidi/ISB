@@ -88,20 +88,27 @@ Font source and license: **Vazirmatn, OFL-1.1**, via `@fontsource/vazirmatn`; wo
 - Supported viewport/device baseline: 320 px minimum tested target; breakpoints `sm 640 / md 768 / lg 1024` (Tailwind defaults). No device matrix evidence committed (UNVERIFIED beyond code inspection).
 - RTL/localization behavior: fa-IR RTL only; no LTR locale; LTR runs isolated via `.num-text`/`.latin-text`.
 
+## Owner direction
+
+Accepted choices made by the product owner. Recorded verbatim in intent; code tokens own resolved values.
+
+- **2026-10-03 — footer "خدمات تخصصی" block (content directive):** the footer column headed **خدمات تخصصی** must state only the company's service domains — `خدمات فنی و مهندسی ایمنی، آتش نشانی و بازرسی فنی` — and must carry **no** explanations, per-service descriptions, or per-service links. The owner supplied **no** new style, color, type, or motion choice with this request; the existing navy/teal direction, Vazirmatn type, and footer composition stay exactly as inventoried above.
+  - Agent proposal (not owner-approved, reversible): keep the sentence as a single `<p>` but hold the compound terms `آتش نشانی` and `بازرسی فنی` on one line so RTL wrapping never splits a term inside the narrow `xl` footer column. Same text, same tokens; no new color, radius, or motion. Measured 2026-10-03: keeping the two compounds separate leaves the widest unbreakable run at 167 px against the narrowest measured column (179 px at 200 % text zoom); one wider group balanced the 320 px lines but overflowed the column at 200 % text zoom, so the shorter grouping was kept and the 320 px second line stays short.
+
 ## Components and states
 
-| Component / pattern | Variants                                                                | Required states                                                                        | Reuse or change |
-| ------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --------------- |
-| Header (sticky)     | desktop nav / mobile drawer                                             | default / hover (text→accent) / focus-visible / open (aria-expanded) / closed          | keep            |
-| Mobile menu         | drawer + overlay + body lock                                            | open/close, Escape, link-click closes                                                  | keep            |
-| Hero                | home variant with dual CTAs                                             | default                                                                                | keep            |
-| SectionTitle        | title + optional subtitle                                               | default                                                                                | keep            |
-| Card                | service / project / highlight / contact                                 | default / hover-lift                                                                   | keep            |
-| ServiceCard        | grid grouped by category (`/services`) / featured grid (home)       | default / hover-lift / empty details list                                      | keep            |
-| ProjectCard        | card grid (`/projects`, home)                                       | default / hover-lift                                                             | keep            |
-| WhatsAppForm        | `status: active` / `status: placeholder` (disabled button + amber note) | default / required-field validation (native) / submit→wa.me open / placeholder message | keep            |
-| 404 page            | centered card + home/contact links                                      | noindex page                                                                           | keep            |
-| Footer              | contact columns + quick links                                           | default                                                                                | keep            |
+| Component / pattern | Variants                                                                | Required states                                                                        | Reuse or change                          |
+| ------------------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Header (sticky)     | desktop nav / mobile drawer                                             | default / hover (text→accent) / focus-visible / open (aria-expanded) / closed          | keep                                     |
+| Mobile menu         | drawer + overlay + body lock                                            | open/close, Escape, link-click closes                                                  | keep                                     |
+| Hero                | home variant with dual CTAs                                             | default                                                                                | keep                                     |
+| SectionTitle        | title + optional subtitle                                               | default                                                                                | keep                                     |
+| Card                | service / project / highlight / contact                                 | default / hover-lift                                                                   | keep                                     |
+| ServiceCard         | grid grouped by category (`/services`) / featured grid (home)           | default / hover-lift / empty details list                                              | keep                                     |
+| ProjectCard         | card grid (`/projects`, home)                                           | default / hover-lift                                                                   | keep                                     |
+| WhatsAppForm        | `status: active` / `status: placeholder` (disabled button + amber note) | default / required-field validation (native) / submit→wa.me open / placeholder message | keep                                     |
+| 404 page            | centered card + home/contact links                                      | noindex page                                                                           | keep                                     |
+| Footer              | contact columns + quick links + `خدمات تخصصی` domain line               | default (one-line domain statement, no per-service list)                               | keep (content fixed by owner 2026-10-03) |
 
 Required journey states:
 
@@ -144,6 +151,7 @@ Required journey states:
 | Services      | grouped card grids (category headers)           | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
 | Projects      | card grid                                    | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
 | Contact       | WhatsApp active/placeholder, map embed | desktop/mobile, fa-RTL    | none committed (UNVERIFIED) |
+| Footer        | domain statement, no per-service list  | 320/375/768/1024/1280/1440 + 200 % zoom, fa-RTL | inspected in a real browser 2026-10-03 (images kept in ignored artifacts, not committed) |
 | 404           | default                                | all, fa-RTL               | none committed (UNVERIFIED) |
 
 No visual-regression evidence is committed. The e2e lane (`tests/e2e/home.spec.mjs`) provides DOM/state coverage; screenshot artifacts go to `.artifacts/playwright/` and are for human review or an image-capable model only.
@@ -157,6 +165,7 @@ No visual-regression evidence is committed. The e2e lane (`tests/e2e/home.spec.m
 
 ## Decision log
 
-| Date      | Decision                                                     | Evidence / rationale                                              | Revisit when                     |
-| --------- | ------------------------------------------------------------ | ----------------------------------------------------------------- | -------------------------------- |
-| bootstrap | Inventory the implemented direction as the accepted baseline | Code inspection of `global.css`, `tailwind.config.ts`, components | A `/design` decision replaces it |
+| Date       | Decision                                                                                     | Evidence / rationale                                                                                       | Revisit when                                        |
+| ---------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| bootstrap  | Inventory the implemented direction as the accepted baseline                                 | Code inspection of `global.css`, `tailwind.config.ts`, components                                          | A `/design` decision replaces it                    |
+| 2026-10-03 | Footer `خدمات تخصصی` states only the three service domains, no explanations or service links | Owner directive (see Owner direction); verified in a real browser on every route at 320/768/1024/1280/1440 | If the owner wants service links back in the footer |
