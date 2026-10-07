@@ -108,13 +108,16 @@
         "p",
         ".pi/models.env",
         "scripts/pi-sandbox.sh",
-        "tests/launcher.test.mjs"
+        "scripts/pi-extension-compat.mjs",
+        "tests/launcher.test.mjs",
+        "tests/pi-extension-compat.test.mjs"
       ],
       "commands": [
         [
           "node",
           "--test",
-          "tests/launcher.test.mjs"
+          "tests/launcher.test.mjs",
+          "tests/pi-extension-compat.test.mjs"
         ]
       ]
     },
