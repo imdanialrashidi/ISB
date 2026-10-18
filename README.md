@@ -46,28 +46,26 @@ npm run preview
 - `npm run preview` - build + `wrangler dev` preview
 - `npm run check` / `npm run typecheck` - Astro/Type diagnostics (`astro check`)
 - `npm run lint` - ESLint
-- `npm test` - Node test runner: harness suites (`tests/*.test.mjs`) + product unit tests (`tests/unit/*.test.mjs`)
+- `npm test` - Node test runner: product unit tests (`tests/unit/*.test.mjs`)
 - `npm run validate:content` - contract validation of `src/content/*.json`
 - `npm run format` - Prettier check (⚠ not enforced — see below)
 - `npm run verify:fast` - fast static lane: lint + check + content validation
 - `npm run verify:feature` - feature lane: fast + build + E2E smoke
 - `npm run test:e2e` - Playwright smoke (`tests/e2e/`; chromium only, 1 worker, no video/trace/screenshots; builds+previews on port 4325 or reuses an ISBATAB server already running there)
 - `npm run deploy` - build + `wrangler deploy` (Cloudflare Workers)
-- `node scripts/verify-affected.mjs` - affected-file verification routing (config: `.pi/verification.json`; unmatched files fall back to the full gate)
-- `bash scripts/verify.sh` - canonical full gate: harness doctor (`--ci`) + typecheck + lint + unit tests + build
+- `bash scripts/verify.sh` - canonical gate: template self-checks, then the project lane in `scripts/project-verify.sh` (lint + check + content validation + unit tests + build)
 - `npm run extract-content` - extract content from the source DOCX (set `DOCX_PATH`; defaults to `docs/private/` — kept out of git)
 
 ## Verification lanes (for agents and humans)
 
-| Lane                | Command                                          | Covers                                                                                 |
-| ------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------- |
-| Targeted / affected | `node scripts/verify-affected.mjs --file <path>` | Routes in `.pi/verification.json`; conservative full-gate fallback for unmatched files |
-| Fast (static)       | `npm run verify:fast`                            | ESLint + `astro check` + content validation                                          |
-| Unit               | `npm test`                                      | Harness + product unit suites (`tests/`, `tests/unit/`)                              |
-| Feature             | `npm run verify:feature`                         | Fast + production build + committed browser smoke                                      |
-| Full (canonical)    | `bash scripts/verify.sh`                         | Harness doctor + typecheck + lint + unit tests + build — required before merge/release |
+| Lane                | Command                           | Covers                                                                                |
+| ------------------- | --------------------------------- | ------------------------------------------------------------------------------------- |
+| Fast (static)       | `npm run verify:fast`             | ESLint + `astro check` + content validation                                           |
+| Unit                | `npm test`                        | Product unit suites (`tests/unit/`)                                                   |
+| Feature             | `npm run verify:feature`          | Fast + production build + committed browser smoke                                     |
+| Full (canonical)    | `bash scripts/verify.sh`          | Template self-checks + project lane (lint + check + content + unit + build) — required before merge/release |
 
-Browser E2E prerequisites: `npx playwright install chromium` once locally. Interactive browser exploration uses the Playwright MCP server (`.pi/mcp.json`); committed deterministic specs live in `tests/e2e/`.
+Browser E2E prerequisites: `npx playwright install chromium` once locally. Committed deterministic specs live in `tests/e2e/`; interactive browser exploration uses the agent's native browser tool.
 
 Tiny low-risk edits: `/skill:quick-fix <change>` (targeted check only; escalates to `/build` when scope or risk grows).
 

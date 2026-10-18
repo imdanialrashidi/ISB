@@ -1,5 +1,5 @@
 // Low-resource local Playwright lane.
-// Policy (see .pi/skills/verification-routing + browser-qa):
+// Policy (see docs/QUALITY.md and .omp/skills/verify):
 // - no CI mode (never sets CI=1), one Chromium project, one worker, zero retries;
 // - video, trace, and automatic screenshots disabled;
 // - dedicated port 4325 so a foreign app on Astro's default 4321 can never be
@@ -8,7 +8,7 @@
 // - the spec's beforeAll probe verifies the server actually serves the ISBATAB
 //   site, because Playwright's readiness check only tests HTTP 2xx;
 // - deterministic committed specs live in tests/e2e; interactive exploration uses
-//   the Playwright MCP server configured in .pi/mcp.json (kept separate by design).
+//   the agent's native browser tool (kept separate by design).
 import { defineConfig } from "@playwright/test";
 
 const PORT = 4325;

@@ -40,7 +40,7 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 | Styling            | Tailwind 3 + CSS variables in `:root` (global.css) mapped to `brand.*` theme colors     | One token surface for components               | Token system changes are accepted   |
 | Contact conversion | Static `tel:`/`wa.me` links + client-side WhatsApp compose                              | No backend needed; Iran-friendly channel       | A server-side lead form is accepted |
 | Blog               | Astro content collection (zod, `draft` flag)                                            | Schema-validated, draft-gated                  | Real editorial workflow arrives     |
-| Verification       | npm scripts + `.pi/verification.json` affected routing + `scripts/verify.sh` full gate  | Deterministic, cheap, lane-aware               | Canonical gate changes are accepted |
+| Verification       | npm scripts + `scripts/verify.sh` canonical gate (template self-checks + `scripts/project-verify.sh` project lane) | Deterministic, cheap, lane-aware               | Canonical gate changes are accepted |
 | Browser QA         | Playwright MCP (interactive) + `@playwright/test` narrow committed spec (deterministic) | Separation of exploration from regression      | E2E coverage needs to grow          |
 
 ## Explicitly rejected complexity
@@ -52,7 +52,7 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 
 ## Operational baseline
 
-- Configuration/secrets: none in the repo beyond `.pi/models.env` model routing (no API keys committed). Env vars read at build/runtime: none for the site itself; `DOCX_PATH` only for the extraction script.
+- Configuration/secrets: none in the repo (no API keys committed). Env vars read at build/runtime: none for the site itself; `DOCX_PATH` only for the extraction script.
 - Migrations: none (static content).
 - Backup and tested restore: content is Git history; redeploy from any commit. No restore drill recorded (UNVERIFIED).
 - Logging/monitoring: none at runtime (static). Build/CI logs only.

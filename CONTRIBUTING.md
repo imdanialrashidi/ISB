@@ -5,10 +5,10 @@ Contributions should improve representative task outcomes, reduce risk/cost, or 
 ## Setup
 
 1. Use Node.js 22.19.0 or newer.
-2. Install the reviewed Pi pin from `README.md`.
-3. Review project-local packages/extensions before trusting the repository.
+2. Open the repository in omp (one binary, no packages or MCP setup); project config loads from `.omp/`.
+3. Review third-party pins before trusting an update.
 4. Run `bash scripts/verify.sh` before and after a workflow change.
-5. Use the direct autonomous launcher for trusted work. For an untrusted repository or meaningful credential/private-data exposure, use `bash scripts/pi-sandbox.sh` or another boundary described in `SECURITY.md`.
+5. Work in the repository directly. For an untrusted repository or meaningful credential/private-data exposure, use an OS/container/VM boundary as described in `SECURITY.md`.
 
 ## Change contract
 
@@ -24,17 +24,15 @@ Preserve unrelated work and keep one primary writer. Do not add dependencies wit
 
 ## Workflow-policy changes
 
-Workflow maintenance is allowed in the default autonomous mode. Keep it explicitly scoped, update all affected source-of-truth documents, doctor assertions, integrity records, eval cases, and `CHANGELOG.md`, and rely on the tested diff/CI evidence rather than a startup flag.
+Workflow maintenance follows `AGENTS.md` and `docs/HARNESS.md`. Keep it explicitly scoped, update all affected source-of-truth documents and `CHANGELOG.md`, and rely on the tested diff/CI evidence.
 
 Run:
 
 ```bash
 bash scripts/verify.sh
-node scripts/verify-package-integrity.mjs --online  # when package pins change
-node scripts/run-workflow-evals.mjs --dry-run       # when evals/runner change
 ```
 
-For a material harness change, compare baseline/candidate on representative cases as described in `docs/EVALUATION.md`. Do not publish model-eval artifacts containing repository content or credentials.
+For a material harness change, compare baseline/candidate on representative cases. Do not publish model-eval artifacts containing repository content or credentials.
 
 ## Frontend contributions
 
