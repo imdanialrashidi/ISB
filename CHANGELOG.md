@@ -4,6 +4,13 @@ All notable workflow changes are documented here. This project follows the spiri
 
 ## Unreleased
 
+### Changed — GitHub Pages hosting
+
+- Replaced the Cloudflare Workers runtime with a pure static Astro build for GitHub Pages: removed the `@astrojs/cloudflare` adapter, `wrangler.jsonc`, Wrangler scripts/dependency, `public/_headers`, and `public/.assetsignore`; `dist/` no longer contains `_worker.js`/`_routes.json` (smaller, CDN-cacheable artifact).
+- Added `public/CNAME` (`isbatab.ir`), `public/.nojekyll`, and `.github/workflows/deploy-pages.yml` (static gates + build → `upload-pages-artifact` → `deploy-pages`, manual dispatch supported).
+- GitHub Pages cannot set response headers, so the Cloudflare caching/security header policy was replaced by a document CSP `<meta>` tag in `BaseLayout.astro`; `frame-ancestors`/`X-Frame-Options`/nosniff/referrer-policy are no longer host-enforced.
+- `npm run preview` now serves `dist/` through `scripts/serve-dist.mjs`, which mirrors GitHub Pages directory redirects (`/about` → `/about/`) and 404 handling so the committed browser smoke stays production-accurate.
+
 ### Changed — Pi workflow upgrade to 1.0
 
 - Adopted the upstream `pi-production-workflow-template` Pi 1.0 set: runtime pin `0.84.2` → `1.0.0` in `./p`, `Dockerfile.pi`, and doctor requirements; registry integrities re-verified against npm.

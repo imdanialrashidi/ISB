@@ -7,7 +7,7 @@ Corporate RTL website for **ISBATAB (ایمن صنعت باتاب)** built for B
 - Astro (SSG)
 - TypeScript
 - Tailwind CSS
-- Static hosting target: Cloudflare Workers (static assets + minimal Astro runtime)
+- Static hosting target: GitHub Pages (static `dist/` artifact)
 
 ## Local Development
 
@@ -42,8 +42,8 @@ npm run preview
 ## Scripts
 
 - `npm run dev` - start Astro dev server (http://localhost:4321)
-- `npm run build` - build static site to `dist` (Workers static-assets layout: `dist/_worker.js`)
-- `npm run preview` - build + `wrangler dev` preview
+- `npm run build` - build the static site to `dist`
+- `npm run preview` - serve the built `dist/` locally (`npm run build` first)
 - `npm run check` / `npm run typecheck` - Astro/Type diagnostics (`astro check`)
 - `npm run lint` - ESLint
 - `npm test` - Node test runner: product unit tests (`tests/unit/*.test.mjs`)
@@ -52,7 +52,6 @@ npm run preview
 - `npm run verify:fast` - fast static lane: lint + check + content validation
 - `npm run verify:feature` - feature lane: fast + build + E2E smoke
 - `npm run test:e2e` - Playwright smoke (`tests/e2e/`; chromium only, 1 worker, no video/trace/screenshots; builds+previews on port 4325 or reuses an ISBATAB server already running there)
-- `npm run deploy` - build + `wrangler deploy` (Cloudflare Workers)
 - `bash scripts/verify.sh` - canonical gate: template self-checks, then the project lane in `scripts/project-verify.sh` (lint + check + content validation + unit tests + build)
 - `npm run extract-content` - extract content from the source DOCX (set `DOCX_PATH`; defaults to `docs/private/` — kept out of git)
 
@@ -71,26 +70,33 @@ Tiny low-risk edits: `/skill:quick-fix <change>` (targeted check only; escalates
 
 > Note: Prettier is configured but **not enforced** — `npm run format` fails on pre-existing files and is deliberately absent from all verification lanes. Format only files you touch.
 
-## Deploy to Cloudflare Workers
+## Deploy to GitHub Pages
 
-The site builds to the Workers static-assets layout (`dist/` with `dist/_worker.js`)
-and deploys with Wrangler:
+The site is a pure static build (`dist/`) deployed by
+`.github/workflows/deploy-pages.yml` on every push to `main` (or manually via
+**Actions → deploy-pages → Run workflow**).
 
-1. Install the Wrangler CLI and authenticate (`npx wrangler login`) or set `CLOUDFLARE_API_TOKEN`.
-2. `npm run deploy` (builds, then `wrangler deploy` using `wrangler.jsonc`).
-3. Add the custom domain `isbatab.ir` in the Cloudflare dashboard (Workers → the deployed worker → Custom Domains).
-4. Ensure HTTPS is enabled (Cloudflare Universal SSL).
+One-time repository setup:
 
-Rollback: redeploy a previous commit (or `wrangler rollback` for the last version).
-There is no CI deploy workflow yet — deploys are manual until one is added.
+1. **Settings → Pages → Build and deployment → Source:** select **GitHub Actions**.
+2. Keep the custom domain `isbatab.ir` in **Settings → Pages → Custom domain**
+   (the domain is also committed as `public/CNAME`, so the artifact preserves it).
+3. Point the domain's DNS at GitHub Pages (apex `A`/`AAAA` records or a `www`
+   `CNAME`), then enable **Enforce HTTPS**.
 
-### `_headers` support
+Rollback: re-run the workflow for an earlier commit, or revert the commit on
+`main` and let the workflow redeploy. GitHub Pages keeps the previous
+deployment available in the repository's Actions run history.
 
-This project uses `public/_headers` to define:
+### Response headers
 
-- long-term immutable cache for `/_astro/*` and `/fonts/*`
-- short cache for HTML routes
-- baseline security headers (CSP, frame policy, referrer policy, etc.)
+GitHub Pages serves static files only and does not support custom response
+headers, so the former `_headers` file (Cloudflare-specific caching and
+security headers) was removed. `Cache-Control` is set by GitHub's CDN and
+cannot be tuned per path; use hashed `_astro/*` URLs for immutable assets.
+Document-level CSP is emitted as a `<meta http-equiv="Content-Security-Policy">`
+tag in `BaseLayout.astro`; `frame-ancestors`/`X-Frame-Options` cannot be set on
+GitHub Pages.
 
 ## Content Editing Guide
 
@@ -128,7 +134,7 @@ Applied optimizations include:
 - Reduced Persian font loading to critical weights only (400, 500, 700).
 - `font-display: swap` with minimal preload for above-the-fold text.
 - Inline stylesheet strategy in Astro build to reduce render-blocking CSS request chains.
-- Cloudflare cache headers for hashed assets and fonts.
+- Hashed `_astro/*` asset filenames for long-lived CDN caching (caching itself is controlled by GitHub Pages).
 - Width/height and lazy-loading applied to non-critical images for low CLS.
 - All raster content images are optimized at build time to responsive WebP variants (`srcset`/`sizes`) sized for their rendered slot, so mobile browsers download smaller files than desktop; certificates/org-chart use conservative quality for text clarity. SVG placeholders and favicons remain in their original formats.
 
@@ -148,7 +154,7 @@ Recommended checks:
 
 - **Canonical convention:** every indexable page identifies its preferred URL
   with a trailing slash (`https://isbatab.ir/about/`). Canonical tags, internal
-  links, the XML sitemap, and Cloudflare's auto-trailing-slash asset behavior
+  links, the XML sitemap, and GitHub Pages' automatic `/about` → `/about/` redirect
   all agree on this single form — keep new links on it.
 - **Index policy:** pages opt out of indexing with the `noIndex` prop on
   `BaseLayout` (currently `/blog/` only — its post is demo content and the
@@ -167,7 +173,7 @@ Recommended checks:
   copy of the logo (used by Organization `logo` JSON-LD); keep it in sync with
   `src/assets/images/brand/isbatab-logo.png`.
 - **Preview environments:** canonical tags are absolute and always point to
-  `https://isbatab.ir/...`, so Cloudflare preview URLs cannot become competing
+  `https://isbatab.ir/...`, so preview/deploy URLs cannot become competing
   indexed copies of production.
 
 ## License

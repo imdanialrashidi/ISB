@@ -16,7 +16,7 @@ Keep this document short. It is the durable source of truth for what the product
 - Riskiest product assumption: published licenses/certificates and project portfolio will be trusted by industrial buyers without a third-party review channel. UNVERIFIED.
 - Smallest experiment that tests it: launch the site, monitor contact-path clicks (needs analytics — not yet installed), and ask the first 5 inbound callers where they heard about the company.
 - Deadline / hard constraints: none recorded in the repository. UNKNOWN.
-- Supported platforms and environments: static HTML/JS/CSS with a minimal Cloudflare Workers runtime (adapter) serving prerendered pages; any modern browser; `lang="fa" dir="rtl"`; single locale (fa-IR), no LTR or multi-language support.
+- Supported platforms and environments: pure static HTML/JS/CSS on GitHub Pages; any modern browser; `lang="fa" dir="rtl"`; single locale (fa-IR), no LTR or multi-language support.
 
 ## Must-have user flows
 
@@ -40,15 +40,15 @@ Keep this document short. It is the durable source of truth for what the product
 - [x] SEO basics: title/description/canonical/OG/JSON-LD on every page; `robots.txt`, `sitemap-index.xml` generated.
 - [x] 404 page exists and is indexed as noindex.
 - [ ] Browser-verified journey evidence (deterministic E2E) — now covered by `tests/e2e/home.spec.mjs` after bootstrap.
-- [ ] Live deployment to Cloudflare Workers (isbatab.ir) — UNVERIFIED from the repository (`npm run deploy` is wired; no CI deploy workflow yet).
+- [ ] Live deployment to GitHub Pages (isbatab.ir) — UNVERIFIED from the repository (`.github/workflows/deploy-pages.yml` is wired; the first Pages run is pending).
 
 ## Security, privacy, and compliance constraints
 
 - Data classification: public business data only (company facts, contacts, certificates). No personal data is collected or stored by the site.
 - Critical access rules: static site, no server-side authorization surface; the WhatsApp form composes a `wa.me` URL client-side and stores nothing.
-- External/payment providers: none. Only external links (`tel:`, `wa.me`, Google Maps iframe/links) and Cloudflare Workers hosting.
+- External/payment providers: none. Only external links (`tel:`, `wa.me`, Google Maps iframe/links) and GitHub Pages hosting.
 - Retention/deletion requirements: none — the site stores no user data.
-- CSP and security headers are shipped via `public/_headers` (frame-ancestors 'none', X-Frame-Options DENY, nosniff, referrer policy).
+- CSP is shipped as a `<meta http-equiv="Content-Security-Policy">` tag in `BaseLayout.astro`. GitHub Pages does not support custom response headers, so frame-ancestors/X-Frame-Options, nosniff, and referrer policy cannot be set at the host level.
 
 ## Performance and UX budgets
 
@@ -65,7 +65,7 @@ Keep this document short. It is the durable source of truth for what the product
 - Activation / success event: contact-path interaction (tel/WhatsApp/email). NOT MEASURED — no analytics installed; decision pending.
 - Guardrail metrics: none defined. UNKNOWN.
 - Required product telemetry: none yet; must be decided before claiming measurement.
-- Support / recovery expectation: static content on Cloudflare Workers; recovery = redeploy from Git history (or `wrangler rollback`); no state to back up.
+- Support / recovery expectation: static content on GitHub Pages; recovery = re-run the Pages workflow for an earlier commit or revert on `main`; no state to back up.
 
 ## Open product decisions
 

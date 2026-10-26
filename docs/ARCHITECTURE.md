@@ -4,7 +4,7 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 
 ## Current system
 
-- Runtime/platform: Astro 5 static site generation (SSG) on Node.js 22 (CI pins 22.23.2; local is 22.23.1); output is static HTML/CSS/JS in `dist/` served via the Cloudflare Workers static-assets model (a minimal Astro runtime in `dist/_worker.js` serves the prerendered pages; no SSR endpoints, no database, no auth).
+- Runtime/platform: Astro 5 static site generation (SSG) on Node.js 22 (CI pins 22.23.2; local is 22.23.1); output is pure static HTML/CSS/JS in `dist/` deployed to GitHub Pages (no adapter, no worker runtime, no SSR endpoints, no database, no auth).
 - Main modules:
   - `src/pages/*.astro` — routes: `/` (index), `/about`, `/services` (consolidated service catalog), `/services/[id]` (detail pages for the 11 services flagged `detailPage: true` in `services.json`), `/projects`, `/contact`, `/blog`, `/blog/[slug]`, `404`.
   - `src/components/*.astro` — presentational components (Header with mobile menu, Footer, Hero, SectionTitle, Badge, ContactCTA, ServiceCard, ProjectCard, OrganizationChart, WhatsAppForm).
@@ -13,8 +13,8 @@ Record only durable constraints and decisions. Do not turn this into a diary.
   - `src/content.config.ts` — Astro content collection schema (zod) for the `blog` collection only.
   - `scripts/extract-docx.mjs` — one-way DOCX → `src/content/*.json` content extraction pipeline (`npm run extract-content`, source path via `DOCX_PATH` env).
 - Data stores: none at runtime. Content is committed JSON validated at build time by TypeScript (via `types.ts` casts) and by content collection schemas where defined. Since `astro check` does not type-check JSON, `scripts/validate-content.mjs` (`npm run validate:content`, part of `verify:fast` and the `product-content` affected route) enforces the content contract with clear per-file errors.
-- External services: Cloudflare Workers (static assets + minimal Astro runtime; `wrangler.jsonc`; live deployment UNVERIFIED from the repository); Google Maps embed/links on `/contact` (embed URL lives in `contacts.json.addresses[].embedUrl`); `wa.me` and `tel:` deep links; `@astrojs/sitemap` generates `sitemap-index.xml` at build (filtered to canonical indexable URLs; `/blog/*` excluded while it carries only demo content).
-- Deployment topology: static `dist/` (incl. `dist/_worker.js`) → Cloudflare Workers (`npm run deploy` → `wrangler deploy`); `public/_headers` controls caching (immutable `/_astro/*`, `/fonts/*`, favicons; short `must-revalidate` for `/images/*`) and security headers (CSP, X-Frame-Options DENY, nosniff, referrer policy). The adapter runtime is a deliberate accepted cost (~600KB) for a fully static site. No CI deploy workflow exists in `.github/workflows/` (only `quality.yml` — harness validation, unit tests, and e2e).
+- External services: GitHub Pages (static `dist/` artifact; custom domain `isbatab.ir` via `public/CNAME`; live deployment UNVERIFIED from the repository); Google Maps embed/links on `/contact` (embed URL lives in `contacts.json.addresses[].embedUrl`); `wa.me` and `tel:` deep links; `@astrojs/sitemap` generates `sitemap-index.xml` at build (filtered to canonical indexable URLs; `/blog/*` excluded while it carries only demo content).
+- Deployment topology: static `dist/` → GitHub Pages, deployed by `.github/workflows/deploy-pages.yml` on push to `main` (static gates + build, then `upload-pages-artifact`/`deploy-pages`); `public/CNAME` pins the custom domain. GitHub Pages controls `Cache-Control` at its CDN and does not support custom response headers, so there is no `_headers` file; the document CSP is emitted as a `<meta http-equiv="Content-Security-Policy">` tag in `BaseLayout.astro` (meta CSP cannot express `frame-ancestors`/`X-Frame-Options`). `quality.yml` remains the verification workflow.
 
 ## Trust boundaries and critical data flows
 
@@ -56,4 +56,4 @@ Record only durable constraints and decisions. Do not turn this into a diary.
 - Migrations: none (static content).
 - Backup and tested restore: content is Git history; redeploy from any commit. No restore drill recorded (UNVERIFIED).
 - Logging/monitoring: none at runtime (static). Build/CI logs only.
-- Rollback: redeploy a previous commit with `npm run deploy` (or `wrangler rollback`); no state to migrate (documented in README; not exercised).
+- Rollback: re-run the Pages workflow for a previous commit, or revert the commit on `main` and let the workflow redeploy; no state to migrate (documented in README; not exercised).

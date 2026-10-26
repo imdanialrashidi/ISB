@@ -23,8 +23,8 @@ export const LOGO_URL = "/images/brand/isbatab-logo.png";
 /**
  * Canonical URL convention: every indexable page identifies its preferred URL
  * with a trailing slash (https://isbatab.ir/about/), matching the XML sitemap
- * and Cloudflare's auto-trailing-slash asset behavior. Keep internal links,
- * canonical tags, and the sitemap on this single form.
+ * and GitHub Pages' automatic `/about` → `/about/` redirect. Keep internal
+ * links, canonical tags, and the sitemap on this single form.
  */
 export const canonicalize = (path = "/"): string => {
   const clean = path.startsWith("/") ? path : `/${path}`;

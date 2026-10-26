@@ -2,7 +2,7 @@ import type { ImageMetadata } from "astro";
 
 /**
  * Build-time raster image sources (Astro-managed, optimized to responsive WebP
- * during the build; see the Cloudflare adapter's `imageService: "compile"`).
+ * during the build; static output, no runtime image service).
  *
  * Content JSON keeps referring to these images with their legacy public paths
  * (`/images/...`); the basename maps that stable identifier to the imported

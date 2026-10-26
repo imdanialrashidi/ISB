@@ -2,7 +2,7 @@
 // Asserts the durable search-facing facts: canonical convention (trailing
 // slash), single H1, homepage Organization+WebSite JSON-LD, absence of
 // obsolete meta (keywords/hreflang), noindex policy, draft-gated 404, and
-// mobile equivalence. Runs against wrangler dev (production-accurate assets).
+// mobile equivalence. Runs against `astro preview` (production build output).
 import { expect, test } from "@playwright/test";
 
 test.describe("seo contract", () => {

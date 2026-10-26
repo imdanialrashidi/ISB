@@ -37,11 +37,6 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# Wrangler / Cloudflare Workers
-.wrangler
-.dev.vars*
-!.dev.vars.example
-
 # Editors / OS
 .idea/
 .vscode/
